@@ -1,0 +1,30 @@
+Signature-Version: 1.0
+SHA-256-Digest-Manifest-Main-Attributes: WkrGnunUDILDJLhOInzfRt8YhMaAM
+ SnFmsOQufbveus=
+SHA-256-Digest-Manifest: ShDQ/CAyTqZUfv7mN+vtZb7E70oLDYZXj5BC6ok8At0=
+Created-By: 1.7.0_17 (Oracle Corporation)
+
+Name: OpenAL32.dll
+SHA-256-Digest: JBLWoifSMjsWesKbvbxdetxfaSSV+2SqjdybhO5Ug+w=
+
+Name: OpenAL64.dll
+SHA-256-Digest: 7joamLIRSB9nwGwslYeRfLgSwxQ24vyx1VjtMUz5yzo=
+
+Name: jinput-dx8_64.dll
+SHA-256-Digest: gqPqx0iM+EyTEiFIIjLqpap5R4F+rpngD1zDWztZqJU=
+
+Name: jinput-raw.dll
+SHA-256-Digest: 0F2MlPOLDUP+YvMJi7sZaEwZr0e+CGba2hUXY1xtRjQ=
+
+Name: jinput-raw_64.dll
+SHA-256-Digest: vAU35hZjfxoUPfOgy50IhGZeaaSCglGI3akQFZrME8Q=
+
+Name: lwjgl64.dll
+SHA-256-Digest: ZXlHgawu4vnk8EUC4TSInY6tb1W2uCzrx0/Y1U4qlNk=
+
+Name: lwjgl.dll
+SHA-256-Digest: EWqjFPuefVPVW6B9cqblfY6s8SqdKaAixSmNDocqiUk=
+
+Name: jinput-dx8.dll
+SHA-256-Digest: bbfCaHkHLO6f+f78cbISFegwkgJ3gr8LKdnmjyx4hN4=
+

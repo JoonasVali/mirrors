@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.2
+Created-By: 1.7.0_17-b02 (Oracle Corporation)
+
+Name: OpenAL32.dll
+SHA-256-Digest: uvJ/yR3IUteIieBSz8ntK2/AknJYu1B6iVxvzVDxD+8=
+
+Name: jinput-dx8_64.dll
+SHA-256-Digest: UR3FDCAB0+JYRd1HnKgv38nUJAP5qmnGSTJXxm3fAmY=
+
+Name: OpenAL64.dll
+SHA-256-Digest: kmG2YBCoRd3vn2HV5CZv4vCKU/NgXaAC6ej40gK9vF4=
+
+Name: jinput-raw.dll
+SHA-256-Digest: D80z4AulxR8/3zYT2JxungA4H+8DtVBBLqc7yDcjfc8=
+
+Name: jinput-raw_64.dll
+SHA-256-Digest: dM101V6iDo/Op67YuXws8JbaH83j+vGD+BWk3Ok2TsM=
+
+Name: lwjgl64.dll
+SHA-256-Digest: hqjkVV02FOftWiS+2pITls655B2/JQjXE6PSa5KIYrc=
+
+Name: lwjgl.dll
+SHA-256-Digest: /xVkGZgzmTNovguLrvPdxMHFwQhcaHyidy+gXHO7hpU=
+
+Name: jinput-dx8.dll
+SHA-256-Digest: 9u4zcBv7ukgYcPSjcNcHuHAB+zIT78xgv/MlATtOIZw=
+
