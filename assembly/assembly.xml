@@ -15,11 +15,21 @@
   <fileSets>
 
     <fileSet>
-      <directory>${binfolder}</directory>
+      <directory>${binfolder}/unix</directory>
       <outputDirectory>bin</outputDirectory>
       <includes>
         <include>**/*</include>
       </includes>
+      <lineEnding>unix</lineEnding>
+    </fileSet>
+
+    <fileSet>
+      <directory>${binfolder}/win</directory>
+      <outputDirectory>bin</outputDirectory>
+      <includes>
+        <include>**/*</include>
+      </includes>
+      <lineEnding>windows</lineEnding>
     </fileSet>
 
 
