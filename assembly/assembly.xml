@@ -33,6 +33,16 @@
       <lineEnding>windows</lineEnding>
     </fileSet>
 
+    <fileSet>
+      <directory>${basedir}/doc</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>**/*</include>
+      </includes>
+      <lineEnding>unix</lineEnding>
+      <fileMode>0444</fileMode>
+    </fileSet>
+
 
     <fileSet>
       <directory>${mirrors.target}</directory>
