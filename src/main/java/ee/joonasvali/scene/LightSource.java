@@ -10,7 +10,7 @@ import org.newdawn.slick.Graphics;
  * Time: 3:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public class LightSource extends RoundPhysical implements Activatable, LightEmitter {
+public class LightSource extends RoundPhysical implements Activatable {
 
   private final Environment env;
   private LightEmitterProperties properties;
@@ -38,7 +38,6 @@ public class LightSource extends RoundPhysical implements Activatable, LightEmit
     }
   }
 
-  @Override
   public void emit(LightEmitterProperties properties) {
     double density = properties.getDensity();
     double velocity = properties.getVelocity();
