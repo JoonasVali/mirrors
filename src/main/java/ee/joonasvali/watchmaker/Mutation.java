@@ -6,8 +6,8 @@ import ee.joonasvali.scene.genetic.Gene;
 import ee.joonasvali.scene.genetic.Genepool;
 import org.uncommons.watchmaker.framework.EvolutionaryOperator;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -26,7 +26,7 @@ public class Mutation implements EvolutionaryOperator<Genepool> {
 
   @Override
   public List<Genepool> apply(List<Genepool> selectedCandidates, Random rng) {
-    List<Genepool> list = new LinkedList<>();
+    List<Genepool> list = new ArrayList<>();
     for (Genepool pool : selectedCandidates) {
       Iterator<Gene> it = pool.iterator();
       while(it.hasNext()) {

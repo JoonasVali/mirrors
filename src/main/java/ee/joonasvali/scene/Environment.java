@@ -1,12 +1,11 @@
 package ee.joonasvali.scene;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 
 public class Environment {
-  private final LinkedList<Physical> objects = new LinkedList<>();
+  private final List<Physical> objects = new ArrayList<>(250);
   private double score = 0;
   private int lightCount = 0;
 
@@ -16,6 +15,9 @@ public class Environment {
 
   public void addScore(double score) {
     this.score += score;
+    if (this.score < 0) {
+      this.score = 0;
+    }
   }
 
   public void addObject(Physical physical) {

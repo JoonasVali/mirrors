@@ -32,8 +32,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.Properties;
 import java.util.Random;
 
@@ -193,8 +193,8 @@ public class Launcher {
    * Possible to add more operators here, read about them in Watchmaker docs.
    * http://watchmaker.uncommons.org/api/org/uncommons/watchmaker/framework/operators/package-summary.html
    */
-  private static LinkedList<EvolutionaryOperator<Genepool>> getEvolutionaryOperators() {
-    LinkedList<EvolutionaryOperator<Genepool>> operators = new LinkedList<EvolutionaryOperator<Genepool>>();
+  private static ArrayList<EvolutionaryOperator<Genepool>> getEvolutionaryOperators() {
+    ArrayList<EvolutionaryOperator<Genepool>> operators = new ArrayList<>();
 //    ListCrossover e = new ListCrossover(3, new Probability(0.1));
     operators.add(new Mutation());
     //operators.add(e);
