@@ -8,12 +8,7 @@ public class Environment {
   private final List<Physical> objects = new ArrayList<>(250);
   private double score = 0;
   private int lightCount = 0;
-  private final Object LOCK = new Object() {
-    @Override
-    public String toString() {
-      return "environment.lock";
-    }
-  };
+  private Object lock;
 
   public double getScore() {
     return score;
@@ -77,6 +72,10 @@ public class Environment {
   }
 
   public Object getLock() {
-    return LOCK;
+    return lock;
+  }
+
+  public void setLock(Object lock) {
+    this.lock = lock;
   }
 }

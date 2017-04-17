@@ -30,7 +30,6 @@ import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
@@ -82,7 +81,7 @@ public class Launcher {
     );
 
     // Make the graphics update.
-    int delay = 50;
+    int delay = 30;
     ActionListener taskPerformer = evt -> container.repaint();
     timer = new Timer(delay, taskPerformer);
     timer.start();
@@ -243,24 +242,6 @@ public class Launcher {
       return new DemoEnvironmentController(builder);
     }
     return null;
-  }
-
-  public static File getSavingDir() {
-    try {
-      File file = new File(System.getProperty("user.dir"));
-      File saved = new File(file, "../../saved").getCanonicalFile();
-      if (!saved.exists()) {
-        saved.mkdirs();
-      }
-
-      log.info("file " + file.getCanonicalPath() + " ");
-      return saved;
-    } catch (IOException e) {
-      log.error("fatal error: ", e);
-      System.exit(-1);
-      return null;
-    }
-
   }
 
   private static class EvolutionProperties {

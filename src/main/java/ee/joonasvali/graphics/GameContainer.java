@@ -27,12 +27,14 @@ public class GameContainer extends JFrame {
   }
 
   private JPanel createCanvas() {
-    return new JPanel() {
+    JPanel panel = new JPanel() {
       @Override
       public void paintComponent(Graphics g) {
         super.paintComponent(g);
         env.render((Graphics2D) g);
       }
     };
+    addKeyListener(env.getKeyListener());
+    return panel;
   }
 }
