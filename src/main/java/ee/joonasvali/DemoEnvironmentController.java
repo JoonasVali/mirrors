@@ -6,6 +6,10 @@ import ee.joonasvali.scene.Environment;
 import ee.joonasvali.scene.EnvironmentBuilder;
 
 import java.awt.Graphics2D;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 
 /**
@@ -16,31 +20,38 @@ public class DemoEnvironmentController implements EnvironmentController {
   private final Renderer renderer;
   private volatile long lastRender;
   private volatile Environment environment;
+  private final KeyListener keyListener;
+  private final Object LOCK = new Object() {
+    @Override
+    public String toString() {
+      return "environment.lock";
+    }
+  };
 
   public DemoEnvironmentController(EnvironmentBuilder environment) {
     this.environmentBuilder = environment;
     this.renderer = new DefaultRenderer();
+    keyListener = createKeyListener();
+  }
+
+  private KeyListener createKeyListener() {
+    return new KeyAdapter() {
+      @Override
+      public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+          init();
+        }
+      }
+    };
   }
 
   public void init() {
     this.environment = environmentBuilder.getEnvironment();
+    this.environment.setLock(LOCK);
   }
 
   public void render(Graphics2D g) {
     renderer.render(environment, g);
-  }
-
-  public void keyPressed(int key, char c) {
-
-  }
-
-  public void keyReleased(int key, char c) {
-    /**
-     * Replays scene when space is pressed.
-     */
-//    if(key == Input.KEY_SPACE){
-//      init();
-//    }
   }
 
   @Override
@@ -53,5 +64,10 @@ public class DemoEnvironmentController implements EnvironmentController {
   @Override
   public Environment getEnvironment() {
     return environment;
+  }
+
+  @Override
+  public KeyListener getKeyListener() {
+    return keyListener;
   }
 }
