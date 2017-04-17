@@ -1,13 +1,10 @@
 package ee.joonasvali.scene;
 
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 public class Light extends BasePhysical implements Activatable {
-
-
-
   private double angle;
   private double speed;
   private double itensity;
@@ -35,7 +32,7 @@ public class Light extends BasePhysical implements Activatable {
   }
 
   @Override
-  public void render(Graphics g) {
+  public void render(Graphics2D g) {
     int rate = (int) (itensity / initialItensity * 255);
     g.setColor(colors[rate]);
     g.drawRect((int)getX(), (int)getY(), 1, 1);

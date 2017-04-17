@@ -23,7 +23,6 @@ SOFTWARE.
 This project uses the following frameworks which are subject to their respective licensing terms.
 
 * The Watchmaker Framework
-* Slick2D
 * SLF4J
 * Logback
 

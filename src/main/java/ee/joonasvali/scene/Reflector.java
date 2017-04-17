@@ -1,15 +1,8 @@
 package ee.joonasvali.scene;
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Joss
- * Date: 3/23/14
- * Time: 6:21 PM
- * To change this template use File | Settings | File Templates.
- */
 public class Reflector extends BasePhysical implements Collidable {
 
   public static final double REFLECTION_DELTA = 1;
@@ -21,7 +14,7 @@ public class Reflector extends BasePhysical implements Collidable {
   }
 
   @Override
-  public void render(Graphics g) {
+  public void render(Graphics2D g) {
     g.setColor(Color.cyan);
     g.drawRect((int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
 
