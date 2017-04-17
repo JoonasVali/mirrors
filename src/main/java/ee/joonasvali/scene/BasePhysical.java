@@ -1,12 +1,6 @@
 package ee.joonasvali.scene;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Joss
- * Date: 3/23/14
- * Time: 3:39 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public abstract class BasePhysical implements Physical{
   protected double x, y;
   protected double width, height;

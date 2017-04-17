@@ -1,6 +1,8 @@
 package ee.joonasvali;
 
-import org.newdawn.slick.Graphics;
+import ee.joonasvali.scene.Environment;
+
+import java.awt.Graphics2D;
 
 /**
  * @author Joonas Vali April 2016
@@ -8,11 +10,13 @@ import org.newdawn.slick.Graphics;
 public interface EnvironmentController {
   void init();
 
-  void render(Graphics g);
-
-  void update(int delta);
+  void render(Graphics2D g);
 
   void keyPressed(int key, char c);
 
   void keyReleased(int key, char c);
+
+  void nextStep();
+
+  Environment getEnvironment();
 }

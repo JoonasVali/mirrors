@@ -1,15 +1,8 @@
 package ee.joonasvali.scene;
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Joss
- * Date: 3/25/14
- * Time: 8:59 AM
- * To change this template use File | Settings | File Templates.
- */
 public class Accelerator extends RoundPhysical implements Collidable{
   private double acceleration;
 
@@ -36,7 +29,7 @@ public class Accelerator extends RoundPhysical implements Collidable{
   }
 
   @Override
-  public void render(Graphics g) {
+  public void render(Graphics2D g) {
     if(acceleration > 0) {
       g.setColor(Color.green);
     } else g.setColor(Color.yellow);

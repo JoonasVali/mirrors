@@ -52,12 +52,5 @@
       </includes>
     </fileSet>
 
-    <fileSet>
-      <directory>${slick.native.lib}</directory>
-      <outputDirectory>sl-libs</outputDirectory>
-      <includes>
-        <include>**/*</include>
-      </includes>
-    </fileSet>
   </fileSets>
 </assembly>

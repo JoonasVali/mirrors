@@ -1,9 +1,6 @@
 package ee.joonasvali.scene;
 
 
-import ee.joonasvali.scene.Physical;
-import ee.joonasvali.scene.RoundPhysical;
-
 public class CollisionUtil {
 
   public static boolean areColliding(RoundPhysical c1, RoundPhysical c2) {

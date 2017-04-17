@@ -1,5 +1,6 @@
 package ee.joonasvali;
 
+import ee.joonasvali.graphics.GameContainer;
 import ee.joonasvali.scene.Constants;
 import ee.joonasvali.scene.EnvironmentBuilder;
 import ee.joonasvali.scene.genetic.Genepool;
@@ -12,8 +13,6 @@ import ee.joonasvali.util.PolFileChooser;
 import ee.joonasvali.watchmaker.GenepoolCanditateFactory;
 import ee.joonasvali.watchmaker.Mutation;
 import ee.joonasvali.watchmaker.SystemEvaluator;
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.SlickException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uncommons.maths.random.MersenneTwisterRNG;
@@ -26,11 +25,18 @@ import org.uncommons.watchmaker.framework.operators.EvolutionPipeline;
 import org.uncommons.watchmaker.framework.selection.TruncationSelection;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
 
-import java.awt.*;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.WindowConstants;
+import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,29 +49,54 @@ import java.util.Random;
 public class Launcher {
   private static final Logger log = LoggerFactory.getLogger(Launcher.class);
   private static String nl = System.lineSeparator();
+  private static volatile boolean running = true;
+  private static volatile GameContainer container;
+  private static volatile Timer timer;
 
-  public static void main(String[] args) {
-    boolean sharedContextTest = false;
-
+  public static void main(String[] args) throws InvocationTargetException, InterruptedException {
     if (GraphicsEnvironment.isHeadless()) {
       log.error("This system is not supported as it appears to be headless. GraphicsEnvironment.isHeadless() == true");
       System.exit(-1);
     }
 
-    try {
-      EnvironmentController env = getEnvironment(args);
-      if (env == null) {
-        log.info("EnvironmentController not present. Exiting.");
-        System.exit(0);
-      }
-      AppGameContainer container = new AppGameContainer(new SlickController(env));
-      container.setForceExit(!sharedContextTest);
-      container.setDisplayMode(Constants.DIMENSION_X, Constants.DIMENSION_Y, false);
-      container.setVSync(true);
-      container.start();
-    } catch (SlickException e) {
-      log.error("Unable to launch Mirrors", e);
+
+    EnvironmentController env = getEnvironment(args);
+
+    if (env == null) {
+      log.info("EnvironmentController not present. Exiting.");
+      System.exit(0);
     }
+    env.init();
+
+    SwingUtilities.invokeAndWait(
+        () -> {
+          try {
+            container = new GameContainer(env, Constants.DIMENSION_X, Constants.DIMENSION_Y);
+            container.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            container.setSize(new Dimension(Constants.DIMENSION_X, Constants.DIMENSION_Y));
+            container.setVisible(true);
+          } catch (Exception e) {
+            log.error("Unable to launch Mirrors", e);
+          }
+        }
+    );
+
+    // Make the graphics update.
+    int delay = 50;
+    ActionListener taskPerformer = evt -> container.repaint();
+    timer = new Timer(delay, taskPerformer);
+    timer.start();
+
+    // Make the simulation update.
+    final Object lock = env.getEnvironment().getLock();
+    while (running) {
+      synchronized (lock) {
+        env.nextStep();
+      }
+
+      Thread.sleep(10L);
+    }
+
   }
 
   private static EnvironmentController getEnvironment(String[] args) {

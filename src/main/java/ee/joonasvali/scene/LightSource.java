@@ -1,15 +1,8 @@
 package ee.joonasvali.scene;
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Joss
- * Date: 3/23/14
- * Time: 3:04 PM
- * To change this template use File | Settings | File Templates.
- */
 public class LightSource extends RoundPhysical implements Activatable {
 
   private final Environment env;
@@ -25,7 +18,7 @@ public class LightSource extends RoundPhysical implements Activatable {
   }
 
   @Override
-  public void render(Graphics g) {
+  public void render(Graphics2D g) {
     g.setColor(Color.red);
     g.drawOval((int) getX(), (int) getY(), (int) getWidth(), (int) getHeight());
   }

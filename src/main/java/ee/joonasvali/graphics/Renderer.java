@@ -1,11 +1,9 @@
 package ee.joonasvali.graphics;
 
 import ee.joonasvali.scene.Environment;
-import org.newdawn.slick.Graphics;
 
-/**
- * @author Joonas Vali April 2016
- */
+import java.awt.Graphics2D;
+
 public interface Renderer {
-  void render(Environment environment, Graphics g);
+  void render(Environment environment, Graphics2D g);
 }

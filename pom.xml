@@ -15,7 +15,6 @@
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
     <binfolder>${basedir}/bin</binfolder>
     <asm.file>${basedir}/assembly/assembly.xml</asm.file>
-    <slick.native.lib>${basedir}/target/natives</slick.native.lib>
     <mirrors.target>${basedir}/target</mirrors.target>
     <project.build.directory>${basedir}/dist</project.build.directory>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,11 +26,6 @@
       <groupId>org.uncommons.watchmaker</groupId>
       <artifactId>watchmaker-framework</artifactId>
       <version>0.7.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slick2d</groupId>
-      <artifactId>slick2d-core</artifactId>
-      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -81,21 +75,6 @@
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>com.googlecode.mavennatives</groupId>
-        <artifactId>maven-nativedependencies-plugin</artifactId>
-        <version>0.0.5</version>
-        <executions>
-          <execution>
-            <id>unpacknatives</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
 
       <plugin>

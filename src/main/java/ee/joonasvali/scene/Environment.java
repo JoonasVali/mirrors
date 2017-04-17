@@ -8,6 +8,12 @@ public class Environment {
   private final List<Physical> objects = new ArrayList<>(250);
   private double score = 0;
   private int lightCount = 0;
+  private final Object LOCK = new Object() {
+    @Override
+    public String toString() {
+      return "environment.lock";
+    }
+  };
 
   public double getScore() {
     return score;
@@ -31,7 +37,7 @@ public class Environment {
     } while (isLightRemaining());
   }
 
-  public void act(int delta) {
+  public void act(long delta) {
     // check collisions for light and objects
 
     List<Physical> objects = new ArrayList<>(getObjects());
@@ -68,5 +74,9 @@ public class Environment {
 
   public boolean isLightRemaining() {
     return lightCount > 0;
+  }
+
+  public Object getLock() {
+    return LOCK;
   }
 }

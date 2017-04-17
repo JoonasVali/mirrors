@@ -1,17 +1,12 @@
 package ee.joonasvali.scene;
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Joss
- * Date: 3/23/14
- * Time: 3:38 PM
- * To change this template use File | Settings | File Templates.
- */
+import java.awt.Color;
+import java.awt.Graphics2D;
+
 public class LightGoal extends RoundPhysical implements LightAbsorber, Collidable {
   private LightGoalAction action;
+  private Color color = new Color(87, 107, 255);
   public LightGoal(double x, double y, double rotation, double radius, LightGoalAction action) {
     super(x, y, rotation, radius);
     this.action = action;
@@ -23,8 +18,8 @@ public class LightGoal extends RoundPhysical implements LightAbsorber, Collidabl
   }
 
   @Override
-  public void render(Graphics g) {
-    g.setColor(Color.blue);
+  public void render(Graphics2D g) {
+    g.setColor(color);
     g.drawOval((int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
   }
 

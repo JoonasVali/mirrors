@@ -1,7 +1,5 @@
 package ee.joonasvali.scene;
-
-
-import org.newdawn.slick.Graphics;
+import java.awt.Graphics2D;
 
 public interface Physical {
   double getX();
@@ -9,5 +7,5 @@ public interface Physical {
   double getRotation();
   double getWidth();
   double getHeight();
-  void render(Graphics g);
+  void render(Graphics2D g);
 }
