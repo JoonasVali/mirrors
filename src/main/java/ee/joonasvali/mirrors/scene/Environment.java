@@ -1,6 +1,7 @@
 package ee.joonasvali.mirrors.scene;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -49,9 +50,18 @@ public class Environment {
       }
     }
 
-    for(Physical object : objects) {
+    Iterator<Physical> it = objects.iterator();
+    while (it.hasNext()) {
+      Physical object = it.next();
       if(object instanceof Activatable) {
         ((Activatable) object).activate();
+        if (object instanceof Light) {
+          Light light = (Light) object;
+          if (light.getItensity() <= 0) {
+            lightCount--;
+            it.remove();
+          }
+        }
       }
     }
   }
