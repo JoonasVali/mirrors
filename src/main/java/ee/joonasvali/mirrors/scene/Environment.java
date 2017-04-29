@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Environment {
   private final List<Physical> objects = new ArrayList<>(250);
+  private final List<LinePhysical> lines = new ArrayList<>();
   private double score = 0;
   private int lightCount = 0;
   private Object lock;
@@ -20,6 +21,10 @@ public class Environment {
     if (this.score < 0) {
       this.score = 0;
     }
+  }
+
+  public void addObject(LinePhysical line) {
+    this.lines.add(line);
   }
 
   public void addObject(Physical physical) {
@@ -38,10 +43,21 @@ public class Environment {
 
     List<Physical> objects = new ArrayList<>(getObjects());
 
+    for(LinePhysical line : lines) {
+      for(Physical object2 : objects){
+        if(object2 instanceof Light) {
+          Light light = (Light) object2;
+          if(line.isCollision(light)) {
+            line.actCollision(light, this);
+          }
+        }
+      }
+    }
+
     for(Physical object : objects) {
       if(object instanceof Collidable) {
         for(Physical object2 : objects){
-          if(object2 instanceof Light) {
+          if(object2 instanceof Light && object2 != object) {
             if(((Collidable) object).isCollision(object2)) {
               ((Collidable) object).actCollision(object2, this);
             }
@@ -87,5 +103,9 @@ public class Environment {
 
   public void setLock(Object lock) {
     this.lock = lock;
+  }
+
+  public List<LinePhysical> getLines() {
+    return lines;
   }
 }

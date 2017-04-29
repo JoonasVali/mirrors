@@ -3,6 +3,7 @@ package ee.joonasvali.mirrors;
 import ee.joonasvali.mirrors.scene.Environment;
 import ee.joonasvali.mirrors.scene.EnvironmentBuilder;
 import ee.joonasvali.mirrors.scene.Light;
+import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.Reflector;
 import org.junit.Test;
 
@@ -29,6 +30,58 @@ public class GraphicalMirrorTest {
 
       environment.addObject(new Light(350, 350, 280, 1, 100, 0.1));
       environment.addObject(new Light(440, 350, 220, 1, 100, 0.1));
+
+      return environment;
+    };
+    EnvironmentController controller = new DemoEnvironmentController(builder);
+    WindowController windowController = new WindowController(controller);
+    windowController.launch();
+  }
+
+  @Test
+  public void line1Test() throws InvocationTargetException, InterruptedException {
+    EnvironmentBuilder builder = () -> {
+      Environment environment = new Environment();
+
+      environment.addObject(new LinePhysical(350, 250, 400, 290));
+
+      environment.addObject(new Light(300, 150, 60, 1, 100, 0.1));
+      environment.addObject(new Light(150, 150, 28, 1, 100, 0.1));
+
+      environment.addObject(new Light(510, 100, 135, 1, 100, 0.1));
+      environment.addObject(new Light(520, 100, 134, 1, 100, 0.1));
+
+      environment.addObject(new Light(480, 230, 168, 1, 100, 0.1));
+      environment.addObject(new Light(480, 230, 140, 1, 100, 0.1));
+
+      environment.addObject(new Light(350, 350, 280, 1, 100, 0.1));
+      environment.addObject(new Light(400, 350, 270, 1, 100, 0.1));
+
+      return environment;
+    };
+    EnvironmentController controller = new DemoEnvironmentController(builder);
+    WindowController windowController = new WindowController(controller);
+    windowController.launch();
+  }
+
+  @Test
+  public void line2Test() throws InvocationTargetException, InterruptedException {
+    EnvironmentBuilder builder = () -> {
+      Environment environment = new Environment();
+
+      environment.addObject(new LinePhysical(450, 250, 300, 290));
+
+      environment.addObject(new Light(300, 150, 60, 1, 100, 0.1));
+//      environment.addObject(new Light(150, 150, 28, 1, 100, 0.1));
+//
+//      environment.addObject(new Light(510, 100, 135, 1, 100, 0.1));
+//      environment.addObject(new Light(520, 100, 134, 1, 100, 0.1));
+//
+//      environment.addObject(new Light(480, 230, 168, 1, 100, 0.1));
+//      environment.addObject(new Light(480, 230, 140, 1, 100, 0.1));
+//
+//      environment.addObject(new Light(350, 350, 280, 1, 100, 0.1));
+//      environment.addObject(new Light(400, 350, 270, 1, 100, 0.1));
 
       return environment;
     };
