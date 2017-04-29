@@ -2,9 +2,12 @@ package ee.joonasvali.mirrors.scene.genetic.impl;
 
 import ee.joonasvali.mirrors.scene.Environment;
 import ee.joonasvali.mirrors.scene.LightGoal;
+import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.Physical;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class LightGoalGene implements Gene {
@@ -19,12 +22,17 @@ public class LightGoalGene implements Gene {
   }
 
   @Override
-  public Physical createPhysical(Environment environment) {
-    return new LightGoal(x - radius / 2, y - radius / 2, 0, radius, light -> {  });
+  public Gene getOffspringGene(Random random) {
+    return new LightGoalGene(radius, x, y);
   }
 
   @Override
-  public Gene getOffspringGene(Random random) {
-    return new LightGoalGene(radius, x, y);
+  public List<Physical> createPhysicals(Environment environment) {
+    return Collections.singletonList(new LightGoal(x - radius / 2, y - radius / 2, 0, radius, light -> {  }));
+  }
+
+  @Override
+  public List<LinePhysical> createLinePhysicals(Environment environment) {
+    return null;
   }
 }

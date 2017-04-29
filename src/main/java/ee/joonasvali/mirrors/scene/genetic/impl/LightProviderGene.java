@@ -3,9 +3,12 @@ package ee.joonasvali.mirrors.scene.genetic.impl;
 import ee.joonasvali.mirrors.scene.Environment;
 import ee.joonasvali.mirrors.scene.LightEmitterProperties;
 import ee.joonasvali.mirrors.scene.LightSource;
+import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.Physical;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class LightProviderGene implements Gene {
@@ -23,24 +26,30 @@ public class LightProviderGene implements Gene {
   }
 
   @Override
-  public Physical createPhysical(Environment environment) {
-    return new LightSource(x, y, new LightEmitterProperties() {
-
-      @Override
-      public double getDensity() {
-        return density;
-      }
-
-      @Override
-      public double getVelocity() {
-        return velocity;
-      }
-    }, environment);
+  public Gene getOffspringGene(Random random) {
+    return new LightProviderGene(x, y, density, velocity);
   }
 
   @Override
-  public Gene getOffspringGene(Random random) {
-    return new LightProviderGene(x, y, density, velocity);
+  public List<Physical> createPhysicals(Environment environment) {
+    return Collections.singletonList(
+        new LightSource(x, y, new LightEmitterProperties() {
+          @Override
+          public double getDensity() {
+            return density;
+          }
+
+          @Override
+          public double getVelocity() {
+            return velocity;
+          }
+        }, environment)
+    );
+  }
+
+  @Override
+  public List<LinePhysical> createLinePhysicals(Environment environment) {
+    return null;
   }
 
 }
