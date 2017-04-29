@@ -2,7 +2,10 @@ package ee.joonasvali.mirrors.scene.genetic;
 
 import ee.joonasvali.mirrors.scene.Environment;
 import ee.joonasvali.mirrors.scene.EnvironmentBuilder;
-import ee.joonasvali.mirrors.scene.Reflector;
+import ee.joonasvali.mirrors.scene.LinePhysical;
+import ee.joonasvali.mirrors.scene.Physical;
+
+import java.util.List;
 
 public class GeneticEnvironmentBuilder implements EnvironmentBuilder {
 
@@ -22,7 +25,15 @@ public class GeneticEnvironmentBuilder implements EnvironmentBuilder {
   public Environment getEnvironment() {
     Environment environment = new Environment();
     for(Gene gene : genepool.getGenes()) {
-      environment.addObject(gene.createPhysical(environment));
+      List<Physical> physicalList = gene.createPhysicals(environment);
+      if (physicalList != null) {
+        physicalList.forEach(environment::addObject);
+      }
+
+      List<LinePhysical> linePhysicalList = gene.createLinePhysicals(environment);
+      if (linePhysicalList != null) {
+        linePhysicalList.forEach(environment::addObject);
+      }
     }
     return environment;
   }

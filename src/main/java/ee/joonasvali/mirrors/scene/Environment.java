@@ -66,20 +66,24 @@ public class Environment {
       }
     }
 
-    Iterator<Physical> it = objects.iterator();
+    for (Physical object : objects) {
+      if (object instanceof Activatable) {
+        ((Activatable) object).activate();
+      }
+    }
+
+    Iterator<Physical> it = getObjects().iterator();
     while (it.hasNext()) {
       Physical object = it.next();
-      if(object instanceof Activatable) {
-        ((Activatable) object).activate();
-        if (object instanceof Light) {
-          Light light = (Light) object;
-          if (light.getItensity() <= 0) {
-            lightCount--;
-            it.remove();
-          }
+      if (object instanceof Light) {
+        Light light = (Light) object;
+        if (light.getItensity() <= 0 || light.getSpeed() <= 0) {
+          lightCount--;
+          it.remove();
         }
       }
     }
+
   }
 
   public List<Physical> getObjects() {
