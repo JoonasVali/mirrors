@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
+import static java.lang.Math.atan2;
+
 /**
  * @author Joonas Vali April 2017
  */
@@ -33,8 +35,8 @@ public class LinePhysical implements Collidable {
     double lightY = light.getY();
     double speed = light.getSpeed();
     double angle = light.getAngle();
-    double xVector = speed * Math.cos(Math.toRadians(angle));
-    double yVector = speed * Math.sin(Math.toRadians(angle));
+    double xVector = speed * Math.cos(Math.toRadians(angle - 90));
+    double yVector = speed * Math.sin(Math.toRadians(angle - 90));
     double nextX = lightX + xVector;
     double nextY = lightY + yVector;
     return Util.isIntersecting(lightX, lightY, nextX, nextY, x, y, x2, y2);
@@ -55,32 +57,41 @@ public class LinePhysical implements Collidable {
     if (!(object instanceof Light)) {
       return;
     }
+
     Light light = (Light) object;
 
     double lightX = light.getX();
     double lightY = light.getY();
 
-    double xVector = light.getSpeed() * Math.cos(Math.toRadians(light.getAngle()));
-    double yVector = light.getSpeed() * Math.sin(Math.toRadians(light.getAngle()));
+    double xVector = light.getSpeed() * Math.cos(Math.toRadians(light.getAngle() - 90));
+    double yVector = light.getSpeed() * Math.sin(Math.toRadians(light.getAngle() - 90));
     double nextX = lightX + xVector;
     double nextY = lightY + yVector;
 
     Point intersection = Util.getLineIntersection(lightX, lightY, nextX, nextY, x, y, x2, y2);
     if (intersection != null) {
-      light.x = intersection.getX();
-      light.y = intersection.getY();
+      double dx=x2-x;
+      double dy=y2-y;
+      double normalX = -dy;
+      double normalY = dx;
 
-      double lineAngle = Util.getAngle(x, y, x2, y2);
+      //https://sinepost.wordpress.com/2012/08/30/bouncing-off-the-walls-more-productively/
 
-      double vectorAngle = Util.getAngle(lightX, lightY, nextX, nextY);
-      double diff = Util.getAngleDiff(lineAngle, vectorAngle );
-      System.out.println(lineAngle + " " + diff);
+      double distPerpWall = distAlong(xVector, yVector, normalX, normalY);
+      double distParWall = distAlong(xVector, yVector, normalY, -normalX);
 
-      if (y2 > y) {
-        light.setAngle(lineAngle - diff);
-      } else {
-        light.setAngle(lineAngle + diff);
-      }
+      distPerpWall = -distPerpWall;
+
+      xVector = distParWall * normalY + distPerpWall * normalX;
+      yVector = distParWall * -normalX + distPerpWall * normalY;
+      double angle = Math.toDegrees(atan2(yVector,xVector)) + 90;
+
+      light.setAngle(angle);
     }
+
+  }
+
+  private double distAlong(double x, double y, double xAlong, double yAlong) {
+    return (x * xAlong + y * yAlong) / Math.hypot(xAlong, yAlong);
   }
 }

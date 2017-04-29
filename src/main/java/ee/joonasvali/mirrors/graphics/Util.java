@@ -19,6 +19,9 @@ public class Util {
     return diff;
   }
 
+  /**
+   * @return angle in degrees, with 0 top
+   */
   public static float getAngle(double x, double y, double x2, double y2) {
     float angle = (float) Math.toDegrees(Math.atan2(x2 - x, y2 - y));
 
@@ -85,7 +88,7 @@ public class Util {
     if ((t_numer < 0) == denomPositive)
       return null; // No collision
 
-    if (((s_numer > denom) == denomPositive) || ((t_numer > denom) == denomPositive))
+    if (((s_numer >= denom) == denomPositive) || ((t_numer >= denom) == denomPositive))
       return null; // No collision
     // Collision detected
     t = t_numer / denom;
