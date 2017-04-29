@@ -30,6 +30,9 @@ public class Light extends BasePhysical implements Activatable {
 
   @Override
   public void render(Graphics2D g) {
+    if (itensity < 0) {
+      return;
+    }
     int rate = (int) (itensity / initialItensity * 255);
     g.setColor(colors[rate]);
 
