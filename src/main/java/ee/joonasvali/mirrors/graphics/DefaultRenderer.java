@@ -1,6 +1,7 @@
 package ee.joonasvali.mirrors.graphics;
 
 import ee.joonasvali.mirrors.scene.Environment;
+import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.Physical;
 
 import java.awt.Color;
@@ -16,6 +17,10 @@ public class DefaultRenderer implements Renderer {
     synchronized (environment.getLock()) {
       g.setColor(Color.BLACK);
       g.fillRect(0, 0, 1000, 1000);
+      for (LinePhysical line : environment.getLines()) {
+        line.render(g);
+      }
+
       for (Physical object : environment.getObjects()) {
         object.render(g);
       }

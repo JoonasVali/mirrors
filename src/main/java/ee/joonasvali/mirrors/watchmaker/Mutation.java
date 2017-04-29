@@ -11,13 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Joss
- * Date: 3/25/14
- * Time: 7:57 PM
- * To change this template use File | Settings | File Templates.
- */
 public class Mutation implements EvolutionaryOperator<Genepool> {
 
   public static final double CHANCE_OF_REMOVAL = 0.01;
