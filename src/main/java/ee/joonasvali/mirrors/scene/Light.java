@@ -18,7 +18,15 @@ public class Light extends BasePhysical implements Activatable {
     }
   }
 
-
+  /**
+   *
+   * @param x
+   * @param y
+   * @param angle with 0 on top
+   * @param speed
+   * @param itensity
+   * @param itensityReductionRate
+   */
   public Light(double x, double y, double angle, double speed, double itensity, double itensityReductionRate) {
     super(x, y, 0, 1, 1);
     this.itensity = itensity;
@@ -41,8 +49,10 @@ public class Light extends BasePhysical implements Activatable {
 
   @Override
   public void activate() {
-    double xVector = speed * Math.cos(Math.toRadians(angle));
-    double yVector = speed * Math.sin(Math.toRadians(angle));
+    // This naturally produces vectors, which consider right hand
+    // as 0-degree marker, not top, so we subtract the needed 90 to get 0-degree marker top.
+    double xVector = speed * Math.cos(Math.toRadians(angle - 90));
+    double yVector = speed * Math.sin(Math.toRadians(angle - 90));
     x += xVector;
     y += yVector;
     itensity -= rate;
