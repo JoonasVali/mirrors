@@ -10,7 +10,6 @@ public class Light extends BasePhysical implements Activatable {
   private double itensity;
   private final double initialItensity;
   private final double rate;
-  private Itensity0Action action;
 
   private static Color[] colors = new Color[256];
   static {
@@ -20,15 +19,13 @@ public class Light extends BasePhysical implements Activatable {
   }
 
 
-
-  public Light(double x, double y, double angle, double speed, double itensity, double itensityReductionRate, Itensity0Action onItensity0) {
+  public Light(double x, double y, double angle, double speed, double itensity, double itensityReductionRate) {
     super(x, y, 0, 1, 1);
     this.itensity = itensity;
     this.initialItensity = itensity;
     this.rate = itensityReductionRate;
     this.angle = angle;
     this.speed = speed;
-    this.action = onItensity0;
   }
 
   @Override
@@ -46,7 +43,6 @@ public class Light extends BasePhysical implements Activatable {
     x += xVector;
     y += yVector;
     itensity -= rate;
-    if(itensity <= 0) action.onItensity0(this);
   }
 
   public double getItensity() {
@@ -55,7 +51,6 @@ public class Light extends BasePhysical implements Activatable {
 
   public void reduceItensity(double amount){
     this.itensity = Math.max(this.itensity - amount, 0);
-    if(itensity <= 0) action.onItensity0(this);
   }
 
   public double getAngle() {
@@ -72,8 +67,5 @@ public class Light extends BasePhysical implements Activatable {
 
   public void setSpeed(double speed) {
     this.speed = speed;
-    if(this.speed < 0) { this.speed = 0;
-      action.onItensity0(this);
-    }
   }
 }

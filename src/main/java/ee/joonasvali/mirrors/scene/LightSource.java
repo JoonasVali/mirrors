@@ -8,12 +8,10 @@ public class LightSource extends RoundPhysical implements Activatable {
   private final Environment env;
   private LightEmitterProperties properties;
   private boolean hasActivated;
-  private Itensity0Action onIntensity0;
 
   public LightSource(double x, double y, LightEmitterProperties properties, Environment environment) {
     super(x, y, 0, 10);
     this.env = environment;
-    onIntensity0 = env::remove;
     this.properties = properties;
   }
 
@@ -36,7 +34,7 @@ public class LightSource extends RoundPhysical implements Activatable {
     double velocity = properties.getVelocity();
 
     for (double i = 0; i < 360; i += density) {
-      Light light = new Light(getCenterX(), getCenterY(), i, velocity, 100, 0.1, onIntensity0);
+      Light light = new Light(getCenterX(), getCenterY(), i, velocity, 100, 0.1);
       env.addObject(light);
     }
 
