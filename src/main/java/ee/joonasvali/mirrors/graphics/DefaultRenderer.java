@@ -1,6 +1,7 @@
 package ee.joonasvali.mirrors.graphics;
 
 import ee.joonasvali.mirrors.scene.Environment;
+import ee.joonasvali.mirrors.scene.Light;
 import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.Physical;
 
@@ -23,6 +24,10 @@ public class DefaultRenderer implements Renderer {
 
       for (Physical object : environment.getObjects()) {
         object.render(g);
+      }
+
+      for (Light light : environment.getParticles()) {
+        light.render(g);
       }
     }
 
