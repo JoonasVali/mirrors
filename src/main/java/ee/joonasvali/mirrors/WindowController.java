@@ -56,6 +56,7 @@ public class WindowController {
     // Make the simulation update.
     final Object lock = env.getEnvironment().getLock();
     while (running) {
+
       synchronized (lock) {
         env.nextStep();
       }

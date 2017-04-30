@@ -1,15 +1,14 @@
 package ee.joonasvali.mirrors.scene;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class Environment {
-  private final List<Physical> objects = new ArrayList<>(250);
-  private final List<LinePhysical> lines = new ArrayList<>();
+  private final List<Physical> objects = new CopyOnWriteArrayList<>();
+  private final List<LinePhysical> lines = new CopyOnWriteArrayList<>();
+  private volatile List<Light> particles = new CopyOnWriteArrayList<>();
   private double score = 0;
-  private int lightCount = 0;
   private Object lock;
 
   public double getScore() {
@@ -28,39 +27,35 @@ public class Environment {
   }
 
   public void addObject(Physical physical) {
-    if(physical instanceof Light) lightCount++;
+    if(physical instanceof Light) {
+      particles.add((Light)physical);
+      return;
+    }
     this.objects.add(physical);
   }
 
   public void actUntilNoLightLeft() {
     do {
       act(1);
-    } while (isLightRemaining());
+    } while (hasParticlesRemaining());
   }
 
   public void act(long delta) {
     // check collisions for light and objects
-
-    List<Physical> objects = new ArrayList<>(getObjects());
-
     for(LinePhysical line : lines) {
-      for(Physical object2 : objects){
-        if(object2 instanceof Light) {
-          Light light = (Light) object2;
-          if(line.isCollision(light)) {
-            line.actCollision(light, this);
-          }
+      for(Physical light : particles){
+        if(line.isCollision(light)) {
+          line.actCollision(light, this);
         }
       }
     }
 
     for(Physical object : objects) {
       if(object instanceof Collidable) {
-        for(Physical object2 : objects){
-          if(object2 instanceof Light && object2 != object) {
-            if(((Collidable) object).isCollision(object2)) {
-              ((Collidable) object).actCollision(object2, this);
-            }
+        Collidable collidable = (Collidable) object;
+        for(Light light : particles){
+          if(collidable.isCollision(light)) {
+            collidable.actCollision(light, this);
           }
         }
       }
@@ -72,17 +67,8 @@ public class Environment {
       }
     }
 
-    Iterator<Physical> it = getObjects().iterator();
-    while (it.hasNext()) {
-      Physical object = it.next();
-      if (object instanceof Light) {
-        Light light = (Light) object;
-        if (light.getItensity() <= 0 || light.getSpeed() <= 0) {
-          lightCount--;
-          it.remove();
-        }
-      }
-    }
+    particles.forEach(Light::activate);
+    particles.removeIf(light -> light.getItensity() <= 0 || light.getSpeed() <= 0);
 
   }
 
@@ -90,15 +76,20 @@ public class Environment {
     return objects;
   }
 
+  public List<Light> getParticles() {
+    return particles;
+  }
+
   public void remove(Physical object) {
     if(object instanceof Light){
-      lightCount--;
+      particles.remove(object);
+      return;
     }
     objects.remove(object);
   }
 
-  public boolean isLightRemaining() {
-    return lightCount > 0;
+  public boolean hasParticlesRemaining() {
+    return particles.size() > 0;
   }
 
   public Object getLock() {
@@ -111,5 +102,9 @@ public class Environment {
 
   public List<LinePhysical> getLines() {
     return lines;
+  }
+
+  public void setParticles(List<Light> particles) {
+    this.particles = new CopyOnWriteArrayList<>(particles);
   }
 }

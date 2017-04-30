@@ -2,6 +2,8 @@ package ee.joonasvali.mirrors.scene;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LightSource extends RoundPhysical implements Activatable {
 
@@ -33,10 +35,12 @@ public class LightSource extends RoundPhysical implements Activatable {
     double density = properties.getDensity();
     double velocity = properties.getVelocity();
 
+    List<Light> particles = new ArrayList<>();
     for (double i = 0; i < 360; i += density) {
       Light light = new Light(getCenterX(), getCenterY(), i, velocity, 100, 0.1);
-      env.addObject(light);
+      particles.add(light);
     }
+    env.setParticles(particles);
 
   }
 }
