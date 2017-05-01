@@ -61,7 +61,7 @@ public class WindowController {
         env.nextStep();
       }
 
-      Thread.sleep(10L);
+      Thread.sleep(9L);
     }
 
 

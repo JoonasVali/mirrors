@@ -9,6 +9,7 @@ import ee.joonasvali.mirrors.scene.genetic.GeneticEnvironmentBuilder;
 import ee.joonasvali.mirrors.scene.genetic.impl.GeneratorGenepoolProvider;
 import ee.joonasvali.mirrors.scene.genetic.impl.LoaderGenepoolProvider;
 import ee.joonasvali.mirrors.scene.genetic.impl.SerializationUtil;
+import ee.joonasvali.mirrors.util.KeepAliveUtil;
 import ee.joonasvali.mirrors.util.PolFileChooser;
 import ee.joonasvali.mirrors.watchmaker.GenepoolCanditateFactory;
 import ee.joonasvali.mirrors.watchmaker.Mutation;
@@ -119,6 +120,12 @@ public class Launcher {
     int targetFitness = properties.getTargetFitness();
     int concurrent = properties.getConcurrent();
     int elite = properties.getElites();
+
+    if (properties.isKeepAlive()) {
+      log.info("KeepAliveUtil activated");
+      KeepAliveUtil.keepAlive();
+    }
+
     log.info("Starting evolution process with target fitness " + nl + targetFitness + "." + nl +
         "Concurrent organisms: " + concurrent + nl + "Elite population: " + elite + nl);
 
@@ -155,6 +162,7 @@ public class Launcher {
           Integer.parseInt(props.getProperty("elites", "2")),
           Integer.parseInt(props.getProperty("concurrent", "10")),
           Integer.parseInt(props.getProperty("target.fitness", "350000")),
+          Boolean.parseBoolean(props.getProperty("keep.machine.alive", "false")),
           savedDir
       );
     } catch (IOException e) {
@@ -214,11 +222,13 @@ public class Launcher {
     private final int elites;
     private final int concurrent;
     private final int targetFitness;
+    private final boolean keepAlive;
     private final File savingDir;
 
-    public EvolutionProperties(int elites, int concurrent, int targetFitness, File savingDir) {
+    public EvolutionProperties(int elites, int concurrent, int targetFitness, boolean keepAlive, File savingDir) {
       this.elites = elites;
       this.concurrent = concurrent;
+      this.keepAlive = keepAlive;
       this.targetFitness = targetFitness;
       this.savingDir = savingDir;
     }
@@ -237,6 +247,10 @@ public class Launcher {
 
     public File getSavingDir() {
       return savingDir;
+    }
+
+    public boolean isKeepAlive() {
+      return keepAlive;
     }
   }
 }
