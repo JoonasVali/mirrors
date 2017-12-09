@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Random;
 
 
-public class ReflectorGene implements Gene {
+public class ReflectorGene implements Gene<ReflectorGene> {
 
   private double x;
   private double y;
@@ -26,7 +26,7 @@ public class ReflectorGene implements Gene {
   }
 
   @Override
-  public Gene getOffspringGene(Random random) {
+  public ReflectorGene getOffspringGene(Random random) {
     return new ReflectorGene(
         GeneUtil.largeRandom(random, 20) + x,
         GeneUtil.largeRandom(random, 20) + y,

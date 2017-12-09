@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Random;
 
 
-public interface Gene extends Serializable{
-  Gene getOffspringGene(Random random);
+public interface Gene<T extends Gene> extends Serializable{
+  T getOffspringGene(Random random);
   List<Physical> createPhysicals(Environment environment);
   List<LinePhysical> createLinePhysicals(Environment environment);
 }
