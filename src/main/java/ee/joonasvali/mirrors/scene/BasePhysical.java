@@ -1,7 +1,7 @@
 package ee.joonasvali.mirrors.scene;
 
 
-public abstract class BasePhysical implements Physical{
+public abstract class BasePhysical implements Physical {
   protected volatile double x, y;
   protected final double width, height;
   protected final double rotation;

@@ -3,7 +3,7 @@ package ee.joonasvali.mirrors.scene;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-public class Accelerator extends RoundPhysical implements Collidable{
+public class Accelerator extends RoundPhysical implements Collidable {
   private double acceleration;
 
   public Accelerator(double x, double y, double rotation, double radius, double acceleration) {

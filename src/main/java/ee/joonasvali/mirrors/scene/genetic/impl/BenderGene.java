@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Random;
 
 
-public class BenderGene implements Gene {
+public class BenderGene implements Gene<BenderGene> {
 
   private double x;
   private double y;
@@ -27,7 +27,7 @@ public class BenderGene implements Gene {
   }
 
   @Override
-  public Gene getOffspringGene(Random random) {
+  public BenderGene getOffspringGene(Random random) {
     return new BenderGene(
         GeneUtil.largeRandom(random, 20) + x,
         GeneUtil.largeRandom(random, 20) + y,

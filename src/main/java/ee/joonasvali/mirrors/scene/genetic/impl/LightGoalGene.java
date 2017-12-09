@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class LightGoalGene implements Gene {
+public class LightGoalGene implements Gene<LightGoalGene> {
   private double radius;
   private double x;
   private double y;
@@ -22,7 +22,7 @@ public class LightGoalGene implements Gene {
   }
 
   @Override
-  public Gene getOffspringGene(Random random) {
+  public LightGoalGene getOffspringGene(Random random) {
     return new LightGoalGene(radius, x, y);
   }
 

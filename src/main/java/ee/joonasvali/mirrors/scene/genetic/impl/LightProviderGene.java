@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class LightProviderGene implements Gene {
+public class LightProviderGene implements Gene<LightProviderGene> {
   private double x;
   private double y;
 
@@ -26,7 +26,7 @@ public class LightProviderGene implements Gene {
   }
 
   @Override
-  public Gene getOffspringGene(Random random) {
+  public LightProviderGene getOffspringGene(Random random) {
     return new LightProviderGene(x, y, density, velocity);
   }
 

@@ -13,7 +13,7 @@ import java.util.Random;
 /**
  * @author Joonas Vali April 2017
  */
-public class TriangleReflectorGene implements Gene {
+public class TriangleReflectorGene implements Gene<TriangleReflectorGene> {
 
   private double x;
   private double y;
@@ -38,7 +38,7 @@ public class TriangleReflectorGene implements Gene {
   }
 
   @Override
-  public Gene getOffspringGene(Random random) {
+  public TriangleReflectorGene getOffspringGene(Random random) {
     return new TriangleReflectorGene(
         GeneUtil.largeRandom(random, 20) + x,
         GeneUtil.largeRandom(random, 20) + y,
