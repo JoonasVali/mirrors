@@ -1,7 +1,7 @@
 package ee.joonasvali.mirrors.graphics;
 
 
-import java.awt.Point;
+import java.awt.*;
 
 public class Util {
   public static double getDistance(double x1, double y1, double x2, double y2) {

@@ -2,9 +2,7 @@ package ee.joonasvali.mirrors.scene;
 
 import ee.joonasvali.mirrors.graphics.Util;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 
 import static java.lang.Math.atan2;
 

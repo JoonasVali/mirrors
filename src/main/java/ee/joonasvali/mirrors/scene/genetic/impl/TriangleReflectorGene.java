@@ -4,26 +4,25 @@ import ee.joonasvali.mirrors.scene.Environment;
 import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.Physical;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
-import ee.joonasvali.mirrors.scene.genetic.GeneUtil;
+import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * @author Joonas Vali April 2017
  */
 public class TriangleReflectorGene implements Gene<TriangleReflectorGene> {
 
-  private double x;
-  private double y;
+  private final double x;
+  private final double y;
 
-  private double x1;
-  private double y1;
-  private double x2;
-  private double y2;
-  private double x3;
-  private double y3;
+  private final double x1;
+  private final double y1;
+  private final double x2;
+  private final double y2;
+  private final double x3;
+  private final double y3;
 
 
   public TriangleReflectorGene(double x, double y, double x1, double y1, double x2, double y2, double x3, double y3) {
@@ -38,16 +37,16 @@ public class TriangleReflectorGene implements Gene<TriangleReflectorGene> {
   }
 
   @Override
-  public TriangleReflectorGene getOffspringGene(Random random) {
+  public TriangleReflectorGene getOffspringGene(GeneFactory geneFactory) {
     return new TriangleReflectorGene(
-        GeneUtil.largeRandom(random, 20) + x,
-        GeneUtil.largeRandom(random, 20) + y,
-        GeneUtil.largeRandom(random, 5) + x1,
-        GeneUtil.largeRandom(random, 5) + y1,
-        GeneUtil.largeRandom(random, 5) + x2,
-        GeneUtil.largeRandom(random, 5) + y2,
-        GeneUtil.largeRandom(random, 5) + x3,
-        GeneUtil.largeRandom(random, 5) + y3
+        geneFactory.largeRandom(20) + x,
+        geneFactory.largeRandom(20) + y,
+        geneFactory.largeRandom(5) + x1,
+        geneFactory.largeRandom(5) + y1,
+        geneFactory.largeRandom(5) + x2,
+        geneFactory.largeRandom(5) + y2,
+        geneFactory.largeRandom( 5) + x3,
+        geneFactory.largeRandom(5) + y3
     );
   }
 

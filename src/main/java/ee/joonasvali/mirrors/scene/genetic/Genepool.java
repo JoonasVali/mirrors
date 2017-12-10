@@ -3,9 +3,9 @@ package ee.joonasvali.mirrors.scene.genetic;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class Genepool extends ArrayList<Gene> {
+
   public Genepool() { }
 
   public Genepool(List<Gene> list) {
@@ -16,10 +16,10 @@ public class Genepool extends ArrayList<Gene> {
     return Collections.unmodifiableList(this);
   }
 
-  public Genepool getOffspring(Random rng) {
+  public Genepool getOffspring(GeneFactory geneFactory) {
     List<Gene> pool = new ArrayList<>(this.size());
     for(Gene gene : this) {
-      pool.add(gene.getOffspringGene(rng));
+      pool.add(gene.getOffspringGene(geneFactory));
     }
     return new Genepool(pool);
   }

@@ -5,8 +5,7 @@ import ee.joonasvali.mirrors.scene.Light;
 import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.Physical;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 
 
 /**

@@ -3,10 +3,7 @@ package ee.joonasvali.mirrors.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.AWTException;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.Robot;
+import java.awt.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;

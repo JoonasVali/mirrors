@@ -6,11 +6,10 @@ import ee.joonasvali.mirrors.scene.Physical;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Random;
 
 
 public interface Gene<T extends Gene> extends Serializable{
-  T getOffspringGene(Random random);
+  T getOffspringGene(GeneFactory geneFactory);
   List<Physical> createPhysicals(Environment environment);
   List<LinePhysical> createLinePhysicals(Environment environment);
 }

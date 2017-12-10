@@ -5,18 +5,17 @@ import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.Physical;
 import ee.joonasvali.mirrors.scene.Repellent;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
-import ee.joonasvali.mirrors.scene.genetic.GeneUtil;
+import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class RepellentGene implements Gene<RepellentGene> {
 
-  private double x;
-  private double y;
-  private double radius;
-  private double delta;
+  private final double x;
+  private final double y;
+  private final double radius;
+  private final double delta;
 
   public RepellentGene(double x, double y, double radius, double delta) {
     this.x = x;
@@ -26,12 +25,12 @@ public class RepellentGene implements Gene<RepellentGene> {
   }
 
   @Override
-  public RepellentGene getOffspringGene(Random random) {
+  public RepellentGene getOffspringGene(GeneFactory geneFactory) {
     return new RepellentGene(
-        GeneUtil.largeRandom(random, 20) + x,
-        GeneUtil.largeRandom(random, 20) + y,
-        GeneUtil.largeRandom(random, 10) + radius,
-        GeneUtil.smallrandom(random, 50) +  delta);
+        geneFactory.largeRandom(20) + x,
+        geneFactory.largeRandom(20) + y,
+        geneFactory.largeRandom(10) + radius,
+        geneFactory.smallrandom(50) +  delta);
   }
 
   @Override

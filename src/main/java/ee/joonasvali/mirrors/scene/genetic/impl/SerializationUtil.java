@@ -4,12 +4,7 @@ import ee.joonasvali.mirrors.scene.genetic.Genepool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 
 public class SerializationUtil {

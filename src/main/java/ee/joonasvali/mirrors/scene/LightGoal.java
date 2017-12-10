@@ -1,8 +1,7 @@
 package ee.joonasvali.mirrors.scene;
 
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 
 public class LightGoal extends RoundPhysical implements LightAbsorber, Collidable {
   private LightGoalAction action;

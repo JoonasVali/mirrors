@@ -1,8 +1,7 @@
 package ee.joonasvali.mirrors.scene;
 
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 
 
 public class Bender extends RoundPhysical implements Collidable {

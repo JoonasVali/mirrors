@@ -5,7 +5,7 @@ import ee.joonasvali.mirrors.graphics.Renderer;
 import ee.joonasvali.mirrors.scene.Environment;
 import ee.joonasvali.mirrors.scene.EnvironmentBuilder;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

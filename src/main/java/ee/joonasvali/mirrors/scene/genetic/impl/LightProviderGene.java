@@ -1,22 +1,18 @@
 package ee.joonasvali.mirrors.scene.genetic.impl;
 
-import ee.joonasvali.mirrors.scene.Environment;
-import ee.joonasvali.mirrors.scene.LightEmitterProperties;
-import ee.joonasvali.mirrors.scene.LightSource;
-import ee.joonasvali.mirrors.scene.LinePhysical;
-import ee.joonasvali.mirrors.scene.Physical;
+import ee.joonasvali.mirrors.scene.*;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
+import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class LightProviderGene implements Gene<LightProviderGene> {
-  private double x;
-  private double y;
+  private final double x;
+  private final double y;
 
-  private double density;
-  private double velocity;
+  private final double density;
+  private final double velocity;
 
   public LightProviderGene(double x, double y, double density, double velocity) {
     this.x = x;
@@ -26,7 +22,7 @@ public class LightProviderGene implements Gene<LightProviderGene> {
   }
 
   @Override
-  public LightProviderGene getOffspringGene(Random random) {
+  public LightProviderGene getOffspringGene(GeneFactory geneFactory) {
     return new LightProviderGene(x, y, density, velocity);
   }
 
