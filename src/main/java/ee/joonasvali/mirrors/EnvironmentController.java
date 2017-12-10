@@ -2,7 +2,7 @@ package ee.joonasvali.mirrors;
 
 import ee.joonasvali.mirrors.scene.Environment;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.KeyListener;
 
 /**

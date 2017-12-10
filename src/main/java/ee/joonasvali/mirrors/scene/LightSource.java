@@ -1,7 +1,6 @@
 package ee.joonasvali.mirrors.scene;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 

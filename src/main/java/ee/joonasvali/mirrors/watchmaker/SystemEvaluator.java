@@ -10,16 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Joss
- * Date: 3/25/14
- * Time: 8:01 PM
- * To change this template use File | Settings | File Templates.
- */
 public class SystemEvaluator implements FitnessEvaluator<Genepool> {
 
   private final Map<Genepool, Double> cache = new WeakHashMap<>();
+
   @Override
   public double getFitness(Genepool candidate, List<? extends Genepool> population) {
     Double score;

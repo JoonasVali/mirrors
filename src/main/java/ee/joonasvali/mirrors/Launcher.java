@@ -1,8 +1,8 @@
 package ee.joonasvali.mirrors;
 
-import ee.joonasvali.mirrors.graphics.GameContainer;
 import ee.joonasvali.mirrors.scene.Constants;
 import ee.joonasvali.mirrors.scene.EnvironmentBuilder;
+import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 import ee.joonasvali.mirrors.scene.genetic.Genepool;
 import ee.joonasvali.mirrors.scene.genetic.GenepoolProvider;
 import ee.joonasvali.mirrors.scene.genetic.GeneticEnvironmentBuilder;
@@ -12,26 +12,17 @@ import ee.joonasvali.mirrors.scene.genetic.impl.SerializationUtil;
 import ee.joonasvali.mirrors.util.KeepAliveUtil;
 import ee.joonasvali.mirrors.util.PolFileChooser;
 import ee.joonasvali.mirrors.watchmaker.GenepoolCanditateFactory;
-import ee.joonasvali.mirrors.watchmaker.Mutation;
+import ee.joonasvali.mirrors.watchmaker.MutationOperator;
 import ee.joonasvali.mirrors.watchmaker.SystemEvaluator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uncommons.maths.random.MersenneTwisterRNG;
-import org.uncommons.watchmaker.framework.EvolutionEngine;
-import org.uncommons.watchmaker.framework.EvolutionObserver;
-import org.uncommons.watchmaker.framework.EvolutionaryOperator;
-import org.uncommons.watchmaker.framework.GenerationalEvolutionEngine;
-import org.uncommons.watchmaker.framework.PopulationData;
+import org.uncommons.watchmaker.framework.*;
 import org.uncommons.watchmaker.framework.operators.EvolutionPipeline;
 import org.uncommons.watchmaker.framework.selection.TruncationSelection;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
 
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-import javax.swing.WindowConstants;
-import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -49,16 +40,12 @@ import java.util.Random;
 public class Launcher {
   private static final Logger log = LoggerFactory.getLogger(Launcher.class);
   private static String nl = System.lineSeparator();
-  private static volatile boolean running = true;
-  private static volatile GameContainer container;
-  private static volatile Timer timer;
 
   public static void main(String[] args) throws InvocationTargetException, InterruptedException {
     if (GraphicsEnvironment.isHeadless()) {
       log.error("This system is not supported as it appears to be headless. GraphicsEnvironment.isHeadless() == true");
       System.exit(-1);
     }
-
 
     EnvironmentController env = getEnvironment(args);
     WindowController controller = new WindowController(env);
@@ -68,24 +55,42 @@ public class Launcher {
   private static EnvironmentController getEnvironment(String[] args) {
     if (args.length == 0) {
       log.info("No program arguments, launching random demo scene.");
-      EnvironmentBuilder builder = new GeneticEnvironmentBuilder(new GeneratorGenepoolProvider(new Random(), 750, 550));
+      Random random = new MersenneTwisterRNG();
+      GeneFactory geneFactory = new GeneFactory(createDefaultEvolutionProperties(), random);
+      EnvironmentBuilder builder = new GeneticEnvironmentBuilder(new GeneratorGenepoolProvider(geneFactory, 750, 550));
       return new DemoEnvironmentController(builder);
     }
 
-    if (args.length > 0) {
-      String arg = args[0];
-      if (arg.equals("load")) {
-        log.info("Launching GUI file loader.");
-        return chooseFileWithGUI();
-      }
-
-      if (arg.equals("evolution")) {
-        log.info("Launching Evolution mode.");
-        return evolution(args);
-      }
+    String arg = args[0];
+    if (arg.equals("load")) {
+      log.info("Launching GUI file loader.");
+      return chooseFileWithGUI();
     }
+
+    if (arg.equals("evolution")) {
+      log.info("Launching Evolution mode.");
+      return evolution(args);
+    }
+
     log.error("Arguments didn't match anything we know how to parse.");
     return null; // satisfy compiler
+  }
+
+  private static EvolutionProperties createDefaultEvolutionProperties() {
+    return new EvolutionProperties(
+        DefaultEvolutionPropertyValues.ELITES,
+        DefaultEvolutionPropertyValues.CONCURRENT,
+        DefaultEvolutionPropertyValues.TARGET_FITNESS,
+        DefaultEvolutionPropertyValues.KEEP_MACHINE_ALIVE,
+        new File("../../saved"),
+        DefaultEvolutionPropertyValues.GENE_MUTATION_RATE,
+        DefaultEvolutionPropertyValues.GENE_ADDITION_RATE,
+        DefaultEvolutionPropertyValues.GENE_DELETION_RATE,
+        DefaultEvolutionPropertyValues.REFLECTORS_ENABLED,
+        DefaultEvolutionPropertyValues.BENDERS_ENABLED,
+        DefaultEvolutionPropertyValues.ACCELERATORS_ENABLED,
+        DefaultEvolutionPropertyValues.REPELLENTS_ENABLED
+    );
   }
 
   private static EnvironmentController evolution(String[] args) {
@@ -102,11 +107,13 @@ public class Launcher {
     File file = properties.getSavingDir();
     log.info("Files saved to: " + file);
 
+    Random random = new MersenneTwisterRNG();
     final SerializationUtil saver = new SerializationUtil(file);
-    GenepoolProvider randomProvider = getProvider();
+    GeneFactory geneFactory = new GeneFactory(properties, random);
+    GenepoolProvider randomProvider = getProvider(geneFactory);
     GenepoolCanditateFactory candidateFactory = new GenepoolCanditateFactory(randomProvider);
 
-    java.util.List<EvolutionaryOperator<Genepool>> operators = getEvolutionaryOperators();
+    java.util.List<EvolutionaryOperator<Genepool>> operators = getEvolutionaryOperators(geneFactory, properties);
     EvolutionPipeline<Genepool> pipeline = new EvolutionPipeline<>(operators);
 
     EvolutionEngine<Genepool> engine
@@ -115,7 +122,7 @@ public class Launcher {
         pipeline,
         new SystemEvaluator(),
         new TruncationSelection(0.5),
-        new MersenneTwisterRNG());
+        random);
     engine.addEvolutionObserver(getEvolutionObserver(saver));
     int targetFitness = properties.getTargetFitness();
     int concurrent = properties.getConcurrent();
@@ -129,7 +136,7 @@ public class Launcher {
     log.info("Starting evolution process with target fitness " + nl + targetFitness + "." + nl +
         "Concurrent organisms: " + concurrent + nl + "Elite population: " + elite + nl);
 
-    Genepool winner = null;
+    Genepool winner;
     try {
       // This is a blocking call, evolution happens here.
       winner = engine.evolve(concurrent, elite, new TargetFitness(targetFitness, true));
@@ -152,18 +159,25 @@ public class Launcher {
       File propertiesFile = new File(userDir, name).getCanonicalFile();
       log.info("Properties read from: " + propertiesFile);
       Properties props = new Properties();
-      try (InputStream stream = new FileInputStream(propertiesFile)){
+      try (InputStream stream = new FileInputStream(propertiesFile)) {
         props.load(stream);
       }
 
       File savedDir = new File(userDir, props.getProperty("output.dir", "../../saved")).getCanonicalFile();
 
       properties = new EvolutionProperties(
-          Integer.parseInt(props.getProperty("elites", "2")),
-          Integer.parseInt(props.getProperty("concurrent", "10")),
-          Integer.parseInt(props.getProperty("target.fitness", "350000")),
-          Boolean.parseBoolean(props.getProperty("keep.machine.alive", "false")),
-          savedDir
+          Integer.parseInt(props.getProperty("elites", String.valueOf(DefaultEvolutionPropertyValues.ELITES))),
+          Integer.parseInt(props.getProperty("concurrent", String.valueOf(DefaultEvolutionPropertyValues.CONCURRENT))),
+          Integer.parseInt(props.getProperty("target.fitness", String.valueOf(DefaultEvolutionPropertyValues.TARGET_FITNESS))),
+          Boolean.parseBoolean(props.getProperty("keep.machine.alive", String.valueOf(DefaultEvolutionPropertyValues.KEEP_MACHINE_ALIVE))),
+          savedDir,
+          Double.parseDouble(props.getProperty("gene.mutation.rate", String.valueOf(DefaultEvolutionPropertyValues.GENE_MUTATION_RATE))),
+          Double.parseDouble(props.getProperty("gene.deletion.rate", String.valueOf(DefaultEvolutionPropertyValues.GENE_DELETION_RATE))),
+          Double.parseDouble(props.getProperty("gene.addition.rate", String.valueOf(DefaultEvolutionPropertyValues.GENE_ADDITION_RATE))),
+          Boolean.parseBoolean(props.getProperty("reflectors.enabled", String.valueOf(DefaultEvolutionPropertyValues.REFLECTORS_ENABLED))),
+          Boolean.parseBoolean(props.getProperty("benders.enabled", String.valueOf(DefaultEvolutionPropertyValues.BENDERS_ENABLED))),
+          Boolean.parseBoolean(props.getProperty("accelerators.enabled", String.valueOf(DefaultEvolutionPropertyValues.ACCELERATORS_ENABLED))),
+          Boolean.parseBoolean(props.getProperty("repellents.enabled", String.valueOf(DefaultEvolutionPropertyValues.REPELLENTS_ENABLED)))
       );
     } catch (IOException e) {
       log.error("Can't read properties " + name, e);
@@ -173,11 +187,11 @@ public class Launcher {
     return properties;
   }
 
-  private static GenepoolProvider getProvider() {
-    return new GeneratorGenepoolProvider(new MersenneTwisterRNG(), Constants.DIMENSION_X, Constants.DIMENSION_Y);
+  private static GenepoolProvider getProvider(GeneFactory geneFactory) {
+    return new GeneratorGenepoolProvider(geneFactory, Constants.DIMENSION_X, Constants.DIMENSION_Y);
   }
 
-  public static EvolutionObserver<? super Genepool> getEvolutionObserver(SerializationUtil saver) {
+  private static EvolutionObserver<? super Genepool> getEvolutionObserver(SerializationUtil saver) {
     return new EvolutionObserver<Genepool>() {
       double last = 0;
 
@@ -197,10 +211,10 @@ public class Launcher {
    * Possible to add more operators here, read about them in Watchmaker docs.
    * http://watchmaker.uncommons.org/api/org/uncommons/watchmaker/framework/operators/package-summary.html
    */
-  private static ArrayList<EvolutionaryOperator<Genepool>> getEvolutionaryOperators() {
+  private static ArrayList<EvolutionaryOperator<Genepool>> getEvolutionaryOperators(GeneFactory geneFactory, EvolutionProperties properties) {
     ArrayList<EvolutionaryOperator<Genepool>> operators = new ArrayList<>();
 //    ListCrossover e = new ListCrossover(3, new Probability(0.1));
-    operators.add(new Mutation());
+    operators.add(new MutationOperator(geneFactory, properties.getGeneAdditionRate(), properties.getGeneDeletionRate()));
     //operators.add(e);
     return operators;
   }
@@ -218,39 +232,4 @@ public class Launcher {
     return null;
   }
 
-  private static class EvolutionProperties {
-    private final int elites;
-    private final int concurrent;
-    private final int targetFitness;
-    private final boolean keepAlive;
-    private final File savingDir;
-
-    public EvolutionProperties(int elites, int concurrent, int targetFitness, boolean keepAlive, File savingDir) {
-      this.elites = elites;
-      this.concurrent = concurrent;
-      this.keepAlive = keepAlive;
-      this.targetFitness = targetFitness;
-      this.savingDir = savingDir;
-    }
-
-    public int getElites() {
-      return elites;
-    }
-
-    public int getConcurrent() {
-      return concurrent;
-    }
-
-    public int getTargetFitness() {
-      return targetFitness;
-    }
-
-    public File getSavingDir() {
-      return savingDir;
-    }
-
-    public boolean isKeepAlive() {
-      return keepAlive;
-    }
-  }
 }

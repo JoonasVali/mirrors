@@ -5,15 +5,15 @@ import ee.joonasvali.mirrors.scene.LightGoal;
 import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.Physical;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
+import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class LightGoalGene implements Gene<LightGoalGene> {
-  private double radius;
-  private double x;
-  private double y;
+  private final double radius;
+  private final double x;
+  private final double y;
 
   public LightGoalGene(double radius, double x, double y) {
     this.radius = radius;
@@ -22,7 +22,7 @@ public class LightGoalGene implements Gene<LightGoalGene> {
   }
 
   @Override
-  public LightGoalGene getOffspringGene(Random random) {
+  public LightGoalGene getOffspringGene(GeneFactory geneFactory) {
     return new LightGoalGene(radius, x, y);
   }
 

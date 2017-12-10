@@ -12,19 +12,19 @@ public class GeneticEnvironmentBuilder implements EnvironmentBuilder {
   private Genepool genepool;
   private GenepoolProvider provider;
 
-  public GeneticEnvironmentBuilder(GenepoolProvider provider){
+  public GeneticEnvironmentBuilder(GenepoolProvider provider) {
     this.provider = provider;
     loadGenepool();
   }
 
-  public GeneticEnvironmentBuilder(Genepool pool){
+  public GeneticEnvironmentBuilder(Genepool pool) {
     this.genepool = pool;
   }
 
   @Override
   public Environment getEnvironment() {
     Environment environment = new Environment();
-    for(Gene gene : genepool.getGenes()) {
+    for (Gene gene : genepool.getGenes()) {
       List<Physical> physicalList = gene.createPhysicals(environment);
       if (physicalList != null) {
         physicalList.forEach(environment::addObject);
@@ -38,8 +38,9 @@ public class GeneticEnvironmentBuilder implements EnvironmentBuilder {
     return environment;
   }
 
-  public void loadGenepool(){
-    if(provider != null)
+  public void loadGenepool() {
+    if (provider != null) {
       genepool = provider.provide();
+    }
   }
 }

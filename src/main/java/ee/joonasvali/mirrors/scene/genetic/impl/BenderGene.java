@@ -5,19 +5,18 @@ import ee.joonasvali.mirrors.scene.Environment;
 import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.Physical;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
-import ee.joonasvali.mirrors.scene.genetic.GeneUtil;
+import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 
 public class BenderGene implements Gene<BenderGene> {
 
-  private double x;
-  private double y;
-  private double radius;
-  private double delta;
+  private final double x;
+  private final double y;
+  private final double radius;
+  private final double delta;
 
   public BenderGene(double x, double y, double radius, double delta) {
     this.x = x;
@@ -27,12 +26,12 @@ public class BenderGene implements Gene<BenderGene> {
   }
 
   @Override
-  public BenderGene getOffspringGene(Random random) {
+  public BenderGene getOffspringGene(GeneFactory geneFactory) {
     return new BenderGene(
-        GeneUtil.largeRandom(random, 20) + x,
-        GeneUtil.largeRandom(random, 20) + y,
-        GeneUtil.largeRandom(random, 10) + radius,
-        GeneUtil.smallrandom(random, 5) +  delta);
+        geneFactory.largeRandom(20) + x,
+        geneFactory.largeRandom(20) + y,
+        geneFactory.largeRandom(10) + radius,
+        geneFactory.smallrandom(5) +  delta);
   }
 
   @Override

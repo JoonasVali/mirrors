@@ -2,7 +2,7 @@ package ee.joonasvali.mirrors.watchmaker;
 
 import ee.joonasvali.mirrors.scene.Constants;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
-import ee.joonasvali.mirrors.scene.genetic.GeneUtil;
+import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 import ee.joonasvali.mirrors.scene.genetic.Genepool;
 import org.uncommons.watchmaker.framework.EvolutionaryOperator;
 
@@ -11,11 +11,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class Mutation implements EvolutionaryOperator<Genepool> {
+public class MutationOperator implements EvolutionaryOperator<Genepool> {
 
-  public static final double CHANCE_OF_REMOVAL = 0.01;
-  public static final double CHANCE_OF_ADDITION = 0.05;
+  private final double additionRate;
+  private final double removalRate;
+  private final GeneFactory geneFactory;
 
+  public MutationOperator(GeneFactory geneFactory, double additionRate, double removalRate) {
+    this.additionRate = additionRate;
+    this.removalRate = removalRate;
+    this.geneFactory = geneFactory;
+  }
 
   @Override
   public List<Genepool> apply(List<Genepool> selectedCandidates, Random rng) {
@@ -24,15 +30,14 @@ public class Mutation implements EvolutionaryOperator<Genepool> {
       Iterator<Gene> it = pool.iterator();
       while(it.hasNext()) {
         it.next();
-        if(rng.nextDouble() < CHANCE_OF_REMOVAL){
-
+        if(rng.nextDouble() < removalRate){
           it.remove();
         }
       }
-      if(rng.nextDouble() < CHANCE_OF_ADDITION){
-        pool.add(GeneUtil.generateGene(rng, Constants.DIMENSION_X, Constants.DIMENSION_Y));
+      if(rng.nextDouble() < additionRate){
+        pool.add(geneFactory.generateGene(Constants.DIMENSION_X, Constants.DIMENSION_Y));
       }
-      list.add(pool.getOffspring(rng));
+      list.add(pool.getOffspring(geneFactory));
     }
     return list;
   }

@@ -5,10 +5,8 @@ import ee.joonasvali.mirrors.scene.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-import javax.swing.WindowConstants;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 

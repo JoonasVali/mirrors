@@ -2,13 +2,8 @@ package ee.joonasvali.mirrors.graphics;
 
 import ee.joonasvali.mirrors.EnvironmentController;
 
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author Joonas Vali April 2017

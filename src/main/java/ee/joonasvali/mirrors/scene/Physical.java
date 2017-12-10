@@ -1,5 +1,6 @@
 package ee.joonasvali.mirrors.scene;
-import java.awt.Graphics2D;
+
+import java.awt.*;
 
 public interface Physical {
   double getX();

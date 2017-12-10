@@ -1,7 +1,6 @@
 package ee.joonasvali.mirrors.scene;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 
 public class Accelerator extends RoundPhysical implements Collidable {
   private double acceleration;
