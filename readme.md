@@ -22,12 +22,13 @@ You need:
 ```
 	mvn clean install
 ```
+
 	It will be fully runnable under `./target/mirrors/mirrors` (You can copy it anywhere from there once built.)
 	The runnables are located at `./target/mirrors/mirrors/bin` folder
 
 ### Evolution ###
 
-	use runner under 'evolution', to start evolution.
+	use runner under `evolution` directory to start evolution.
 	
 	- Windows: `evolution/run-evolution.cmd`
 	- Unix: `evolution/run-evolution.sh`
