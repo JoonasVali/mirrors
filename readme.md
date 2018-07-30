@@ -11,6 +11,16 @@ https://www.youtube.com/watch?v=WEZ35350D2k
 ![Image 1](https://i.imgur.com/WCzh5E7.png)
 ![Image 2](https://i.imgur.com/LECMDJ5.png)
 
+
+## What's going on there? ##
+
+The simulation generates a wave of particles on a 2D plane and there exists a gathering point or goal for those particles, 
+which counts how many and how fast the particles reached it by assigning score for each system (fitness of the system).
+While the particle emitter and goal are constants on the system, there are many modifiers that can appear/disappear and change 
+in a particular system. From evolution point of view the whole system of those modifiers is the evolving entity or organism, and
+the modifiers in the system are generated via genes which are then either passed on during the selection process or not, based on how 
+well the system as a whole works. There are currently four types of modifiers: reflectors, benders, repellents and accelerators.
+
 ## Running mirrors ##
 
 You need:
@@ -30,6 +40,7 @@ The runnables are located at `./target/mirrors/mirrors/bin` folder
 use runner under `evolution` directory to start evolution.
 	
 Windows: `evolution/run-evolution.cmd`
+
 Unix: `evolution/run-evolution.sh`
 
 You might want to edit the values in evolution.properties at some point to tweak the parameters of evolution.
@@ -40,11 +51,15 @@ the variations are not saved to avoid duplicates and save space.
 ### Show simulation ###
 
 Simulation can be shown using runner `load` under `./target/mirrors/mirrors/bin/single`. It allows you to choose one .pol file to run.
+
 Windows: `single/load.cmd`
+
 Unix: `single/load.sh`
 	
 ### Test random simulation ###
 	
 Random simulation can be run using runner `run-random` under `./target/mirrors/mirrors/bin/single` to test the engine.
+
 Windows: `single/run-random.cmd`
+
 Unix: `single/run-random.sh`
