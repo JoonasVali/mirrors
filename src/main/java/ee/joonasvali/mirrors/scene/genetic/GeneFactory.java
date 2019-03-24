@@ -1,11 +1,15 @@
 package ee.joonasvali.mirrors.scene.genetic;
 
 import ee.joonasvali.mirrors.EvolutionProperties;
+import ee.joonasvali.mirrors.scene.LightGroup;
 import ee.joonasvali.mirrors.scene.genetic.impl.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class GeneFactory {
@@ -83,6 +87,25 @@ public class GeneFactory {
 
   public double getRandom(double min, double max) {
     return min + random.nextDouble() * (max - min);
+  }
+
+  public Set<LightGroup> reflectiveGroups(Set<LightGroup> reflectiveGroups, Set<LightGroup> allGroups) {
+    Set<LightGroup> result = new HashSet<>();
+    // Add some elements
+    result.addAll(randomSubCollection(allGroups, 1 - chanceOfMutation));
+    // Remove some elements, wi
+    result.addAll(randomSubCollection(reflectiveGroups, chanceOfMutation));
+    return result;
+  }
+
+  public Set<LightGroup> randomSubCollection(Set<LightGroup> groups, double chanceOfNotIncludingElement) {
+    if (chanceOfNotIncludingElement > 1 || chanceOfNotIncludingElement < 0) {
+      throw new IllegalArgumentException("Bad chanceOfNotIncludingElement: " + chanceOfNotIncludingElement);
+    }
+
+    return groups.stream().filter(
+        group -> random.nextDouble() > chanceOfNotIncludingElement
+    ).collect(Collectors.toSet());
   }
 
   private interface GeneProvider {
