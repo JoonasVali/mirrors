@@ -30,16 +30,6 @@ public class GeneFactory {
       geneProviderList.add((maxX, maxY) -> {
         double x = getRandom(0, maxX);
         double y = getRandom(0, maxY);
-        double width = getRandom(10, 30);
-        double height = getRandom(10, 30);
-        return new ReflectorGene(x, y, width, height);
-      });
-    }
-
-    if (props.isReflectorsEnabled()) {
-      geneProviderList.add((maxX, maxY) -> {
-        double x = getRandom(0, maxX);
-        double y = getRandom(0, maxY);
         double x1 = getRandom(10, 40);
         double x2 = getRandom(10, 40);
         double x3 = getRandom(10, 40);

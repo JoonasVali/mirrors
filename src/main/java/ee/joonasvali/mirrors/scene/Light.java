@@ -6,44 +6,34 @@ import java.awt.*;
 public class Light extends BasePhysical implements Activatable {
   private double angle;
   private double speed;
-  private double itensity;
-  private final double initialItensity;
+  private double intensity;
+  private final double initialIntensity;
   private final double rate;
-
-  private static Color[] colors = new Color[256];
-  static {
-    for (int i = 0; i < colors.length; i++) {
-      colors[i] = new Color(255,255,255,i);
-    }
-  }
+  private final LightGroup lightGroup;
 
   /**
-   *
    * @param x
    * @param y
    * @param angle with 0 on top
    * @param speed
-   * @param itensity
+   * @param intensity
    * @param itensityReductionRate
    */
-  public Light(double x, double y, double angle, double speed, double itensity, double itensityReductionRate) {
+  public Light(
+      double x, double y, double angle, double speed, double intensity, double itensityReductionRate, LightGroup group
+  ) {
     super(x, y, 0, 1, 1);
-    this.itensity = itensity;
-    this.initialItensity = itensity;
+    this.intensity = intensity;
+    this.initialIntensity = intensity;
     this.rate = itensityReductionRate;
     this.angle = angle;
     this.speed = speed;
+    this.lightGroup = group;
   }
 
   @Override
   public void render(Graphics2D g) {
-    if (itensity < 0) {
-      return;
-    }
-    int rate = (int) (itensity / initialItensity * 255);
-    g.setColor(colors[rate]);
-
-    g.drawLine((int)getX(), (int)getY(), (int)getX(), (int)getY());
+    lightGroup.render(g, getX(), getY(), intensity, initialIntensity);
   }
 
   @Override
@@ -54,15 +44,15 @@ public class Light extends BasePhysical implements Activatable {
     double yVector = speed * Math.sin(Math.toRadians(angle - 90));
     x += xVector;
     y += yVector;
-    itensity -= rate;
+    intensity -= rate;
   }
 
-  public double getItensity() {
-    return itensity;
+  public double getIntensity() {
+    return intensity;
   }
 
-  public void reduceItensity(double amount){
-    this.itensity = Math.max(this.itensity - amount, 0);
+  public void reduceItensity(double amount) {
+    this.intensity = Math.max(this.intensity - amount, 0);
   }
 
   public double getAngle() {
@@ -79,5 +69,9 @@ public class Light extends BasePhysical implements Activatable {
 
   public void setSpeed(double speed) {
     this.speed = speed;
+  }
+
+  public LightGroup getLightGroup() {
+    return lightGroup;
   }
 }

@@ -68,7 +68,7 @@ public class Environment {
     }
 
     particles.forEach(Light::activate);
-    particles.removeIf(light -> light.getItensity() <= 0 || light.getSpeed() <= 0);
+    particles.removeIf(light -> light.getIntensity() <= 0 || light.getSpeed() <= 0);
 
   }
 
@@ -104,7 +104,7 @@ public class Environment {
     return lines;
   }
 
-  public void setParticles(List<Light> particles) {
-    this.particles = new CopyOnWriteArrayList<>(particles);
+  public void addParticles(List<Light> particles) {
+    this.particles.addAll(particles);
   }
 }

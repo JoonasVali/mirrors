@@ -9,12 +9,12 @@ import static java.lang.Math.atan2;
 /**
  * @author Joonas Vali April 2017
  */
-public class LinePhysical implements Collidable {
+public abstract class LinePhysical implements Collidable {
 
-  private final double x;
-  private final double y;
-  private final double x2;
-  private final double y2;
+  protected final double x;
+  protected final double y;
+  protected final double x2;
+  protected final double y2;
 
   public LinePhysical(double x, double y, double x2, double y2) {
     this.x = x;
@@ -42,22 +42,12 @@ public class LinePhysical implements Collidable {
 
 
   @Override
-  public boolean isCollision(Light object) {
-    if (!(object instanceof Light)) {
-      return false;
-    }
-    Light light = (Light) object;
+  public boolean isCollision(Light light) {
     return isAboutToCollide(light);
   }
 
   @Override
-  public void actCollision(Light object, Environment environment) {
-    if (!(object instanceof Light)) {
-      return;
-    }
-
-    Light light = (Light) object;
-
+  public void actCollision(Light light, Environment environment) {
     double lightX = light.getX();
     double lightY = light.getY();
 
@@ -68,28 +58,11 @@ public class LinePhysical implements Collidable {
 
     Point intersection = Util.getLineIntersection(lightX, lightY, nextX, nextY, x, y, x2, y2);
     if (intersection != null) {
-      double dx=x2-x;
-      double dy=y2-y;
-      double normalX = -dy;
-      double normalY = dx;
-
-      //https://sinepost.wordpress.com/2012/08/30/bouncing-off-the-walls-more-productively/
-
-      double distPerpWall = distAlong(xVector, yVector, normalX, normalY);
-      double distParWall = distAlong(xVector, yVector, normalY, -normalX);
-
-      distPerpWall = -distPerpWall;
-
-      xVector = distParWall * normalY + distPerpWall * normalX;
-      yVector = distParWall * -normalX + distPerpWall * normalY;
-      double angle = Math.toDegrees(atan2(yVector,xVector)) + 90;
-
-      light.setAngle(angle);
+      runLightCollisionAction(light, xVector, yVector);
     }
 
   }
 
-  private double distAlong(double x, double y, double xAlong, double yAlong) {
-    return (x * xAlong + y * yAlong) / Math.hypot(xAlong, yAlong);
-  }
+  abstract void runLightCollisionAction(Light light, double lightXVector, double lightYVector);
+
 }
