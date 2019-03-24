@@ -1,15 +1,30 @@
 package ee.joonasvali.mirrors.scene;
 
+import java.awt.*;
+import java.util.Set;
+
 import static java.lang.Math.atan2;
 
 public class LineReflector extends LinePhysical {
+  private Set<LightGroup> reflectiveGroups;
+
+  public LineReflector(double x, double y, double x2, double y2, Set<LightGroup> reflectiveGroups) {
+    super(x, y, x2, y2);
+    this.reflectiveGroups = reflectiveGroups;
+  }
 
   public LineReflector(double x, double y, double x2, double y2) {
     super(x, y, x2, y2);
+    // Reflect all
+    reflectiveGroups = null;
   }
 
   @Override
   protected void runLightCollisionAction(Light light, double lightXVector, double lightYVector) {
+    if (reflectiveGroups != null && !reflectiveGroups.contains(light.getLightGroup())) {
+      // This reflector is transparent to this light group.
+      return;
+    }
     double dx=x2-x;
     double dy=y2-y;
     double normalX = -dy;
@@ -27,6 +42,10 @@ public class LineReflector extends LinePhysical {
     double angle = Math.toDegrees(atan2(lightYVector, lightXVector)) + 90;
 
     light.setAngle(angle);
+  }
+
+  public void render(Graphics2D g) {
+    super.render(g);
   }
 
   private double distAlong(double x, double y, double xAlong, double yAlong) {

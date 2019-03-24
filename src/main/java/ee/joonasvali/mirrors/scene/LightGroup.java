@@ -25,6 +25,10 @@ public class LightGroup {
     g.drawLine((int)x, (int)y, (int)x, (int)y);
   }
 
+  public Color getColor() {
+    return colors[255];
+  }
+
   public int getId() {
     return id;
   }
