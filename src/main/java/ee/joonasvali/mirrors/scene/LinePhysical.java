@@ -28,7 +28,7 @@ public class LinePhysical implements Collidable {
     g.drawLine((int)x, (int)y, (int)x2, (int)y2);
   }
 
-  public boolean isAboutToCollide(Light light) {
+  private boolean isAboutToCollide(Light light) {
     double lightX = light.getX();
     double lightY = light.getY();
     double speed = light.getSpeed();
@@ -42,7 +42,7 @@ public class LinePhysical implements Collidable {
 
 
   @Override
-  public boolean isCollision(Physical object) {
+  public boolean isCollision(Light object) {
     if (!(object instanceof Light)) {
       return false;
     }
@@ -51,7 +51,7 @@ public class LinePhysical implements Collidable {
   }
 
   @Override
-  public void actCollision(Physical object, Environment environment) {
+  public void actCollision(Light object, Environment environment) {
     if (!(object instanceof Light)) {
       return;
     }

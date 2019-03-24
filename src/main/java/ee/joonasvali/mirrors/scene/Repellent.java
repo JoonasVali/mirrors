@@ -17,18 +17,13 @@ public class Repellent extends RoundPhysical implements Collidable {
   }
 
   @Override
-  public boolean isCollision(Physical object) {
-    if (object instanceof Light) {
-      Light light = (Light) object;
-      return CollisionUtil.areColliding(this, light.getX(), light.getY());
-    }
-    return false;
+  public boolean isCollision(Light light) {
+    return CollisionUtil.areColliding(this, light.getX(), light.getY());
   }
 
   @Override
-  public void actCollision(Physical object, Environment environment) {
-    if (delta > 0 && object instanceof Light) {
-      Light light = (Light) object;
+  public void actCollision(Light light, Environment environment) {
+    if (delta > 0) {
       double distX = midX - light.getX();
       double distY = midY - light.getY();
 
