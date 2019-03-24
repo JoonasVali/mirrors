@@ -31,6 +31,6 @@ public class LightGoal extends RoundPhysical implements LightAbsorber, Collidabl
   public void actCollision(Light light, Environment environment) {
     action.hit(light);
     environment.remove(light);
-    environment.addScore((light).getItensity());
+    environment.addScore((light).getIntensity());
   }
 }

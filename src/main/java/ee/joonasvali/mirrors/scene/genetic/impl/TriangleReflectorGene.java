@@ -2,6 +2,7 @@ package ee.joonasvali.mirrors.scene.genetic.impl;
 
 import ee.joonasvali.mirrors.scene.Environment;
 import ee.joonasvali.mirrors.scene.LinePhysical;
+import ee.joonasvali.mirrors.scene.LineReflector;
 import ee.joonasvali.mirrors.scene.Physical;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
 import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
@@ -58,9 +59,9 @@ public class TriangleReflectorGene implements Gene<TriangleReflectorGene> {
   @Override
   public List<LinePhysical> createLinePhysicals(Environment environment) {
     List<LinePhysical> lines = new ArrayList<>();
-    lines.add(new LinePhysical(x1 + x, y1 + y, x2 + x, y2 + y));
-    lines.add(new LinePhysical(x2 + x, y2 + y, x3 + x, y3 + y));
-    lines.add(new LinePhysical(x3 + x, y3 + y, x1 + x, y1 + y));
+    lines.add(new LineReflector(x1 + x, y1 + y, x2 + x, y2 + y));
+    lines.add(new LineReflector(x2 + x, y2 + y, x3 + x, y3 + y));
+    lines.add(new LineReflector(x3 + x, y3 + y, x1 + x, y1 + y));
     return lines;
   }
 }
