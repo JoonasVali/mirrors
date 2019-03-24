@@ -43,7 +43,7 @@ public class Environment {
   public void act(long delta) {
     // check collisions for light and objects
     for(LinePhysical line : lines) {
-      for(Physical light : particles){
+      for(Light light : particles){
         if(line.isCollision(light)) {
           line.actCollision(light, this);
         }

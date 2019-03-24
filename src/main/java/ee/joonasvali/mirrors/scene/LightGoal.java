@@ -23,21 +23,14 @@ public class LightGoal extends RoundPhysical implements LightAbsorber, Collidabl
   }
 
   @Override
-  public boolean isCollision(Physical light) {
-    if(light instanceof Light) {
-      if(CollisionUtil.areColliding(this, light.getX(), light.getY())) {
-        return true;
-      }
-    }
-    return false;
+  public boolean isCollision(Light light) {
+    return CollisionUtil.areColliding(this, light.getX(), light.getY());
   }
 
   @Override
-  public void actCollision(Physical object, Environment environment) {
-    if(object instanceof Light) {
-      action.hit((Light)object);
-      environment.remove(object);
-      environment.addScore(((Light)object).getItensity());
-    }
+  public void actCollision(Light light, Environment environment) {
+    action.hit(light);
+    environment.remove(light);
+    environment.addScore((light).getItensity());
   }
 }

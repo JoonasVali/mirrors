@@ -1,6 +1,6 @@
 package ee.joonasvali.mirrors.scene;
 
 public interface Collidable {
-  boolean isCollision(Physical object);
-  void actCollision(Physical object, Environment environment);
+  boolean isCollision(Light object);
+  void actCollision(Light object, Environment environment);
 }
