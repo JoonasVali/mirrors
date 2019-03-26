@@ -9,6 +9,7 @@ import java.util.List;
 
 
 public interface Gene<T extends Gene> extends Serializable{
+  Gene<T> copy();
   T getOffspringGene(GeneFactory geneFactory);
   List<Physical> createPhysicals(Environment environment);
   List<LinePhysical> createLinePhysicals(Environment environment);

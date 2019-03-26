@@ -17,9 +17,13 @@ import ee.joonasvali.mirrors.watchmaker.SystemEvaluator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uncommons.maths.random.MersenneTwisterRNG;
-import org.uncommons.watchmaker.framework.*;
+import org.uncommons.watchmaker.framework.EvolutionEngine;
+import org.uncommons.watchmaker.framework.EvolutionObserver;
+import org.uncommons.watchmaker.framework.EvolutionaryOperator;
+import org.uncommons.watchmaker.framework.GenerationalEvolutionEngine;
+import org.uncommons.watchmaker.framework.PopulationData;
 import org.uncommons.watchmaker.framework.operators.EvolutionPipeline;
-import org.uncommons.watchmaker.framework.selection.TruncationSelection;
+import org.uncommons.watchmaker.framework.selection.RouletteWheelSelection;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
 
 import java.awt.*;
@@ -31,6 +35,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
@@ -113,7 +118,7 @@ public class Launcher {
     GenepoolProvider randomProvider = getProvider(geneFactory);
     GenepoolCanditateFactory candidateFactory = new GenepoolCanditateFactory(randomProvider);
 
-    java.util.List<EvolutionaryOperator<Genepool>> operators = getEvolutionaryOperators(geneFactory, properties);
+    List<EvolutionaryOperator<Genepool>> operators = getEvolutionaryOperators(geneFactory, properties);
     EvolutionPipeline<Genepool> pipeline = new EvolutionPipeline<>(operators);
 
     EvolutionEngine<Genepool> engine
@@ -121,7 +126,7 @@ public class Launcher {
         candidateFactory,
         pipeline,
         new SystemEvaluator(),
-        new TruncationSelection(0.5),
+        new RouletteWheelSelection(),
         random);
     engine.addEvolutionObserver(getEvolutionObserver(saver));
     int targetFitness = properties.getTargetFitness();
@@ -207,15 +212,9 @@ public class Launcher {
     };
   }
 
-  /**
-   * Possible to add more operators here, read about them in Watchmaker docs.
-   * http://watchmaker.uncommons.org/api/org/uncommons/watchmaker/framework/operators/package-summary.html
-   */
   private static ArrayList<EvolutionaryOperator<Genepool>> getEvolutionaryOperators(GeneFactory geneFactory, EvolutionProperties properties) {
     ArrayList<EvolutionaryOperator<Genepool>> operators = new ArrayList<>();
-//    ListCrossover e = new ListCrossover(3, new Probability(0.1));
     operators.add(new MutationOperator(geneFactory, properties.getGeneAdditionRate(), properties.getGeneDeletionRate()));
-    //operators.add(e);
     return operators;
   }
 

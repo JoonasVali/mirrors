@@ -1,6 +1,5 @@
 package ee.joonasvali.mirrors.scene.genetic.impl;
 
-import ee.joonasvali.mirrors.scene.LightEmitterProperties;
 import ee.joonasvali.mirrors.scene.LightGroup;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
 import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
@@ -52,18 +51,7 @@ public class GeneratorGenepoolProvider implements GenepoolProvider {
   }
 
   private LightProviderGene createLightEmitter(int x, int y, double density, double velocity, LightGroup group) {
-    LightEmitterProperties properties = new LightEmitterProperties() {
-      @Override
-      public double getDensity() {
-        return density;
-      }
-
-      @Override
-      public double getVelocity() {
-        return velocity;
-      }
-    };
-    return new LightProviderGene(x, y, properties, group);
+    return new LightProviderGene(x, y, density, velocity, group);
   }
 
   public Gene generateGene() {
