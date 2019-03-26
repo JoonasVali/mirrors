@@ -25,6 +25,11 @@ public class AcceleratorGene implements Gene<AcceleratorGene> {
   }
 
   @Override
+  public Gene<AcceleratorGene> copy() {
+    return new AcceleratorGene(x, y, radius, acceleration);
+  }
+
+  @Override
   public AcceleratorGene getOffspringGene(GeneFactory geneFactory) {
     return new AcceleratorGene(
         geneFactory.largeRandom(20) + x,

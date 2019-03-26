@@ -7,16 +7,19 @@ import java.util.List;
 public class LightSource extends RoundPhysical implements Activatable {
   private final LightGroup lightGroup;
   private final Environment env;
-  private final LightEmitterProperties properties;
+  private final double density;
+  private final double velocity;
   private boolean hasActivated;
 
   public LightSource(
-      double x, double y, LightEmitterProperties properties, Environment environment, LightGroup lightGroup
+      double x, double y, double density, double velocity, Environment environment, LightGroup lightGroup
   ) {
     super(x, y, 0, 10);
+    this.density = density;
+    this.velocity = velocity;
     this.lightGroup = lightGroup;
     this.env = environment;
-    this.properties = properties;
+
   }
 
   @Override
@@ -28,15 +31,12 @@ public class LightSource extends RoundPhysical implements Activatable {
   @Override
   public void activate() {
     if (!hasActivated) {
-      emit(properties);
+      emit();
       hasActivated = true;
     }
   }
 
-  public void emit(LightEmitterProperties properties) {
-    double density = properties.getDensity();
-    double velocity = properties.getVelocity();
-
+  public void emit() {
     List<Light> particles = new ArrayList<>();
     for (double i = 0; i < 360; i += density) {
       Light light = new Light(getCenterX(), getCenterY(), i, velocity, 100, 0.1, lightGroup);

@@ -10,6 +10,8 @@ public class Environment {
   private volatile List<Light> particles = new CopyOnWriteArrayList<>();
   private double score = 0;
   private Object lock;
+  private final int screenWidth = Constants.DIMENSION_X;
+  private final int screenHeight = Constants.DIMENSION_Y;
 
   public double getScore() {
     return score;
@@ -68,8 +70,13 @@ public class Environment {
     }
 
     particles.forEach(Light::activate);
-    particles.removeIf(light -> light.getIntensity() <= 0 || light.getSpeed() <= 0);
-
+    particles.removeIf(light ->
+        light.getIntensity() <= 0 ||
+            light.getSpeed() <= 0 ||
+            light.getX() < 0 ||
+            light.getY() < 0 ||
+            light.getX() > screenWidth ||
+            light.getY() > screenHeight);
   }
 
   public List<Physical> getObjects() {

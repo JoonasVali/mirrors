@@ -26,6 +26,11 @@ public class BenderGene implements Gene<BenderGene> {
   }
 
   @Override
+  public Gene<BenderGene> copy() {
+    return new BenderGene(x, y, radius, delta);
+  }
+
+  @Override
   public BenderGene getOffspringGene(GeneFactory geneFactory) {
     return new BenderGene(
         geneFactory.largeRandom(20) + x,

@@ -46,6 +46,11 @@ public class TriangleReflectorGene implements Gene<TriangleReflectorGene> {
   }
 
   @Override
+  public Gene<TriangleReflectorGene> copy() {
+    return new TriangleReflectorGene(x, y, x1, y1, x2, y2, x3, y3);
+  }
+
+  @Override
   public TriangleReflectorGene getOffspringGene(GeneFactory geneFactory) {
     TriangleReflectorGene gene = new TriangleReflectorGene(
         geneFactory.largeRandom(20) + x,

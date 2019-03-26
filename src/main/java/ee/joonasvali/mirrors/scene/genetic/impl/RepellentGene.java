@@ -25,6 +25,11 @@ public class RepellentGene implements Gene<RepellentGene> {
   }
 
   @Override
+  public Gene<RepellentGene> copy() {
+    return new RepellentGene(x, y, radius, delta);
+  }
+
+  @Override
   public RepellentGene getOffspringGene(GeneFactory geneFactory) {
     return new RepellentGene(
         geneFactory.largeRandom(20) + x,

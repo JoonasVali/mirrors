@@ -29,6 +29,11 @@ public class LightGoalGene implements Gene<LightGoalGene> {
   }
 
   @Override
+  public Gene<LightGoalGene> copy() {
+    return new LightGoalGene(radius, x, y, internalColor, targetLightGroup);
+  }
+
+  @Override
   public LightGoalGene getOffspringGene(GeneFactory geneFactory) {
     return new LightGoalGene(radius, x, y, internalColor, targetLightGroup);
   }

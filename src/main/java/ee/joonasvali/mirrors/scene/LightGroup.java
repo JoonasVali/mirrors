@@ -1,8 +1,9 @@
 package ee.joonasvali.mirrors.scene;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class LightGroup {
+public class LightGroup implements Serializable {
   private final int id;
 
   private Color[] colors = new Color[256];
