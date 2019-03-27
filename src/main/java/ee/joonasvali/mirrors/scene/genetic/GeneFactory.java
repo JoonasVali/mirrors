@@ -34,12 +34,12 @@ public class GeneFactory {
       geneProviderList.add((maxX, maxY) -> {
         double x = getRandom(0, maxX);
         double y = getRandom(0, maxY);
-        double x1 = getRandom(10, 40);
-        double x2 = getRandom(10, 40);
-        double x3 = getRandom(10, 40);
-        double y1 = getRandom(10, 40);
-        double y2 = getRandom(10, 40);
-        double y3 = getRandom(10, 40);
+        double x1 = getRandom(10, 150);
+        double x2 = getRandom(10, 150);
+        double x3 = getRandom(10, 150);
+        double y1 = getRandom(10, 150);
+        double y2 = getRandom(10, 150);
+        double y3 = getRandom(10, 150);
         return new TriangleReflectorGene(x, y, x1, y1, x2, y2, x3, y3);
       });
     }
