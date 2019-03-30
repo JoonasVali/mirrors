@@ -129,7 +129,7 @@ public class GraphicalMirrorTest {
       Environment environment = new Environment();
 
       LightGroup group2 = new LightGroup(2, new Color(230, 46, 56));
-      environment.addObject(new LineReflector(300, 250, 470, 95, new HashSet<>(Collections.singletonList(group))));
+      environment.addObject(new LineReflector(300, 250, 470, 95, new HashSet<>(Collections.singletonList(group.getId()))));
 
       environment.addObject(new Light(300, 150, 90, 1, 100, 0.1, group2));
       environment.addObject(new Light(150, 150, 118, 1, 100, 0.1, group2));

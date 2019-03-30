@@ -6,22 +6,22 @@ import java.util.Set;
 import static java.lang.Math.atan2;
 
 public class LineReflector extends LinePhysical {
-  private Set<LightGroup> reflectiveGroups;
+  private Set<Integer> reflectiveGroupIds;
 
-  public LineReflector(double x, double y, double x2, double y2, Set<LightGroup> reflectiveGroups) {
+  public LineReflector(double x, double y, double x2, double y2, Set<Integer> reflectiveGroupIds) {
     super(x, y, x2, y2);
-    this.reflectiveGroups = reflectiveGroups;
+    this.reflectiveGroupIds = reflectiveGroupIds;
   }
 
   public LineReflector(double x, double y, double x2, double y2) {
     super(x, y, x2, y2);
     // Reflect all
-    reflectiveGroups = null;
+    reflectiveGroupIds = null;
   }
 
   @Override
   protected void runLightCollisionAction(Light light, double lightXVector, double lightYVector) {
-    if (reflectiveGroups != null && !reflectiveGroups.contains(light.getLightGroup())) {
+    if (reflectiveGroupIds != null && !reflectiveGroupIds.contains(light.getLightGroup().getId())) {
       // This reflector is transparent to this light group.
       return;
     }
