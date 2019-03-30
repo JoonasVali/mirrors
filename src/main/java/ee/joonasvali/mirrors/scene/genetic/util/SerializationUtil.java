@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.reflect.TypeToken;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
 import ee.joonasvali.mirrors.scene.genetic.Genepool;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +40,19 @@ public class SerializationUtil {
     return builder.create();
   }
 
-  public SerializationUtil(Path dir, String evolutionName) {
-    this.dir = dir.resolve(evolutionName);
+  public SerializationUtil(Path dir) {
+    this.dir = dir;
+  }
+
+  public void serializePopulation(Collection<Genepool> pools, String name) throws IOException {
+    Files.createDirectories(dir);
+    Path file = dir.resolve(name + ".json");
+    try {
+      savePopulation(pools, file);
+    } catch (IOException e) {
+      log.error("abc", e);
+    }
+    log.info("saved population to " + file.toString());
   }
 
   public void serialize(Genepool pool, String name) throws IOException {
@@ -59,9 +72,21 @@ public class SerializationUtil {
     }
   }
 
+  private void savePopulation(Collection<Genepool> pools, Path path) throws IOException {
+    try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+      gson.toJson(pools, writer);
+    }
+  }
+
   public static Genepool deserialize(Path file) throws IOException {
     String contents = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
     return gson.fromJson(contents, Genepool.class);
+  }
+
+  public static Collection<Genepool> deserializePopulation(Path file) throws IOException {
+    String contents = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
+    Type collectionType = new TypeToken<Collection<Genepool>>() {}.getType();
+    return gson.fromJson(contents, collectionType);
   }
 
   private static class GenepoolAdapter implements JsonSerializer<Genepool>, JsonDeserializer<Genepool> {
