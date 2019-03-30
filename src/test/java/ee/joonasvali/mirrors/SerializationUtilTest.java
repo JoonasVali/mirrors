@@ -15,6 +15,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +28,7 @@ public class SerializationUtilTest {
   @Test
   public void singleGeneSerializedAndDeserialized() throws IOException {
     Path temp = folder.newFolder("mirrors-test").toPath();
-    SerializationUtil util = new SerializationUtil(temp, "test-evolution");
+    SerializationUtil util = new SerializationUtil(temp.resolve("test-evolution"));
     Genepool pool = new Genepool(Collections.singletonList(new BenderGene(50, 60, 70, 80)));
     util.serialize(pool, "abc");
     Path file = temp.resolve("test-evolution").resolve("abc.json");
@@ -40,7 +41,7 @@ public class SerializationUtilTest {
   @Test
   public void multipleGenesSerializedAndDeserialized() throws IOException {
     Path temp = folder.newFolder("mirrors-test").toPath();
-    SerializationUtil util = new SerializationUtil(temp, "test-evolution");
+    SerializationUtil util = new SerializationUtil(temp.resolve("test-evolution"));
     List<Gene> geneList = new ArrayList<>();
     geneList.add(new BenderGene(50, 60, 70, 80));
     geneList.add(new BenderGene(150, 160, 170, 180));
@@ -52,19 +53,42 @@ public class SerializationUtilTest {
     Genepool result = SerializationUtil.deserialize(file);
     Assert.assertEquals(3, result.size());
 
+    assertAllElementsPresentByFieldComparison(geneList, result);
+  }
+
+  @Test
+  public void serializePopulation() throws IOException {
+    Path temp = folder.newFolder("mirrors-test").toPath();
+    SerializationUtil util = new SerializationUtil(temp.resolve("test-evolution"));
+    Genepool genes1 = new Genepool(Collections.singletonList(new BenderGene(50, 60, 70, 80)));
+    Genepool genes2 = new Genepool(Collections.singletonList(new BenderGene(51, 61, 71, 81)));
+    ArrayList<Genepool> population = new ArrayList<>();
+    population.add(genes1);
+    population.add(genes2);
+
+    util.serializePopulation(population, "abc");
+    Path file = temp.resolve("test-evolution").resolve("abc.json");
+    Collection<Genepool> result = SerializationUtil.deserializePopulation(file);
+
+    assertAllElementsPresentByFieldComparison(population, result);
+  }
+
+  private <T> void assertAllElementsPresentByFieldComparison(Collection<T> expected, Collection<T> actual) {
+    List<T> expectedCopy = new ArrayList<>(expected);
     // The order isn't guaranteed so checking for presence of every gene is a bit complicated:
-    for (Gene gene: result) {
-      Iterator<Gene> expectedGenesIterator = geneList.iterator();
-      while (expectedGenesIterator.hasNext()) {
-        Gene candidate = expectedGenesIterator.next();
-        if (EqualsBuilder.reflectionEquals(candidate, gene)) {
-          expectedGenesIterator.remove();
+    for (T pool: actual) {
+      Iterator<T> iterator = expectedCopy.iterator();
+      while (iterator.hasNext()) {
+        T candidate = iterator.next();
+        if (EqualsBuilder.reflectionEquals(candidate, pool)) {
+          iterator.remove();
           break;
         }
       }
     }
-    if (!geneList.isEmpty()) {
-      throw new Error("Didn't find genes from serialized data: " + new Gson().toJson(geneList));
+
+    if (!expectedCopy.isEmpty()) {
+      throw new Error("Didn't find genes from serialized data: " + new Gson().toJson(expectedCopy));
     }
   }
 

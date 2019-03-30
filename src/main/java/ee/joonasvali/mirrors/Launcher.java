@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Random;
 
@@ -90,9 +91,12 @@ public class Launcher {
     }
 
     EvolutionController controller = new EvolutionController(properties);
-    Genepool winner = controller.runEvolution();
-    EnvironmentBuilder builder = new GeneticEnvironmentBuilder(new LoaderGenepoolProvider(winner));
-    return new DemoEnvironmentController(builder);
+    Optional<Genepool> winner = controller.runEvolution();
+    if (winner.isPresent()) {
+      EnvironmentBuilder builder = new GeneticEnvironmentBuilder(new LoaderGenepoolProvider(winner.get()));
+      return new DemoEnvironmentController(builder);
+    }
+    return null;
   }
 
   private static EvolutionProperties loadProperties(String name) {
