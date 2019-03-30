@@ -1,9 +1,8 @@
 package ee.joonasvali.mirrors.scene;
 
 import java.awt.*;
-import java.io.Serializable;
 
-public class LightGroup implements Serializable {
+public class LightGroup {
   private final int id;
   private Color color;
   // Kept with lazy initialization due to exclusion from serialization.
