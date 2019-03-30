@@ -1,9 +1,11 @@
 package ee.joonasvali.mirrors.scene.genetic.impl;
 
+import ee.joonasvali.mirrors.scene.genetic.util.SerializationUtil;
 import ee.joonasvali.mirrors.scene.genetic.Genepool;
 import ee.joonasvali.mirrors.scene.genetic.GenepoolProvider;
 
 import java.io.File;
+import java.io.IOException;
 
 
 public class LoaderGenepoolProvider implements GenepoolProvider {
@@ -20,7 +22,11 @@ public class LoaderGenepoolProvider implements GenepoolProvider {
   }
 
   private void init() {
-    genepool = SerializationUtil.get(file);
+    try {
+      genepool = SerializationUtil.deserialize(file.toPath());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override

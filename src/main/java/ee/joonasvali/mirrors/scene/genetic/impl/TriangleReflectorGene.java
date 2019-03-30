@@ -12,6 +12,7 @@ import ee.joonasvali.mirrors.scene.label.BoxLabelPhysical;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Joonas Vali April 2017
@@ -100,9 +101,12 @@ public class TriangleReflectorGene implements Gene<TriangleReflectorGene> {
   @Override
   public List<LinePhysical> createLinePhysicals(Environment environment) {
     List<LinePhysical> lines = new ArrayList<>();
-    lines.add(new LineReflector(x1 + x, y1 + y, x2 + x, y2 + y, reflectiveGroups));
-    lines.add(new LineReflector(x2 + x, y2 + y, x3 + x, y3 + y, reflectiveGroups));
-    lines.add(new LineReflector(x3 + x, y3 + y, x1 + x, y1 + y, reflectiveGroups));
+    Set<Integer> groupIds = reflectiveGroups == null ?
+        null :
+        reflectiveGroups.stream().map(LightGroup::getId).collect(Collectors.toSet());
+    lines.add(new LineReflector(x1 + x, y1 + y, x2 + x, y2 + y, groupIds));
+    lines.add(new LineReflector(x2 + x, y2 + y, x3 + x, y3 + y, groupIds));
+    lines.add(new LineReflector(x3 + x, y3 + y, x1 + x, y1 + y, groupIds));
     return lines;
   }
 }

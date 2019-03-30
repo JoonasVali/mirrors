@@ -1,30 +1,15 @@
 package ee.joonasvali.mirrors;
 
-import ee.joonasvali.mirrors.scene.Constants;
 import ee.joonasvali.mirrors.scene.EnvironmentBuilder;
 import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 import ee.joonasvali.mirrors.scene.genetic.Genepool;
-import ee.joonasvali.mirrors.scene.genetic.GenepoolProvider;
 import ee.joonasvali.mirrors.scene.genetic.GeneticEnvironmentBuilder;
 import ee.joonasvali.mirrors.scene.genetic.impl.GeneratorGenepoolProvider;
 import ee.joonasvali.mirrors.scene.genetic.impl.LoaderGenepoolProvider;
-import ee.joonasvali.mirrors.scene.genetic.impl.SerializationUtil;
-import ee.joonasvali.mirrors.util.KeepAliveUtil;
-import ee.joonasvali.mirrors.util.PolFileChooser;
-import ee.joonasvali.mirrors.watchmaker.GenepoolCanditateFactory;
-import ee.joonasvali.mirrors.watchmaker.MutationOperator;
-import ee.joonasvali.mirrors.watchmaker.SystemEvaluator;
+import ee.joonasvali.mirrors.util.SceneFileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uncommons.maths.random.MersenneTwisterRNG;
-import org.uncommons.watchmaker.framework.EvolutionEngine;
-import org.uncommons.watchmaker.framework.EvolutionObserver;
-import org.uncommons.watchmaker.framework.EvolutionaryOperator;
-import org.uncommons.watchmaker.framework.GenerationalEvolutionEngine;
-import org.uncommons.watchmaker.framework.PopulationData;
-import org.uncommons.watchmaker.framework.operators.EvolutionPipeline;
-import org.uncommons.watchmaker.framework.selection.RouletteWheelSelection;
-import org.uncommons.watchmaker.framework.termination.TargetFitness;
 
 import java.awt.*;
 import java.io.File;
@@ -32,10 +17,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
@@ -44,14 +25,8 @@ import java.util.Random;
  */
 public class Launcher {
   private static final Logger log = LoggerFactory.getLogger(Launcher.class);
-  private static String nl = System.lineSeparator();
 
   public static void main(String[] args) throws InvocationTargetException, InterruptedException {
-    if (GraphicsEnvironment.isHeadless()) {
-      log.error("This system is not supported as it appears to be headless. GraphicsEnvironment.isHeadless() == true");
-      System.exit(-1);
-    }
-
     EnvironmentController env = getEnvironment(args);
     WindowController controller = new WindowController(env);
     controller.launch();
@@ -59,6 +34,11 @@ public class Launcher {
 
   private static EnvironmentController getEnvironment(String[] args) {
     if (args.length == 0) {
+      if (GraphicsEnvironment.isHeadless()) {
+        log.error("This system is not supported as it appears to be headless. GraphicsEnvironment.isHeadless() == true");
+        System.exit(-1);
+      }
+
       log.info("No program arguments, launching random demo scene.");
       Random random = new MersenneTwisterRNG();
       GeneFactory geneFactory = new GeneFactory(createDefaultEvolutionProperties(), random);
@@ -109,50 +89,8 @@ public class Launcher {
       return null;
     }
 
-    File file = properties.getSavingDir();
-    log.info("Files saved to: " + file);
-
-    Random random = new MersenneTwisterRNG();
-    final SerializationUtil saver = new SerializationUtil(file);
-    GeneFactory geneFactory = new GeneFactory(properties, random);
-    GenepoolProvider randomProvider = getProvider(geneFactory);
-    GenepoolCanditateFactory candidateFactory = new GenepoolCanditateFactory(randomProvider);
-
-    List<EvolutionaryOperator<Genepool>> operators = getEvolutionaryOperators(geneFactory, properties);
-    EvolutionPipeline<Genepool> pipeline = new EvolutionPipeline<>(operators);
-
-    EvolutionEngine<Genepool> engine
-        = new GenerationalEvolutionEngine<>(
-        candidateFactory,
-        pipeline,
-        new SystemEvaluator(),
-        new RouletteWheelSelection(),
-        random);
-    engine.addEvolutionObserver(getEvolutionObserver(saver));
-    int targetFitness = properties.getTargetFitness();
-    int concurrent = properties.getConcurrent();
-    int elite = properties.getElites();
-
-    if (properties.isKeepAlive()) {
-      log.info("KeepAliveUtil activated");
-      KeepAliveUtil.keepAlive();
-    }
-
-    log.info("Starting evolution process with target fitness " + nl + targetFitness + "." + nl +
-        "Concurrent organisms: " + concurrent + nl + "Elite population: " + elite + nl);
-
-    Genepool winner;
-    try {
-      // This is a blocking call, evolution happens here.
-      winner = engine.evolve(concurrent, elite, new TargetFitness(targetFitness, true));
-
-      saver.store(winner, "winner");
-      log.info("Evolution completed.");
-    } catch (Exception ex) {
-      log.error("Fatal error during evolution", ex);
-      return null;
-    }
-
+    EvolutionController controller = new EvolutionController(properties);
+    Genepool winner = controller.runEvolution();
     EnvironmentBuilder builder = new GeneticEnvironmentBuilder(new LoaderGenepoolProvider(winner));
     return new DemoEnvironmentController(builder);
   }
@@ -192,34 +130,13 @@ public class Launcher {
     return properties;
   }
 
-  private static GenepoolProvider getProvider(GeneFactory geneFactory) {
-    return new GeneratorGenepoolProvider(geneFactory, Constants.DIMENSION_X, Constants.DIMENSION_Y);
-  }
-
-  private static EvolutionObserver<? super Genepool> getEvolutionObserver(SerializationUtil saver) {
-    return new EvolutionObserver<Genepool>() {
-      double last = 0;
-
-      @Override
-      public void populationUpdate(PopulationData<? extends Genepool> data) {
-        log.info("Time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(System.currentTimeMillis())));
-        log.info("best of generation (" + data.getGenerationNumber() + "): " + data.getBestCandidateFitness());
-        if (data.getBestCandidateFitness() > last) {
-          saver.store(data.getBestCandidate(), data.getGenerationNumber() + "-" + (int) (data.getBestCandidateFitness()));
-          last = data.getBestCandidateFitness();
-        }
-      }
-    };
-  }
-
-  private static ArrayList<EvolutionaryOperator<Genepool>> getEvolutionaryOperators(GeneFactory geneFactory, EvolutionProperties properties) {
-    ArrayList<EvolutionaryOperator<Genepool>> operators = new ArrayList<>();
-    operators.add(new MutationOperator(geneFactory, properties.getGeneAdditionRate(), properties.getGeneDeletionRate()));
-    return operators;
-  }
-
   private static DemoEnvironmentController chooseFileWithGUI() {
-    PolFileChooser fileChooser = new PolFileChooser();
+    if (GraphicsEnvironment.isHeadless()) {
+      log.error("This system is not supported as it appears to be headless. GraphicsEnvironment.isHeadless() == true");
+      System.exit(-1);
+    }
+
+    SceneFileChooser fileChooser = new SceneFileChooser();
     File file = fileChooser.selectFile(System.getProperty("user.dir"));
     if (file == null) {
       log.error("No file selected");
