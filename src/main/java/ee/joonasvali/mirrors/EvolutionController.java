@@ -25,10 +25,10 @@ import org.uncommons.watchmaker.framework.selection.RouletteWheelSelection;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
 import org.uncommons.watchmaker.framework.termination.UserAbort;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -37,21 +37,24 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class EvolutionController {
+  public static final String EVOLUTION_PROPERTIES_FILE_NAME = "evolution.properties";
+  public static final String POPULATIONS_FILE_NAME = "populations.json";
   private final static String nl = System.lineSeparator();
   private final static Logger log = LoggerFactory.getLogger(EvolutionController.class);
+  private final Path evolutionDirectory;
   private final EvolutionProperties properties;
 
-  public EvolutionController(EvolutionProperties properties) {
-    this.properties = properties;
+  public EvolutionController(Path evolutionDirectory) {
+    Path evolutionPropertyFile = evolutionDirectory.resolve(EVOLUTION_PROPERTIES_FILE_NAME);
+    EvolutionPropertyLoader loader = new EvolutionPropertyLoader();
+    this.properties = loader.loadProperties(evolutionPropertyFile);
+    this.evolutionDirectory = evolutionDirectory;
   }
 
-  public Optional<Genepool> runEvolution() {
-    File file = properties.getSavingDir();
-    log.info("Files saved to: " + file);
-    Path evolutionDir = file.toPath().resolve(String.valueOf(System.currentTimeMillis()));
-
+  public Optional<Genepool> runEvolution(Collection<Genepool> seedPopulation) {
+    log.info("Files saved to: " + evolutionDirectory);
     Random random = new MersenneTwisterRNG();
-    final SerializationUtil serializer = new SerializationUtil(evolutionDir);
+    final SerializationUtil serializer = new SerializationUtil(evolutionDirectory);
     GeneFactory geneFactory = new GeneFactory(properties, random);
     GenepoolProvider randomProvider = getProvider(geneFactory);
     GenepoolCanditateFactory candidateFactory = new GenepoolCanditateFactory(randomProvider);
@@ -60,13 +63,15 @@ public class EvolutionController {
     EvolutionPipeline<Genepool> pipeline = new EvolutionPipeline<>(operators);
     UserAbort abortCondition = new UserAbort();
 
-    Runtime.getRuntime().addShutdownHook(new AbortOnShutdown(() -> {
+    Thread shutdownHook = new AbortOnShutdown(() -> {
       abortCondition.abort();
-      // Wait until main thread successfully aborts and saves the state, by getting their shared lock.
+      // Wait until main thread successfully aborts and saves the state, by holding their shared lock.
       synchronized (abortCondition) {
         log.info("Aborting completed, continuing with shutdown.");
       }
-    }));
+    });
+
+    Runtime.getRuntime().addShutdownHook(shutdownHook);
 
     EvolutionEngine<Genepool> engine
         = new GenerationalEvolutionEngine<>(
@@ -75,6 +80,7 @@ public class EvolutionController {
         new SystemEvaluator(),
         new RouletteWheelSelection(),
         random);
+
     engine.addEvolutionObserver(getEvolutionObserver(serializer));
     int targetFitness = properties.getTargetFitness();
     int concurrent = properties.getConcurrent();
@@ -94,8 +100,9 @@ public class EvolutionController {
     try {
       synchronized (abortCondition) {
         // This is a blocking call, evolution happens here.
-        List<EvaluatedCandidate<Genepool>> population =
-            engine.evolvePopulation(concurrent, elite, targetFitnessCondition, abortCondition);
+        List<EvaluatedCandidate<Genepool>> population = engine.evolvePopulation(
+            concurrent, elite, seedPopulation, targetFitnessCondition, abortCondition
+        );
 
         List<TerminationCondition> conditions = engine.getSatisfiedTerminationConditions();
         if (conditions.contains(abortCondition) && !conditions.contains(targetFitnessCondition)) {
@@ -103,7 +110,7 @@ public class EvolutionController {
               population.stream()
                   .map(EvaluatedCandidate::getCandidate)
                   .collect(Collectors.toList()),
-              "evolution"
+              evolutionDirectory.resolve(POPULATIONS_FILE_NAME)
           );
           return Optional.empty();
         }
@@ -113,10 +120,16 @@ public class EvolutionController {
             .max(Comparator.comparingDouble(EvaluatedCandidate::getFitness));
 
         if (!winnerCandidate.isPresent()) {
-          log.error("Something went wrong. Couldn't find winner that satisfies targetFitness. Returning random from population.");
-          winner = population.get(0).getCandidate();
-        } else {
+          log.error("Something went wrong. Couldn't find winner that satisfies targetFitness. Returning best from population.");
+          winnerCandidate = population.stream()
+              .max(Comparator.comparingDouble(EvaluatedCandidate::getFitness));
+        }
+
+        if (winnerCandidate.isPresent()) {
           winner = winnerCandidate.get().getCandidate();
+        } else {
+          Runtime.getRuntime().removeShutdownHook(shutdownHook);
+          throw new IllegalStateException("No population. Everyone's dead.");
         }
 
         serializer.serialize(winner, "winner");
@@ -124,9 +137,11 @@ public class EvolutionController {
       }
     } catch (Exception ex) {
       log.error("Fatal error during evolution", ex);
+      Runtime.getRuntime().removeShutdownHook(shutdownHook);
       return Optional.empty();
     }
 
+    Runtime.getRuntime().removeShutdownHook(shutdownHook);
     return Optional.of(winner);
   }
 
@@ -163,6 +178,7 @@ public class EvolutionController {
   private static class AbortOnShutdown extends Thread {
     private static final Logger log = LoggerFactory.getLogger(AbortOnShutdown.class);
     private final Runnable abort;
+
     public AbortOnShutdown(Runnable abort) {
       this.abort = abort;
     }

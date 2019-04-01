@@ -1,14 +1,11 @@
 package ee.joonasvali.mirrors;
 
 
-import java.io.File;
-
 public class EvolutionProperties {
   private final int elites;
   private final int concurrent;
   private final int targetFitness;
   private final boolean keepAlive;
-  private final File savingDir;
   private final boolean reflectorsEnabled;
   private final boolean bendersEnabled;
   private final boolean acceleratorsEnabled;
@@ -22,7 +19,6 @@ public class EvolutionProperties {
       int concurrent,
       int targetFitness,
       boolean keepAlive,
-      File savingDir,
       double mutationRate,
       double geneAdditionRate,
       double geneDeletionRate,
@@ -34,7 +30,6 @@ public class EvolutionProperties {
     this.concurrent = concurrent;
     this.keepAlive = keepAlive;
     this.targetFitness = targetFitness;
-    this.savingDir = savingDir;
     this.mutationRate = mutationRate;
     this.geneAdditionRate = geneAdditionRate;
     this.geneDeletionRate = geneDeletionRate;
@@ -54,10 +49,6 @@ public class EvolutionProperties {
 
   public int getTargetFitness() {
     return targetFitness;
-  }
-
-  public File getSavingDir() {
-    return savingDir;
   }
 
   public boolean isKeepAlive() {

@@ -6,6 +6,7 @@ import ee.joonasvali.mirrors.scene.genetic.Genepool;
 import ee.joonasvali.mirrors.scene.genetic.GeneticEnvironmentBuilder;
 import ee.joonasvali.mirrors.scene.genetic.impl.GeneratorGenepoolProvider;
 import ee.joonasvali.mirrors.scene.genetic.impl.LoaderGenepoolProvider;
+import ee.joonasvali.mirrors.scene.genetic.util.SerializationUtil;
 import ee.joonasvali.mirrors.util.SceneFileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +14,17 @@ import org.uncommons.maths.random.MersenneTwisterRNG;
 
 import java.awt.*;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Random;
 
 /**
@@ -42,8 +48,11 @@ public class Launcher {
 
       log.info("No program arguments, launching random demo scene.");
       Random random = new MersenneTwisterRNG();
-      GeneFactory geneFactory = new GeneFactory(createDefaultEvolutionProperties(), random);
-      EnvironmentBuilder builder = new GeneticEnvironmentBuilder(new GeneratorGenepoolProvider(geneFactory, 750, 550));
+      EvolutionPropertyLoader propertyLoader = new EvolutionPropertyLoader();
+      GeneFactory geneFactory = new GeneFactory(propertyLoader.createDefaultEvolutionProperties(), random);
+      EnvironmentBuilder builder = new GeneticEnvironmentBuilder(
+          new GeneratorGenepoolProvider(geneFactory, 750, 550)
+      );
       return new DemoEnvironmentController(builder);
     }
 
@@ -58,80 +67,124 @@ public class Launcher {
       return evolution(args);
     }
 
+    if (arg.equals("create-evolution")) {
+      log.info("Creating evolution directory.");
+      return createEvolutionDirectory(args);
+    }
+
     log.error("Arguments didn't match anything we know how to parse.");
-    return null; // satisfy compiler
+    return null;
   }
 
-  private static EvolutionProperties createDefaultEvolutionProperties() {
-    return new EvolutionProperties(
-        DefaultEvolutionPropertyValues.ELITES,
-        DefaultEvolutionPropertyValues.CONCURRENT,
-        DefaultEvolutionPropertyValues.TARGET_FITNESS,
-        DefaultEvolutionPropertyValues.KEEP_MACHINE_ALIVE,
-        new File("../../saved"),
-        DefaultEvolutionPropertyValues.GENE_MUTATION_RATE,
-        DefaultEvolutionPropertyValues.GENE_ADDITION_RATE,
-        DefaultEvolutionPropertyValues.GENE_DELETION_RATE,
-        DefaultEvolutionPropertyValues.REFLECTORS_ENABLED,
-        DefaultEvolutionPropertyValues.BENDERS_ENABLED,
-        DefaultEvolutionPropertyValues.ACCELERATORS_ENABLED,
-        DefaultEvolutionPropertyValues.REPELLENTS_ENABLED
-    );
+  private static EnvironmentController createEvolutionDirectory(String[] args) {
+    if (args.length < 2) {
+      log.error("expected parameter to be the file pointing to target evolution directory");
+    }
+
+    String evolutionDirectoryPath = args[1];
+    Path evolutionDirectory = Paths.get(evolutionDirectoryPath);
+
+    if (!Files.exists(evolutionDirectory)) {
+      // If no directory is present then create it.
+      try {
+        Files.createDirectories(evolutionDirectory);
+      } catch (IOException e) {
+        log.error("Unable to create evolution directory "  + evolutionDirectory, e);
+        throw new RuntimeException(e);
+      }
+    } else {
+      // If existing empty directory is present then accept it as evolution directory.
+      try {
+        if (Files.list(evolutionDirectory).count() != 0) {
+          throw new IllegalArgumentException("Directory already exists and is not empty.");
+        }
+      } catch (IOException e) {
+        log.error("Unable to read contents of evolution directory " + evolutionDirectory, e);
+      }
+    }
+
+    Path runEvolutionFile = evolutionDirectory.resolve("run.cmd");
+
+    // This is an assumption that the script is launched from HOME/bin dir.
+    Path mirrorsHome;
+    try {
+      mirrorsHome = Paths.get("..").toRealPath();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    try {
+      String content = "" +
+          "@echo off\n" +
+          "SET MIRRORS_HOME=" + mirrorsHome.toString() + "\n" +
+          "java -jar -Xmx2048M %MIRRORS_HOME%/lib/mirrors.jar evolution evolution.properties";
+
+      Files.write(runEvolutionFile, content.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE_NEW);
+    } catch (IOException e) {
+      throw new RuntimeException("Unable to create run file." + runEvolutionFile, e);
+    }
+
+    try {
+      Path sourcePropertyFile = mirrorsHome.resolve("config").resolve("evolution.win.properties");
+      Path evolutionPropertyFile = evolutionDirectory.resolve(EvolutionController.EVOLUTION_PROPERTIES_FILE_NAME);
+      Files.copy(sourcePropertyFile, evolutionPropertyFile);
+    } catch (IOException e) {
+      log.error("Unable to create evolution directory.", e);
+      throw new RuntimeException(e);
+    }
+
+    return null;
   }
 
   private static EnvironmentController evolution(String[] args) {
     if (args.length < 2) {
-      log.error("expected second argument to be the file pointing to evolution.properties");
-      return null;
-    }
-    EvolutionProperties properties = loadProperties(args[1]);
-    if (properties == null) {
-      log.error("properties == null");
+      log.error("expected second parameter to be the file pointing to evolution.properties");
       return null;
     }
 
-    EvolutionController controller = new EvolutionController(properties);
-    Optional<Genepool> winner = controller.runEvolution();
+    // These are the properties copied to evolution directory when new evolution is started.
+    Path sourceProperties = Paths.get(args[1]);
+    // Assume current dir is evolution directory.
+    Path evolutionDirectory = Paths.get(System.getProperty("user.dir"));
+    Path evolutionFile = evolutionDirectory.resolve(EvolutionController.POPULATIONS_FILE_NAME);
+    Path evolutionPropertyFile = evolutionDirectory.resolve(EvolutionController.EVOLUTION_PROPERTIES_FILE_NAME);
+    Collection<Genepool> seedPopulation = Collections.emptyList();
+
+    if (!Files.exists(evolutionDirectory)) {
+      try {
+        Files.createDirectory(evolutionDirectory);
+      } catch (IOException e) {
+        log.error("Unable to create evolution directory.", e);
+        throw new RuntimeException(e);
+      }
+    }
+
+    if (!Files.exists(evolutionPropertyFile)) {
+      try {
+        Files.copy(sourceProperties, evolutionPropertyFile);
+      } catch (IOException e) {
+        log.error("Unable to create evolution directory.", e);
+        throw new RuntimeException(e);
+      }
+    }
+
+    if (Files.exists(evolutionFile)) {
+      log.info("Loaded existing population from evolution file: " + evolutionFile);
+      try {
+        seedPopulation = SerializationUtil.deserializePopulation(evolutionFile);
+      } catch (IOException e) {
+        log.error("Unable to read evolution file.");
+        throw new RuntimeException(e);
+      }
+    }
+
+    EvolutionController controller = new EvolutionController(evolutionDirectory);
+    Optional<Genepool> winner = controller.runEvolution(seedPopulation);
     if (winner.isPresent()) {
       EnvironmentBuilder builder = new GeneticEnvironmentBuilder(new LoaderGenepoolProvider(winner.get()));
       return new DemoEnvironmentController(builder);
     }
     return null;
-  }
-
-  private static EvolutionProperties loadProperties(String name) {
-    EvolutionProperties properties = null;
-    try {
-      File userDir = new File(System.getProperty("user.dir"));
-      File propertiesFile = new File(userDir, name).getCanonicalFile();
-      log.info("Properties read from: " + propertiesFile);
-      Properties props = new Properties();
-      try (InputStream stream = new FileInputStream(propertiesFile)) {
-        props.load(stream);
-      }
-
-      File savedDir = new File(userDir, props.getProperty("output.dir", "../../saved")).getCanonicalFile();
-
-      properties = new EvolutionProperties(
-          Integer.parseInt(props.getProperty("elites", String.valueOf(DefaultEvolutionPropertyValues.ELITES))),
-          Integer.parseInt(props.getProperty("concurrent", String.valueOf(DefaultEvolutionPropertyValues.CONCURRENT))),
-          Integer.parseInt(props.getProperty("target.fitness", String.valueOf(DefaultEvolutionPropertyValues.TARGET_FITNESS))),
-          Boolean.parseBoolean(props.getProperty("keep.machine.alive", String.valueOf(DefaultEvolutionPropertyValues.KEEP_MACHINE_ALIVE))),
-          savedDir,
-          Double.parseDouble(props.getProperty("gene.mutation.rate", String.valueOf(DefaultEvolutionPropertyValues.GENE_MUTATION_RATE))),
-          Double.parseDouble(props.getProperty("gene.deletion.rate", String.valueOf(DefaultEvolutionPropertyValues.GENE_DELETION_RATE))),
-          Double.parseDouble(props.getProperty("gene.addition.rate", String.valueOf(DefaultEvolutionPropertyValues.GENE_ADDITION_RATE))),
-          Boolean.parseBoolean(props.getProperty("reflectors.enabled", String.valueOf(DefaultEvolutionPropertyValues.REFLECTORS_ENABLED))),
-          Boolean.parseBoolean(props.getProperty("benders.enabled", String.valueOf(DefaultEvolutionPropertyValues.BENDERS_ENABLED))),
-          Boolean.parseBoolean(props.getProperty("accelerators.enabled", String.valueOf(DefaultEvolutionPropertyValues.ACCELERATORS_ENABLED))),
-          Boolean.parseBoolean(props.getProperty("repellents.enabled", String.valueOf(DefaultEvolutionPropertyValues.REPELLENTS_ENABLED)))
-      );
-    } catch (IOException e) {
-      log.error("Can't read properties " + name, e);
-      System.exit(-1);
-    }
-
-    return properties;
   }
 
   private static DemoEnvironmentController chooseFileWithGUI() {

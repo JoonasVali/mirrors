@@ -59,16 +59,17 @@ public class SerializationUtilTest {
   @Test
   public void serializePopulation() throws IOException {
     Path temp = folder.newFolder("mirrors-test").toPath();
-    SerializationUtil util = new SerializationUtil(temp.resolve("test-evolution"));
+    Path evolutionDir = temp.resolve("test-evolution");
+    Path evolutionFile = evolutionDir.resolve("evo.json");
+    SerializationUtil util = new SerializationUtil(evolutionDir);
     Genepool genes1 = new Genepool(Collections.singletonList(new BenderGene(50, 60, 70, 80)));
     Genepool genes2 = new Genepool(Collections.singletonList(new BenderGene(51, 61, 71, 81)));
     ArrayList<Genepool> population = new ArrayList<>();
     population.add(genes1);
     population.add(genes2);
 
-    util.serializePopulation(population, "abc");
-    Path file = temp.resolve("test-evolution").resolve("abc.json");
-    Collection<Genepool> result = SerializationUtil.deserializePopulation(file);
+    util.serializePopulation(population, evolutionFile);
+    Collection<Genepool> result = SerializationUtil.deserializePopulation(evolutionFile);
 
     assertAllElementsPresentByFieldComparison(population, result);
   }
@@ -91,5 +92,4 @@ public class SerializationUtilTest {
       throw new Error("Didn't find genes from serialized data: " + new Gson().toJson(expectedCopy));
     }
   }
-
 }

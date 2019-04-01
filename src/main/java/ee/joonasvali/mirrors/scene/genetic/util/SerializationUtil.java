@@ -44,9 +44,7 @@ public class SerializationUtil {
     this.dir = dir;
   }
 
-  public void serializePopulation(Collection<Genepool> pools, String name) throws IOException {
-    Files.createDirectories(dir);
-    Path file = dir.resolve(name + ".json");
+  public void serializePopulation(Collection<Genepool> pools, Path file) {
     try {
       savePopulation(pools, file);
     } catch (IOException e) {
