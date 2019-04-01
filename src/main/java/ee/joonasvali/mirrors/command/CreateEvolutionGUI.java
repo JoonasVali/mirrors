@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class CreateEvolutionGUI {
@@ -39,6 +40,19 @@ public class CreateEvolutionGUI {
     }
 
     EvolutionDirectoryCreator.createEvolutionDirectory(file.toPath());
+    int answer = JOptionPane.showConfirmDialog(new JFrame(),
+        "<html><p>Successfully created evolution directory at " + file +
+            "</p><p>Would you like to open the created folder in explorer?</p></html>",
+        "Evolution directory created successfully.",
+        JOptionPane.YES_NO_OPTION);
+
+    if (answer == 0) {
+      try {
+        Desktop.getDesktop().open(file);
+      } catch (IOException e) {
+        log.error("Unable to open selected directory.", e);
+      }
+    }
 
     return null;
   }
