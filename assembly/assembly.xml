@@ -34,6 +34,25 @@
     </fileSet>
 
     <fileSet>
+      <directory>${configfolder}</directory>
+      <outputDirectory>config</outputDirectory>
+      <includes>
+        <include>**/*.unix.*</include>
+      </includes>
+      <lineEnding>unix</lineEnding>
+      <fileMode>0755</fileMode>
+    </fileSet>
+
+    <fileSet>
+      <directory>${configfolder}</directory>
+      <outputDirectory>config</outputDirectory>
+      <includes>
+        <include>**/*.win.*</include>
+      </includes>
+      <lineEnding>windows</lineEnding>
+    </fileSet>
+
+    <fileSet>
       <directory>${basedir}/doc</directory>
       <outputDirectory>/</outputDirectory>
       <includes>

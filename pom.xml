@@ -14,6 +14,7 @@
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
     <binfolder>${basedir}/bin</binfolder>
+    <configfolder>${basedir}/config</configfolder>
     <asm.file>${basedir}/assembly/assembly.xml</asm.file>
     <mirrors.target>${basedir}/target</mirrors.target>
     <project.build.directory>${basedir}/dist</project.build.directory>
