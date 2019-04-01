@@ -26,6 +26,7 @@ import org.uncommons.watchmaker.framework.termination.TargetFitness;
 import org.uncommons.watchmaker.framework.termination.UserAbort;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,28 +40,44 @@ import java.util.stream.Collectors;
 public class EvolutionController {
   public static final String EVOLUTION_PROPERTIES_FILE_NAME = "evolution.properties";
   public static final String POPULATIONS_FILE_NAME = "populations.json";
+  public static final String SAMPLE_DIRECTORY_NAME = "samples";
   private final static String nl = System.lineSeparator();
   private final static Logger log = LoggerFactory.getLogger(EvolutionController.class);
   private final Path evolutionDirectory;
+  private final Path sampleDirectory;
   private final EvolutionProperties properties;
+  private final int generationOffset;
 
   public EvolutionController(Path evolutionDirectory) {
     Path evolutionPropertyFile = evolutionDirectory.resolve(EVOLUTION_PROPERTIES_FILE_NAME);
     EvolutionPropertyLoader loader = new EvolutionPropertyLoader();
     this.properties = loader.loadProperties(evolutionPropertyFile);
     this.evolutionDirectory = evolutionDirectory;
+    this.sampleDirectory = evolutionDirectory.resolve(SAMPLE_DIRECTORY_NAME);
+
+    if (!Files.exists(sampleDirectory)) {
+      try {
+        Files.createDirectory(sampleDirectory);
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to create sample directory.", e);
+      }
+    }
+
+    this.generationOffset = lookupLargestGeneration(sampleDirectory) + 1;
+    if (this.generationOffset != 0) {
+      log.info("Continuing evolution from generation " + (generationOffset));
+    }
   }
 
   public Optional<Genepool> runEvolution(Collection<Genepool> seedPopulation) {
-    log.info("Files saved to: " + evolutionDirectory);
-    Random random = new MersenneTwisterRNG();
-    final SerializationUtil serializer = new SerializationUtil(evolutionDirectory);
-    GeneFactory geneFactory = new GeneFactory(properties, random);
-    GenepoolProvider randomProvider = getProvider(geneFactory);
-    GenepoolCanditateFactory candidateFactory = new GenepoolCanditateFactory(randomProvider);
+    log.info("Best improvement of every generation saved to: " + sampleDirectory);
+    final SerializationUtil serializer = new SerializationUtil(sampleDirectory);
 
-    List<EvolutionaryOperator<Genepool>> operators = getEvolutionaryOperators(geneFactory, properties);
-    EvolutionPipeline<Genepool> pipeline = new EvolutionPipeline<>(operators);
+    if (properties.isKeepAlive()) {
+      log.info("KeepAliveUtil activated");
+      KeepAliveUtil.keepAlive();
+    }
+
     UserAbort abortCondition = new UserAbort();
 
     Thread shutdownHook = new AbortOnShutdown(() -> {
@@ -73,6 +90,14 @@ public class EvolutionController {
 
     Runtime.getRuntime().addShutdownHook(shutdownHook);
 
+    Random random = new MersenneTwisterRNG();
+    GeneFactory geneFactory = new GeneFactory(properties, random);
+    GenepoolProvider randomProvider = getProvider(geneFactory);
+    GenepoolCanditateFactory candidateFactory = new GenepoolCanditateFactory(randomProvider);
+
+    List<EvolutionaryOperator<Genepool>> operators = getEvolutionaryOperators(geneFactory, properties);
+    EvolutionPipeline<Genepool> pipeline = new EvolutionPipeline<>(operators);
+
     EvolutionEngine<Genepool> engine
         = new GenerationalEvolutionEngine<>(
         candidateFactory,
@@ -81,15 +106,10 @@ public class EvolutionController {
         new RouletteWheelSelection(),
         random);
 
-    engine.addEvolutionObserver(getEvolutionObserver(serializer));
+    engine.addEvolutionObserver(getEvolutionObserver(serializer, generationOffset));
     int targetFitness = properties.getTargetFitness();
     int concurrent = properties.getConcurrent();
     int elite = properties.getElites();
-
-    if (properties.isKeepAlive()) {
-      log.info("KeepAliveUtil activated");
-      KeepAliveUtil.keepAlive();
-    }
 
     log.info("Starting evolution process with target fitness " + nl + targetFitness + "." + nl +
         "Concurrent organisms: " + concurrent + nl + "Elite population: " + elite + nl);
@@ -106,7 +126,8 @@ public class EvolutionController {
 
         List<TerminationCondition> conditions = engine.getSatisfiedTerminationConditions();
         if (conditions.contains(abortCondition) && !conditions.contains(targetFitnessCondition)) {
-          serializer.serializePopulation(
+          SerializationUtil populationSerializer = new SerializationUtil(evolutionDirectory);
+          populationSerializer.serializePopulation(
               population.stream()
                   .map(EvaluatedCandidate::getCandidate)
                   .collect(Collectors.toList()),
@@ -149,17 +170,18 @@ public class EvolutionController {
     return new GeneratorGenepoolProvider(geneFactory, Constants.DIMENSION_X, Constants.DIMENSION_Y);
   }
 
-  private static EvolutionObserver<? super Genepool> getEvolutionObserver(SerializationUtil saver) {
+  private static EvolutionObserver<? super Genepool> getEvolutionObserver(SerializationUtil saver, int generationOffset) {
     return new EvolutionObserver<Genepool>() {
-      double last = 0;
+      private volatile double last = 0;
 
       @Override
       public void populationUpdate(PopulationData<? extends Genepool> data) {
+        int generation = data.getGenerationNumber() + generationOffset;
         log.info("Time: " + new Date());
-        log.info("best of generation (" + data.getGenerationNumber() + "): " + data.getBestCandidateFitness());
+        log.info("best of generation (" + generation + "): " + data.getBestCandidateFitness());
         if (data.getBestCandidateFitness() > last) {
           try {
-            saver.serialize(data.getBestCandidate(), data.getGenerationNumber() + "-" + (int) (data.getBestCandidateFitness()));
+            saver.serialize(data.getBestCandidate(), generation + "-" + (int) (data.getBestCandidateFitness()));
           } catch (IOException e) {
             log.error("Unable to save best candidate.", e);
           }
@@ -173,6 +195,21 @@ public class EvolutionController {
     ArrayList<EvolutionaryOperator<Genepool>> operators = new ArrayList<>();
     operators.add(new MutationOperator(geneFactory, properties.getGeneAdditionRate(), properties.getGeneDeletionRate()));
     return operators;
+  }
+
+  private static int lookupLargestGeneration(Path sampleDirectory) {
+    try {
+      return Files.list(sampleDirectory)
+          .map(path -> path.getFileName().toString())
+          .filter(name -> name.matches("\\d+-\\d+\\.json"))
+          .map(name -> name.split("-")[0])
+          .map((Integer::parseInt))
+          .max(Integer::compareTo)
+          .orElse(0);
+    } catch (IOException e) {
+      log.error("Unable to look for largest generation, starting from 0.", e);
+      return 0;
+    }
   }
 
   private static class AbortOnShutdown extends Thread {
