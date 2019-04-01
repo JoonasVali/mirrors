@@ -1,17 +1,14 @@
 package ee.joonasvali.mirrors.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * @author Joonas Vali April 2016
  */
 public class SceneFileChooser extends JFileChooser {
-  private static final Logger log = LoggerFactory.getLogger(SceneFileChooser.class);
   public SceneFileChooser() {
     setDialogTitle("Select *.json file");
     setFileFilter(new FileFilter() {
@@ -26,19 +23,14 @@ public class SceneFileChooser extends JFileChooser {
 
       @Override
       public String getDescription() {
-        return ".pol scene files";
+        return ".json scene files";
       }
     });
     setMultiSelectionEnabled(false);
   }
 
-  public File selectFile(String selectedDir) {
-    File currentDir = new File(selectedDir);
-    if (!currentDir.isDirectory()) {
-      log.warn("selected dir is not a dir: " + currentDir);
-    } else {
-      setCurrentDirectory(currentDir);
-    }
+  public File selectFile(Path sampleDir) {
+    setCurrentDirectory(sampleDir.toFile());
     showDialog(new JFrame(), "Select");
     return getSelectedFile();
   }
