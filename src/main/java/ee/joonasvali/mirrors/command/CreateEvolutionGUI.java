@@ -32,7 +32,10 @@ public class CreateEvolutionGUI {
     }
 
     if (!file.exists()) {
-      file.mkdir();
+      boolean created = file.mkdir();
+      if (!created) {
+        throw new RuntimeException("Unable to create directory to " + file);
+      }
     }
 
     if (!file.isDirectory()) {

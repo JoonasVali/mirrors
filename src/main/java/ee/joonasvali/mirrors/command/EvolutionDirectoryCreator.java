@@ -2,6 +2,7 @@ package ee.joonasvali.mirrors.command;
 
 import ee.joonasvali.mirrors.EnvironmentController;
 import ee.joonasvali.mirrors.EvolutionController;
+import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,10 +14,16 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 public class EvolutionDirectoryCreator {
-  private final static Logger log = LoggerFactory.getLogger(EvolutionDirectoryCreator.class);
-  private static final String EVOLVE_FILE_NAME = "evolve.bat";
-  private static final String PLAY_SAMPLE_FILE_NAME = "run-fittest.bat";
-  public static final String EVOLUTION_WIN_PROPERTIES = "evolution.win.properties";
+  public static final String MIRRORS_HOME_ENV_VARIABLE = "MIRRORS_HOME";
+
+  private static final Logger log = LoggerFactory.getLogger(EvolutionDirectoryCreator.class);
+  private static final boolean isWin = SystemUtils.IS_OS_WINDOWS;
+  private static final String EVOLVE_FILE_NAME = "evolve" + (isWin ? ".bat" : ".sh");
+  private static final String PLAY_SAMPLE_FILE_NAME = "run" + (isWin ? ".bat" : ".sh");
+
+  private static final String EVOLUTION_WIN_PROPERTIES = "evolution.win.properties";
+  private static final String EVOLUTION_UNIX_PROPERTIES = "evolution.unix.properties";
+  private static final String PROPERTIES_FILE_NAME = isWin ? EVOLUTION_WIN_PROPERTIES : EVOLUTION_UNIX_PROPERTIES;
 
   public static EnvironmentController createEvolutionDirectory(String[] args) {
     if (args.length < 2) {
@@ -25,10 +32,14 @@ public class EvolutionDirectoryCreator {
     }
 
     String evolutionDirectoryPath = args[1];
-    Path evolutionDirectory = Paths.get(evolutionDirectoryPath);
-    createEvolutionDirectory(evolutionDirectory);
 
-    return null;
+    try {
+      Path evolutionDirectory = Paths.get(evolutionDirectoryPath).toRealPath();
+      createEvolutionDirectory(evolutionDirectory);
+      return null;
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public static void createEvolutionDirectory(Path evolutionDirectory) {
@@ -63,8 +74,16 @@ public class EvolutionDirectoryCreator {
 
   public static Path getMirrorsHome() {
     try {
+      String mirrorsHome = System.getenv(MIRRORS_HOME_ENV_VARIABLE);
+      if (mirrorsHome != null) {
+        Path result = Paths.get(mirrorsHome);
+        if (Files.exists(result)) {
+          return result;
+        } else {
+          log.error("Invalid MIRRORS_HOME defined: " + mirrorsHome);
+        }
+      }
       // This is an assumption that the script is launched from HOME/bin dir.
-      // TODO read from environment variable if present
       return Paths.get("..").toRealPath();
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -73,7 +92,7 @@ public class EvolutionDirectoryCreator {
 
   private static void createEvolutionProperties(Path evolutionDirectory, Path mirrorsHome) {
     try {
-      Path sourcePropertyFile = mirrorsHome.resolve("config").resolve(EVOLUTION_WIN_PROPERTIES);
+      Path sourcePropertyFile = mirrorsHome.resolve("config").resolve(PROPERTIES_FILE_NAME);
       Path evolutionPropertyFile = evolutionDirectory.resolve(EvolutionController.EVOLUTION_PROPERTIES_FILE_NAME);
       Files.copy(sourcePropertyFile, evolutionPropertyFile);
     } catch (IOException e) {
@@ -85,10 +104,19 @@ public class EvolutionDirectoryCreator {
   private static void createEvolutionRunner(Path evolutionDirectory, Path mirrorsHome) {
     Path runEvolutionFile = evolutionDirectory.resolve(EVOLVE_FILE_NAME);
 
-    String content = "" +
-        "@echo off\n" +
-        "SET MIRRORS_HOME=" + mirrorsHome.toString() + "\n" +
-        "java -jar -Xmx2048M %MIRRORS_HOME%/lib/mirrors.jar evolution ./evolution.properties";
+    String content;
+
+    if (isWin) {
+      content = "" +
+          "@echo off\n" +
+          "SET MIRRORS_HOME=" + mirrorsHome.toString() + "\n" +
+          "java -jar -Xmx2048M %MIRRORS_HOME%\\lib\\mirrors.jar evolution ./evolution.properties";
+    } else {
+      content = "" +
+          "#!/bin/bash\n" +
+          "export MIRRORS_HOME=" + mirrorsHome.toString() + "\n" +
+          "java -jar -Xmx2048M $MIRRORS_HOME/lib/mirrors.jar evolution ./evolution.properties";
+    }
 
     createFileOrFail(runEvolutionFile, content);
   }
@@ -96,12 +124,20 @@ public class EvolutionDirectoryCreator {
   private static void createSamplePlayer(Path evolutionDirectory, Path mirrorsHome) {
     Path playSampleFile = evolutionDirectory.resolve(PLAY_SAMPLE_FILE_NAME);
 
-    String content = "" +
-        "@echo off\n" +
-        "SET MIRRORS_HOME=" + mirrorsHome.toString() + "\n" +
-        "java -jar -Xmx2048M %MIRRORS_HOME%/lib/mirrors.jar load " +
-        evolutionDirectory.resolve(EvolutionController.SAMPLE_DIRECTORY_NAME).toAbsolutePath() + "\n";
-
+    String content;
+    if (isWin) {
+      content = "" +
+          "@echo off\n" +
+          "SET MIRRORS_HOME=" + mirrorsHome.toString() + "\n" +
+          "java -jar -Xmx2048M %MIRRORS_HOME%/lib/mirrors.jar load " +
+          evolutionDirectory.resolve(EvolutionController.SAMPLE_DIRECTORY_NAME).toAbsolutePath() + "\n";
+    } else {
+      content = "" +
+          "#!/bin/bash\n" +
+          "export MIRRORS_HOME=" + mirrorsHome.toString() + "\n" +
+          "java -jar -Xmx2048M $MIRRORS_HOME/lib/mirrors.jar load" +
+          evolutionDirectory.resolve(EvolutionController.SAMPLE_DIRECTORY_NAME).toAbsolutePath() + "\n";
+    }
     createFileOrFail(playSampleFile, content);
   }
 

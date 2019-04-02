@@ -26,10 +26,6 @@ public class WindowController {
   }
 
   public void launch() throws InvocationTargetException, InterruptedException {
-    if (env == null) {
-      log.info("EnvironmentController not present. Exiting.");
-      System.exit(0);
-    }
     env.init();
 
     SwingUtilities.invokeAndWait(

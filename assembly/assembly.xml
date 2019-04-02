@@ -53,7 +53,7 @@
     </fileSet>
 
     <fileSet>
-      <directory>${basedir}/doc</directory>
+      <directory>${included}/doc</directory>
       <outputDirectory>/</outputDirectory>
       <includes>
         <include>**/*</include>
@@ -62,6 +62,14 @@
       <fileMode>0444</fileMode>
     </fileSet>
 
+    <!-- create empty dir 'projects' -->
+    <fileSet>
+      <directory>.</directory>
+      <outputDirectory>projects</outputDirectory>
+      <excludes>
+        <exclude>*/**</exclude>
+      </excludes>
+    </fileSet>
 
     <fileSet>
       <directory>${mirrors.target}</directory>
