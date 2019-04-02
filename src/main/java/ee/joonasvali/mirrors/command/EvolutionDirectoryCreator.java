@@ -19,11 +19,12 @@ public class EvolutionDirectoryCreator {
   private static final Logger log = LoggerFactory.getLogger(EvolutionDirectoryCreator.class);
   private static final boolean isWin = SystemUtils.IS_OS_WINDOWS;
   private static final String EVOLVE_FILE_NAME = "evolve" + (isWin ? ".bat" : ".sh");
-  private static final String PLAY_SAMPLE_FILE_NAME = "run" + (isWin ? ".bat" : ".sh");
+  private static final String PLAY_SAMPLE_FILE_NAME = "play" + (isWin ? ".bat" : ".sh");
 
   private static final String EVOLUTION_WIN_PROPERTIES = "evolution.win.properties";
   private static final String EVOLUTION_UNIX_PROPERTIES = "evolution.unix.properties";
   private static final String PROPERTIES_FILE_NAME = isWin ? EVOLUTION_WIN_PROPERTIES : EVOLUTION_UNIX_PROPERTIES;
+  public static final String PLAY_DEMO_NAME = "demo" + (isWin ? ".bat" : ".sh");
 
   public static EnvironmentController createEvolutionDirectory(String[] args) {
     if (args.length < 2) {
@@ -49,6 +50,7 @@ public class EvolutionDirectoryCreator {
     createEvolutionRunner(evolutionDirectory, mirrorsHome);
     createSamplePlayer(evolutionDirectory, mirrorsHome);
     createEvolutionProperties(evolutionDirectory, mirrorsHome);
+    createRandomDemoPlayer(evolutionDirectory, mirrorsHome);
   }
 
   private static void createAndValidateEvolutionDirectory(Path evolutionDirectory) {
@@ -139,6 +141,24 @@ public class EvolutionDirectoryCreator {
           evolutionDirectory.resolve(EvolutionController.SAMPLE_DIRECTORY_NAME).toAbsolutePath() + "\n";
     }
     createFileOrFail(playSampleFile, content);
+  }
+
+  private static void createRandomDemoPlayer(Path evolutionDirectory, Path mirrorsHome) {
+    Path playDemoFile = evolutionDirectory.resolve(PLAY_DEMO_NAME);
+
+    String content;
+    if (isWin) {
+      content = "" +
+          "@echo off\n" +
+          "SET MIRRORS_HOME=" + mirrorsHome.toString() + "\n" +
+          "java -jar -Xmx2048M %MIRRORS_HOME%/lib/mirrors.jar";
+    } else {
+      content = "" +
+          "#!/bin/bash\n" +
+          "export MIRRORS_HOME=" + mirrorsHome.toString() + "\n" +
+          "java -jar -Xmx2048M $MIRRORS_HOME/lib/mirrors.jar";
+    }
+    createFileOrFail(playDemoFile, content);
   }
 
   private static void createFileOrFail(Path file, String content) {
