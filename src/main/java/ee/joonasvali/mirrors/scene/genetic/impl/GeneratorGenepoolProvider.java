@@ -16,31 +16,52 @@ public class GeneratorGenepoolProvider implements GenepoolProvider {
   private final GeneFactory geneFactory;
   private final double maxX;
   private final double maxY;
+  private final boolean topProducer;
+  private final boolean middleProducer;
+  private final boolean bottomProducer;
 
-  public GeneratorGenepoolProvider(GeneFactory geneFactory, double maxX, double maxY) {
+  public GeneratorGenepoolProvider(GeneFactory geneFactory, double maxX, double maxY,
+                                   boolean topProducer, boolean middleProducer, boolean bottomProducer) {
     this.geneFactory = geneFactory;
     this.maxX = maxX;
     this.maxY = maxY;
+    this.topProducer = topProducer;
+    this.middleProducer = middleProducer;
+    this.bottomProducer = bottomProducer;
   }
 
   private Genepool generate() {
     Genepool genepool = new Genepool();
 
-    LightGroup group1 = new LightGroup(1, new Color(255, 150, 150));
-    LightGroup group2 = new LightGroup(2, new Color(150, 255, 150));
-    LightGroup group3 = new LightGroup(3, new Color(150, 150, 255));
-    Set<LightGroup> groups = new HashSet<>(Arrays.asList(group1, group2, group3));
-    genepool.add(new LightGoalGene(20, 550, 250, new Color(255, 150, 150), group1));
-    genepool.add(new LightGoalGene(20, 550, 300, new Color(150, 255, 150), group2));
-    genepool.add(new LightGoalGene(20, 550, 350, new Color(150, 150, 255), group3));
-    genepool.add(createLightEmitter(150, 250, 0.1, 0.8, group1));
-    genepool.add(createLightEmitter(150, 300, 0.1, 1, group2));
-    genepool.add(createLightEmitter(150, 350, 0.1, 1.2, group3));
+    Set<LightGroup> groups = new HashSet<>();
+
+    if (topProducer) {
+      LightGroup group1 = new LightGroup(1, new Color(255, 150, 150));
+      genepool.add(new LightGoalGene(20, 550, 250, new Color(255, 150, 150), group1));
+      genepool.add(createLightEmitter(150, 250, 0.1, 0.8, group1));
+      groups.add(group1);
+    }
+
+    if (middleProducer) {
+      LightGroup group2 = new LightGroup(2, new Color(150, 255, 150));
+      genepool.add(new LightGoalGene(20, 550, 300, new Color(150, 255, 150), group2));
+      genepool.add(createLightEmitter(150, 300, 0.1, 1, group2));
+      groups.add(group2);
+    }
+
+    if (bottomProducer) {
+      LightGroup group3 = new LightGroup(3, new Color(150, 150, 255));
+      genepool.add(new LightGoalGene(20, 550, 350, new Color(150, 150, 255), group3));
+      genepool.add(createLightEmitter(150, 350, 0.1, 1.2, group3));
+      groups.add(group3);
+    }
+
+
     int genes = (int) geneFactory.getRandom(3, 25);
     for (int i = 0; i < genes; i++) {
       Gene gene = generateGene();
 
-      if (gene instanceof TriangleReflectorGene) {
+      if (gene instanceof TriangleReflectorGene && groups.size() > 1) {
         ((TriangleReflectorGene) gene).setAllGroups(groups);
         ((TriangleReflectorGene) gene).setReflectiveGroups(geneFactory.randomSubCollection(groups, 0.20));
       }

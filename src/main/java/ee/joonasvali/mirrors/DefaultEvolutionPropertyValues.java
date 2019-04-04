@@ -12,4 +12,9 @@ public interface DefaultEvolutionPropertyValues {
   boolean REPELLENTS_ENABLED = true;
   double GENE_ADDITION_RATE = 0.05;
   double GENE_DELETION_RATE = 0.01;
+
+  boolean TOP_PRODUCER_ENABLED = false;
+  boolean MIDDLE_PRODUCER_ENABLED = true;
+  boolean BOTTOM_PRODUCER_ENABLED = false;
+
 }

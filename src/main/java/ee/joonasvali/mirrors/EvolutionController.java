@@ -92,7 +92,7 @@ public class EvolutionController {
 
     Random random = new MersenneTwisterRNG();
     GeneFactory geneFactory = new GeneFactory(properties, random);
-    GenepoolProvider randomProvider = getProvider(geneFactory);
+    GenepoolProvider randomProvider = getProvider(geneFactory, properties);
     GenepoolCanditateFactory candidateFactory = new GenepoolCanditateFactory(randomProvider);
 
     List<EvolutionaryOperator<Genepool>> operators = getEvolutionaryOperators(geneFactory, properties);
@@ -166,8 +166,15 @@ public class EvolutionController {
     return Optional.of(winner);
   }
 
-  private static GenepoolProvider getProvider(GeneFactory geneFactory) {
-    return new GeneratorGenepoolProvider(geneFactory, Constants.DIMENSION_X, Constants.DIMENSION_Y);
+  private static GenepoolProvider getProvider(GeneFactory geneFactory, EvolutionProperties properties) {
+    return new GeneratorGenepoolProvider(
+        geneFactory,
+        Constants.DIMENSION_X,
+        Constants.DIMENSION_Y,
+        properties.isTopProducerEnabled(),
+        properties.isMiddleProducerEnabled(),
+        properties.isBottomProducerEnabled()
+    );
   }
 
   private static EvolutionObserver<? super Genepool> getEvolutionObserver(SerializationUtil saver, int generationOffset) {

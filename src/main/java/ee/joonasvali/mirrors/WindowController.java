@@ -15,6 +15,8 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class WindowController {
   private static final Logger log = LoggerFactory.getLogger(Launcher.class);
+  private static final long ENV_UPDATE_DELAY_MS = 9L;
+  private static final int GRAPHICS_UPDATE_DELAY_MS = 30;
 
   private final EnvironmentController env;
   private volatile GameContainer container;
@@ -31,7 +33,7 @@ public class WindowController {
     SwingUtilities.invokeAndWait(
         () -> {
           try {
-            container = new GameContainer(env, Constants.DIMENSION_X, Constants.DIMENSION_Y);
+            container = new GameContainer(env);
             container.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             container.setSize(new Dimension(Constants.DIMENSION_X, Constants.DIMENSION_Y));
             container.setVisible(true);
@@ -42,20 +44,16 @@ public class WindowController {
     );
 
     // Make the graphics update.
-    int delay = 30;
     ActionListener taskPerformer = evt -> container.repaint();
-    timer = new Timer(delay, taskPerformer);
+    timer = new Timer(GRAPHICS_UPDATE_DELAY_MS, taskPerformer);
     timer.start();
 
     // Make the simulation update.
-    final Object lock = env.getEnvironment().getLock();
     while (running) {
-
-      synchronized (lock) {
+      synchronized (env.getEnvironment().getLock()) {
         env.nextStep();
       }
-
-      Thread.sleep(9L);
+      Thread.sleep(ENV_UPDATE_DELAY_MS);
     }
 
 

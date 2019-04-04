@@ -14,6 +14,11 @@ public class EvolutionProperties {
   private final double geneAdditionRate;
   private final double geneDeletionRate;
 
+  private boolean topProducerEnabled = false;
+  private boolean middleProducerEnabled = true;
+  private boolean bottomProducerEnabled = false;
+
+
   public EvolutionProperties(
       int elites,
       int concurrent,
@@ -81,5 +86,29 @@ public class EvolutionProperties {
 
   public double getGeneDeletionRate() {
     return geneDeletionRate;
+  }
+
+  public boolean isTopProducerEnabled() {
+    return topProducerEnabled;
+  }
+
+  public boolean isMiddleProducerEnabled() {
+    return middleProducerEnabled;
+  }
+
+  public boolean isBottomProducerEnabled() {
+    return bottomProducerEnabled;
+  }
+
+  public void setTopProducerEnabled(boolean topProducerEnabled) {
+    this.topProducerEnabled = topProducerEnabled;
+  }
+
+  public void setMiddleProducerEnabled(boolean middleProducerEnabled) {
+    this.middleProducerEnabled = middleProducerEnabled;
+  }
+
+  public void setBottomProducerEnabled(boolean bottomProducerEnabled) {
+    this.bottomProducerEnabled = bottomProducerEnabled;
   }
 }

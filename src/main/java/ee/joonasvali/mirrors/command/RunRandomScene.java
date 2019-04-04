@@ -5,6 +5,7 @@ import ee.joonasvali.mirrors.EnvironmentController;
 import ee.joonasvali.mirrors.EvolutionController;
 import ee.joonasvali.mirrors.EvolutionProperties;
 import ee.joonasvali.mirrors.EvolutionPropertyLoader;
+import ee.joonasvali.mirrors.scene.Constants;
 import ee.joonasvali.mirrors.scene.EnvironmentBuilder;
 import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 import ee.joonasvali.mirrors.scene.genetic.GeneticEnvironmentBuilder;
@@ -34,7 +35,12 @@ public class RunRandomScene {
     );
     GeneFactory geneFactory = new GeneFactory(evolutionProperties, random);
     EnvironmentBuilder builder = new GeneticEnvironmentBuilder(
-        new GeneratorGenepoolProvider(geneFactory, 750, 550)
+        new GeneratorGenepoolProvider(geneFactory,
+            Constants.DIMENSION_X, Constants.DIMENSION_Y,
+            evolutionProperties.isTopProducerEnabled(),
+            evolutionProperties.isMiddleProducerEnabled(),
+            evolutionProperties.isBottomProducerEnabled()
+        )
     );
     return new DemoEnvironmentController(builder);
   }

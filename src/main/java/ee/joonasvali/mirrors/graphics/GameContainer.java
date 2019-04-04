@@ -12,11 +12,10 @@ public class GameContainer extends JFrame {
   private final EnvironmentController env;
   private final JPanel canvas;
 
-  public GameContainer(EnvironmentController env, int width, int height) {
+  public GameContainer(EnvironmentController env) {
     this.env = env;
     this.setLayout(new BorderLayout());
     this.canvas = createCanvas();
-    this.canvas.setSize(width, height);
     this.canvas.setBorder(BorderFactory.createLineBorder(Color.black));
     this.add(canvas, BorderLayout.CENTER);
   }
