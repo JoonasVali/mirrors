@@ -17,18 +17,18 @@ public class Launcher {
   private static final Logger log = LoggerFactory.getLogger(Launcher.class);
 
   public static void main(String[] args) throws InvocationTargetException, InterruptedException {
-    ModelController env = getEnvironment(args);
+    ModelController modelController = getModelController(args);
 
-    if (env == null) {
+    if (modelController == null) {
       log.debug("ModelController not present. Exiting.");
       System.exit(0);
     }
 
-    WindowController controller = new WindowController(env);
+    WindowController controller = new WindowController(modelController);
     controller.launch();
   }
 
-  private static ModelController getEnvironment(String[] args) {
+  private static ModelController getModelController(String[] args) {
     if (args.length == 0) {
       log.info("No program arguments, launching random demo scene.");
       return RunRandomScene.runRandom(args);

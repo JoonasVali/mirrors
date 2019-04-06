@@ -36,7 +36,7 @@ public class Model {
     this.objects.add(physical);
   }
 
-  public void actUntilNoLightLeft() {
+  public void actUntilNoParticlesLeft() {
     do {
       act(1);
     } while (hasParticlesRemaining());
