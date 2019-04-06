@@ -17,27 +17,27 @@ public class Repellent extends RoundPhysical implements Collidable {
   }
 
   @Override
-  public boolean isCollision(Light light) {
-    return CollisionUtil.areColliding(this, light.getX(), light.getY());
+  public boolean isCollision(Particle particle) {
+    return CollisionUtil.areColliding(this, particle.getX(), particle.getY());
   }
 
   @Override
-  public void actCollision(Light light, Environment environment) {
+  public void actCollision(Particle particle, Model model) {
     if (delta > 0) {
-      double distX = midX - light.getX();
-      double distY = midY - light.getY();
+      double distX = midX - particle.getX();
+      double distY = midY - particle.getY();
 
       double forceX = radius - Math.abs(distX);
       double forceY = radius - Math.abs(distY);
 
-      float angle = (float) Math.toDegrees(Math.atan2(light.getY() - midY, light.getX() - midX)) + 90;
+      float angle = (float) Math.toDegrees(Math.atan2(particle.getY() - midY, particle.getX() - midX)) + 90;
 
       if (angle < 0) {
         angle += 360;
       }
 
       double force = Math.sqrt(Math.pow(forceX, 2) + Math.pow(forceY, 2)) / 30d;
-      double angleDiff = angle - light.getAngle();
+      double angleDiff = angle - particle.getAngle();
 
       while (angleDiff > 180) {
         angleDiff -= 360;
@@ -46,7 +46,7 @@ public class Repellent extends RoundPhysical implements Collidable {
         angleDiff += 360;
       }
 
-      light.setAngle(light.getAngle() + angleDiff * force * delta);
+      particle.setAngle(particle.getAngle() + angleDiff * force * delta);
     }
   }
 

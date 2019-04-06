@@ -4,8 +4,6 @@ import ee.joonasvali.mirrors.graphics.Util;
 
 import java.awt.*;
 
-import static java.lang.Math.atan2;
-
 /**
  * @author Joonas Vali April 2017
  */
@@ -28,41 +26,41 @@ public abstract class LinePhysical implements Collidable {
     g.drawLine((int)x, (int)y, (int)x2, (int)y2);
   }
 
-  private boolean isAboutToCollide(Light light) {
-    double lightX = light.getX();
-    double lightY = light.getY();
-    double speed = light.getSpeed();
-    double angle = light.getAngle();
+  private boolean isAboutToCollide(Particle particle) {
+    double particleX = particle.getX();
+    double particleY = particle.getY();
+    double speed = particle.getSpeed();
+    double angle = particle.getAngle();
     double xVector = speed * Math.cos(Math.toRadians(angle - 90));
     double yVector = speed * Math.sin(Math.toRadians(angle - 90));
-    double nextX = lightX + xVector;
-    double nextY = lightY + yVector;
-    return Util.isIntersecting(lightX, lightY, nextX, nextY, x, y, x2, y2);
+    double nextX = particleX + xVector;
+    double nextY = particleY + yVector;
+    return Util.isIntersecting(particleX, particleY, nextX, nextY, x, y, x2, y2);
   }
 
 
   @Override
-  public boolean isCollision(Light light) {
-    return isAboutToCollide(light);
+  public boolean isCollision(Particle particle) {
+    return isAboutToCollide(particle);
   }
 
   @Override
-  public void actCollision(Light light, Environment environment) {
-    double lightX = light.getX();
-    double lightY = light.getY();
+  public void actCollision(Particle particle, Model model) {
+    double particleX = particle.getX();
+    double particleY = particle.getY();
 
-    double xVector = light.getSpeed() * Math.cos(Math.toRadians(light.getAngle() - 90));
-    double yVector = light.getSpeed() * Math.sin(Math.toRadians(light.getAngle() - 90));
-    double nextX = lightX + xVector;
-    double nextY = lightY + yVector;
+    double xVector = particle.getSpeed() * Math.cos(Math.toRadians(particle.getAngle() - 90));
+    double yVector = particle.getSpeed() * Math.sin(Math.toRadians(particle.getAngle() - 90));
+    double nextX = particleX + xVector;
+    double nextY = particleY + yVector;
 
-    Point intersection = Util.getLineIntersection(lightX, lightY, nextX, nextY, x, y, x2, y2);
+    Point intersection = Util.getLineIntersection(particleX, particleY, nextX, nextY, x, y, x2, y2);
     if (intersection != null) {
-      runLightCollisionAction(light, xVector, yVector);
+      runLightCollisionAction(particle, xVector, yVector);
     }
 
   }
 
-  abstract void runLightCollisionAction(Light light, double lightXVector, double lightYVector);
+  abstract void runLightCollisionAction(Particle particle, double particleXVector, double particleYVector);
 
 }

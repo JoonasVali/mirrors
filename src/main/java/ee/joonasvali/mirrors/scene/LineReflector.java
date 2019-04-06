@@ -20,9 +20,9 @@ public class LineReflector extends LinePhysical {
   }
 
   @Override
-  protected void runLightCollisionAction(Light light, double lightXVector, double lightYVector) {
-    if (reflectiveGroupIds != null && !reflectiveGroupIds.contains(light.getLightGroup().getId())) {
-      // This reflector is transparent to this light group.
+  protected void runLightCollisionAction(Particle particle, double particleXVector, double particleYVector) {
+    if (reflectiveGroupIds != null && !reflectiveGroupIds.contains(particle.getParticleGroup().getId())) {
+      // This reflector is transparent to this particle group.
       return;
     }
     double dx=x2-x;
@@ -32,16 +32,16 @@ public class LineReflector extends LinePhysical {
 
     //https://sinepost.wordpress.com/2012/08/30/bouncing-off-the-walls-more-productively/
 
-    double distPerpWall = distAlong(lightXVector, lightYVector, normalX, normalY);
-    double distParWall = distAlong(lightXVector, lightYVector, normalY, -normalX);
+    double distPerpWall = distAlong(particleXVector, particleYVector, normalX, normalY);
+    double distParWall = distAlong(particleXVector, particleYVector, normalY, -normalX);
 
     distPerpWall = -distPerpWall;
 
-    lightXVector = distParWall * normalY + distPerpWall * normalX;
-    lightYVector = distParWall * -normalX + distPerpWall * normalY;
-    double angle = Math.toDegrees(atan2(lightYVector, lightXVector)) + 90;
+    particleXVector = distParWall * normalY + distPerpWall * normalX;
+    particleYVector = distParWall * -normalX + distPerpWall * normalY;
+    double angle = Math.toDegrees(atan2(particleYVector, particleXVector)) + 90;
 
-    light.setAngle(angle);
+    particle.setAngle(angle);
   }
 
   public void render(Graphics2D g) {

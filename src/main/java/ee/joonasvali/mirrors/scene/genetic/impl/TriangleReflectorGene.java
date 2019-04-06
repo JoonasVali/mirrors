@@ -1,7 +1,7 @@
 package ee.joonasvali.mirrors.scene.genetic.impl;
 
-import ee.joonasvali.mirrors.scene.Environment;
-import ee.joonasvali.mirrors.scene.LightGroup;
+import ee.joonasvali.mirrors.scene.Model;
+import ee.joonasvali.mirrors.scene.ParticleGroup;
 import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.LineReflector;
 import ee.joonasvali.mirrors.scene.Physical;
@@ -31,8 +31,8 @@ public class TriangleReflectorGene implements Gene<TriangleReflectorGene> {
   private final double x3;
   private final double y3;
 
-  private Set<LightGroup> reflectiveGroups;
-  private Set<LightGroup> allGroups;
+  private Set<ParticleGroup> reflectiveGroups;
+  private Set<ParticleGroup> allGroups;
 
   public TriangleReflectorGene(
       double x, double y, double x1, double y1, double x2, double y2, double x3, double y3) {
@@ -72,22 +72,22 @@ public class TriangleReflectorGene implements Gene<TriangleReflectorGene> {
     return gene;
   }
 
-  public void setReflectiveGroups(Set<LightGroup> reflectiveGroups) {
+  public void setReflectiveGroups(Set<ParticleGroup> reflectiveGroups) {
     this.reflectiveGroups = reflectiveGroups;
   }
 
-  public void setAllGroups(Set<LightGroup> allGroups) {
+  public void setAllGroups(Set<ParticleGroup> allGroups) {
     this.allGroups = allGroups;
   }
 
   @Override
-  public List<Physical> createPhysicals(Environment environment) {
+  public List<Physical> createPhysicals(Model model) {
     if (reflectiveGroups != null) {
       List<Physical> physicals = new ArrayList<>();
       int yMin = (int) (Math.min(Math.min(y1, y2), y3) + y);
       int xMax = (int) (Math.max(Math.max(x1, x2), x3) + x);
       int count = 0;
-      for (LightGroup group : reflectiveGroups) {
+      for (ParticleGroup group : reflectiveGroups) {
         physicals.add(
             new BoxLabelPhysical(xMax + (BOX_SPACE + 1 + BOX_SIZE) * count, yMin, BOX_SIZE, BOX_SIZE, group.getColor())
         );
@@ -99,11 +99,11 @@ public class TriangleReflectorGene implements Gene<TriangleReflectorGene> {
   }
 
   @Override
-  public List<LinePhysical> createLinePhysicals(Environment environment) {
+  public List<LinePhysical> createLinePhysicals(Model model) {
     List<LinePhysical> lines = new ArrayList<>();
     Set<Integer> groupIds = reflectiveGroups == null ?
         null :
-        reflectiveGroups.stream().map(LightGroup::getId).collect(Collectors.toSet());
+        reflectiveGroups.stream().map(ParticleGroup::getId).collect(Collectors.toSet());
     lines.add(new LineReflector(x1 + x, y1 + y, x2 + x, y2 + y, groupIds));
     lines.add(new LineReflector(x2 + x, y2 + y, x3 + x, y3 + y, groupIds));
     lines.add(new LineReflector(x3 + x, y3 + y, x1 + x, y1 + y, groupIds));

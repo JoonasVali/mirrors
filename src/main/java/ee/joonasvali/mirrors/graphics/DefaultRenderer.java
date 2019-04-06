@@ -1,7 +1,7 @@
 package ee.joonasvali.mirrors.graphics;
 
-import ee.joonasvali.mirrors.scene.Environment;
-import ee.joonasvali.mirrors.scene.Light;
+import ee.joonasvali.mirrors.scene.Model;
+import ee.joonasvali.mirrors.scene.Particle;
 import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.Physical;
 
@@ -13,25 +13,25 @@ import java.awt.*;
  */
 public class DefaultRenderer implements Renderer {
   @Override
-  public void render(Environment environment, Graphics2D g) {
-    synchronized (environment.getLock()) {
+  public void render(Model model, Graphics2D g) {
+    synchronized (model.getLock()) {
       g.setColor(Color.BLACK);
       g.fillRect(0, 0, 1000, 1000);
-      for (LinePhysical line : environment.getLines()) {
+      for (LinePhysical line : model.getLines()) {
         line.render(g);
       }
 
-      for (Physical object : environment.getObjects()) {
+      for (Physical object : model.getObjects()) {
         object.render(g);
       }
 
-      for (Light light : environment.getParticles()) {
-        light.render(g);
+      for (Particle particle : model.getParticles()) {
+        particle.render(g);
       }
     }
 
     g.setColor(Color.darkGray);
-    g.drawString(String.format("%.1f", environment.getScore()), 10, 30);
+    g.drawString(String.format("%.1f", model.getScore()), 10, 30);
     g.setColor(Color.darkGray);
   }
 }

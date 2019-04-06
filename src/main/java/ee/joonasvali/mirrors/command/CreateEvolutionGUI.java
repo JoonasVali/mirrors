@@ -1,6 +1,7 @@
 package ee.joonasvali.mirrors.command;
 
-import ee.joonasvali.mirrors.DemoEnvironmentController;
+import ee.joonasvali.mirrors.DemoModelController;
+import ee.joonasvali.mirrors.ModelController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +18,7 @@ public class CreateEvolutionGUI {
   private static final String APPROVE_BUTTON_TEXT = "Select folder";
   private static final String PROJECTS_FOLDER_NAME = "projects";
 
-  public static DemoEnvironmentController createEvolutionDirectory(String[] args) {
+  public static ModelController createEvolutionDirectory(String[] args) {
     if (GraphicsEnvironment.isHeadless()) {
       log.error("This system is not supported as it appears to be headless. GraphicsEnvironment.isHeadless() == true");
       System.exit(-1);

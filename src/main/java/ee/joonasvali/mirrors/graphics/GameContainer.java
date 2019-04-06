@@ -1,6 +1,6 @@
 package ee.joonasvali.mirrors.graphics;
 
-import ee.joonasvali.mirrors.EnvironmentController;
+import ee.joonasvali.mirrors.ModelController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,10 +9,10 @@ import java.awt.*;
  * @author Joonas Vali April 2017
  */
 public class GameContainer extends JFrame {
-  private final EnvironmentController env;
+  private final ModelController env;
   private final JPanel canvas;
 
-  public GameContainer(EnvironmentController env) {
+  public GameContainer(ModelController env) {
     this.env = env;
     this.setLayout(new BorderLayout());
     this.canvas = createCanvas();

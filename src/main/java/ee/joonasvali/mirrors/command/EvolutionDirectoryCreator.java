@@ -1,6 +1,6 @@
 package ee.joonasvali.mirrors.command;
 
-import ee.joonasvali.mirrors.EnvironmentController;
+import ee.joonasvali.mirrors.ModelController;
 import ee.joonasvali.mirrors.EvolutionController;
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class EvolutionDirectoryCreator {
   private static final String PROPERTIES_FILE_NAME = isWin ? EVOLUTION_WIN_PROPERTIES : EVOLUTION_UNIX_PROPERTIES;
   public static final String PLAY_DEMO_NAME = "demo" + (isWin ? ".bat" : ".sh");
 
-  public static EnvironmentController createEvolutionDirectory(String[] args) {
+  public static ModelController createEvolutionDirectory(String[] args) {
     if (args.length < 2) {
       log.error("expected parameter to be the file pointing to target evolution directory");
       System.exit(-1);
