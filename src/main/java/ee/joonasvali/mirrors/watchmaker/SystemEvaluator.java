@@ -2,7 +2,7 @@ package ee.joonasvali.mirrors.watchmaker;
 
 import ee.joonasvali.mirrors.scene.Environment;
 import ee.joonasvali.mirrors.scene.EnvironmentBuilder;
-import ee.joonasvali.mirrors.scene.genetic.Genepool;
+import ee.joonasvali.mirrors.scene.genetic.Genome;
 import ee.joonasvali.mirrors.scene.genetic.GeneticEnvironmentBuilder;
 import org.slf4j.LoggerFactory;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class SystemEvaluator implements FitnessEvaluator<Genepool> {
+public class SystemEvaluator implements FitnessEvaluator<Genome> {
 
-  private final Map<Genepool, Double> cache = new WeakHashMap<>();
+  private final Map<Genome, Double> cache = new WeakHashMap<>();
 
   @Override
-  public double getFitness(Genepool candidate, List<? extends Genepool> population) {
+  public double getFitness(Genome candidate, List<? extends Genome> population) {
     Double score;
     synchronized (cache) {
       score = cache.get(candidate);
@@ -32,7 +32,7 @@ public class SystemEvaluator implements FitnessEvaluator<Genepool> {
     return score;
   }
 
-  private double evaluate(Genepool candidate) {
+  private double evaluate(Genome candidate) {
     EnvironmentBuilder builder = new GeneticEnvironmentBuilder(candidate);
     Environment environment = builder.getEnvironment();
     environment.actUntilNoLightLeft();

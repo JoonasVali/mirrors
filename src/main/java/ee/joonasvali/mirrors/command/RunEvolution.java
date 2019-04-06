@@ -4,9 +4,9 @@ import ee.joonasvali.mirrors.DemoEnvironmentController;
 import ee.joonasvali.mirrors.EnvironmentController;
 import ee.joonasvali.mirrors.EvolutionController;
 import ee.joonasvali.mirrors.scene.EnvironmentBuilder;
-import ee.joonasvali.mirrors.scene.genetic.Genepool;
+import ee.joonasvali.mirrors.scene.genetic.Genome;
 import ee.joonasvali.mirrors.scene.genetic.GeneticEnvironmentBuilder;
-import ee.joonasvali.mirrors.scene.genetic.impl.LoaderGenepoolProvider;
+import ee.joonasvali.mirrors.scene.genetic.impl.LoaderGenomeProvider;
 import ee.joonasvali.mirrors.scene.genetic.util.SerializationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public class RunEvolution {
     Path evolutionProperties = Paths.get(args[1]).toAbsolutePath();
     Path evolutionDirectory = evolutionProperties.getParent();
     Path evolutionFile = evolutionDirectory.resolve(EvolutionController.POPULATIONS_FILE_NAME);
-    Collection<Genepool> seedPopulation = Collections.emptyList();
+    Collection<Genome> seedPopulation = Collections.emptyList();
 
     if (Files.exists(evolutionFile)) {
       log.info("Loaded existing population from evolution file: " + evolutionFile);
@@ -44,9 +44,9 @@ public class RunEvolution {
     }
 
     EvolutionController controller = new EvolutionController(evolutionDirectory);
-    Optional<Genepool> winner = controller.runEvolution(seedPopulation);
+    Optional<Genome> winner = controller.runEvolution(seedPopulation);
     if (winner.isPresent()) {
-      EnvironmentBuilder builder = new GeneticEnvironmentBuilder(new LoaderGenepoolProvider(winner.get()));
+      EnvironmentBuilder builder = new GeneticEnvironmentBuilder(new LoaderGenomeProvider(winner.get()));
       return new DemoEnvironmentController(builder);
     }
     return null;

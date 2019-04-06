@@ -9,22 +9,22 @@ import java.util.List;
 
 public class GeneticEnvironmentBuilder implements EnvironmentBuilder {
 
-  private Genepool genepool;
-  private GenepoolProvider provider;
+  private Genome genome;
+  private GenomeProvider provider;
 
-  public GeneticEnvironmentBuilder(GenepoolProvider provider) {
+  public GeneticEnvironmentBuilder(GenomeProvider provider) {
     this.provider = provider;
-    loadGenepool();
+    loadGenome();
   }
 
-  public GeneticEnvironmentBuilder(Genepool pool) {
-    this.genepool = pool;
+  public GeneticEnvironmentBuilder(Genome genome) {
+    this.genome = genome;
   }
 
   @Override
   public Environment getEnvironment() {
     Environment environment = new Environment();
-    for (Gene gene : genepool.getGenes()) {
+    for (Gene gene : genome.getGenes()) {
       List<Physical> physicalList = gene.createPhysicals(environment);
       if (physicalList != null) {
         physicalList.forEach(environment::addObject);
@@ -38,9 +38,9 @@ public class GeneticEnvironmentBuilder implements EnvironmentBuilder {
     return environment;
   }
 
-  public void loadGenepool() {
+  public void loadGenome() {
     if (provider != null) {
-      genepool = provider.provide();
+      genome = provider.provide();
     }
   }
 }

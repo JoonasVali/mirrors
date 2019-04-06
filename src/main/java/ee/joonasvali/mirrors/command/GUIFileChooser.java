@@ -3,7 +3,7 @@ package ee.joonasvali.mirrors.command;
 import ee.joonasvali.mirrors.DemoEnvironmentController;
 import ee.joonasvali.mirrors.scene.EnvironmentBuilder;
 import ee.joonasvali.mirrors.scene.genetic.GeneticEnvironmentBuilder;
-import ee.joonasvali.mirrors.scene.genetic.impl.LoaderGenepoolProvider;
+import ee.joonasvali.mirrors.scene.genetic.impl.LoaderGenomeProvider;
 import ee.joonasvali.mirrors.util.SceneFileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class GUIFileChooser {
       log.error("No file selected");
       System.exit(-1);
     } else {
-      EnvironmentBuilder builder = new GeneticEnvironmentBuilder(new LoaderGenepoolProvider(file));
+      EnvironmentBuilder builder = new GeneticEnvironmentBuilder(new LoaderGenomeProvider(file));
       return new DemoEnvironmentController(builder);
     }
     return null;

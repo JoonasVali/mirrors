@@ -2,12 +2,12 @@ package ee.joonasvali.mirrors;
 
 import ee.joonasvali.mirrors.scene.Constants;
 import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
-import ee.joonasvali.mirrors.scene.genetic.Genepool;
-import ee.joonasvali.mirrors.scene.genetic.GenepoolProvider;
-import ee.joonasvali.mirrors.scene.genetic.impl.GeneratorGenepoolProvider;
+import ee.joonasvali.mirrors.scene.genetic.Genome;
+import ee.joonasvali.mirrors.scene.genetic.GenomeProvider;
+import ee.joonasvali.mirrors.scene.genetic.impl.GeneratorGenomeProvider;
 import ee.joonasvali.mirrors.scene.genetic.util.SerializationUtil;
 import ee.joonasvali.mirrors.util.KeepAliveUtil;
-import ee.joonasvali.mirrors.watchmaker.GenepoolCanditateFactory;
+import ee.joonasvali.mirrors.watchmaker.GenomeCanditateFactory;
 import ee.joonasvali.mirrors.watchmaker.MutationOperator;
 import ee.joonasvali.mirrors.watchmaker.SystemEvaluator;
 import org.slf4j.Logger;
@@ -69,7 +69,7 @@ public class EvolutionController {
     }
   }
 
-  public Optional<Genepool> runEvolution(Collection<Genepool> seedPopulation) {
+  public Optional<Genome> runEvolution(Collection<Genome> seedPopulation) {
     log.info("Best improvement of every generation saved to: " + sampleDirectory);
     final SerializationUtil serializer = new SerializationUtil(sampleDirectory);
 
@@ -92,13 +92,13 @@ public class EvolutionController {
 
     Random random = new MersenneTwisterRNG();
     GeneFactory geneFactory = new GeneFactory(properties, random);
-    GenepoolProvider randomProvider = getProvider(geneFactory, properties);
-    GenepoolCanditateFactory candidateFactory = new GenepoolCanditateFactory(randomProvider);
+    GenomeProvider randomProvider = getProvider(geneFactory, properties);
+    GenomeCanditateFactory candidateFactory = new GenomeCanditateFactory(randomProvider);
 
-    List<EvolutionaryOperator<Genepool>> operators = getEvolutionaryOperators(geneFactory, properties);
-    EvolutionPipeline<Genepool> pipeline = new EvolutionPipeline<>(operators);
+    List<EvolutionaryOperator<Genome>> operators = getEvolutionaryOperators(geneFactory, properties);
+    EvolutionPipeline<Genome> pipeline = new EvolutionPipeline<>(operators);
 
-    EvolutionEngine<Genepool> engine
+    EvolutionEngine<Genome> engine
         = new GenerationalEvolutionEngine<>(
         candidateFactory,
         pipeline,
@@ -116,11 +116,11 @@ public class EvolutionController {
 
     TerminationCondition targetFitnessCondition = new TargetFitness(targetFitness, true);
 
-    Genepool winner;
+    Genome winner;
     try {
       synchronized (abortCondition) {
         // This is a blocking call, evolution happens here.
-        List<EvaluatedCandidate<Genepool>> population = engine.evolvePopulation(
+        List<EvaluatedCandidate<Genome>> population = engine.evolvePopulation(
             concurrent, elite, seedPopulation, targetFitnessCondition, abortCondition
         );
 
@@ -136,8 +136,8 @@ public class EvolutionController {
           return Optional.empty();
         }
 
-        Optional<EvaluatedCandidate<Genepool>> winnerCandidate = population.stream()
-            .filter(genepool -> genepool.getFitness() >= targetFitness)
+        Optional<EvaluatedCandidate<Genome>> winnerCandidate = population.stream()
+            .filter(genome -> genome.getFitness() >= targetFitness)
             .max(Comparator.comparingDouble(EvaluatedCandidate::getFitness));
 
         if (!winnerCandidate.isPresent()) {
@@ -166,8 +166,8 @@ public class EvolutionController {
     return Optional.of(winner);
   }
 
-  private static GenepoolProvider getProvider(GeneFactory geneFactory, EvolutionProperties properties) {
-    return new GeneratorGenepoolProvider(
+  private static GenomeProvider getProvider(GeneFactory geneFactory, EvolutionProperties properties) {
+    return new GeneratorGenomeProvider(
         geneFactory,
         Constants.DIMENSION_X,
         Constants.DIMENSION_Y,
@@ -177,12 +177,12 @@ public class EvolutionController {
     );
   }
 
-  private static EvolutionObserver<? super Genepool> getEvolutionObserver(SerializationUtil saver, int generationOffset) {
-    return new EvolutionObserver<Genepool>() {
+  private static EvolutionObserver<? super Genome> getEvolutionObserver(SerializationUtil saver, int generationOffset) {
+    return new EvolutionObserver<Genome>() {
       private volatile double last = 0;
 
       @Override
-      public void populationUpdate(PopulationData<? extends Genepool> data) {
+      public void populationUpdate(PopulationData<? extends Genome> data) {
         int generation = data.getGenerationNumber() + generationOffset;
         log.info("Time: " + new Date());
         log.info("best of generation (" + generation + "): " + data.getBestCandidateFitness());
@@ -198,8 +198,8 @@ public class EvolutionController {
     };
   }
 
-  private static ArrayList<EvolutionaryOperator<Genepool>> getEvolutionaryOperators(GeneFactory geneFactory, EvolutionProperties properties) {
-    ArrayList<EvolutionaryOperator<Genepool>> operators = new ArrayList<>();
+  private static ArrayList<EvolutionaryOperator<Genome>> getEvolutionaryOperators(GeneFactory geneFactory, EvolutionProperties properties) {
+    ArrayList<EvolutionaryOperator<Genome>> operators = new ArrayList<>();
     operators.add(new MutationOperator(geneFactory, properties.getGeneAdditionRate(), properties.getGeneDeletionRate()));
     return operators;
   }
