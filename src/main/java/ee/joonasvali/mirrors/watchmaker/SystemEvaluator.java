@@ -1,9 +1,9 @@
 package ee.joonasvali.mirrors.watchmaker;
 
-import ee.joonasvali.mirrors.scene.Environment;
-import ee.joonasvali.mirrors.scene.EnvironmentBuilder;
+import ee.joonasvali.mirrors.scene.Model;
+import ee.joonasvali.mirrors.scene.ModelBuilder;
 import ee.joonasvali.mirrors.scene.genetic.Genome;
-import ee.joonasvali.mirrors.scene.genetic.GeneticEnvironmentBuilder;
+import ee.joonasvali.mirrors.scene.genetic.GeneticModelBuilder;
 import org.slf4j.LoggerFactory;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
@@ -33,11 +33,11 @@ public class SystemEvaluator implements FitnessEvaluator<Genome> {
   }
 
   private double evaluate(Genome candidate) {
-    EnvironmentBuilder builder = new GeneticEnvironmentBuilder(candidate);
-    Environment environment = builder.getEnvironment();
-    environment.actUntilNoLightLeft();
-    LoggerFactory.getLogger(SystemEvaluator.class).info("Evaluated system to " + environment.getScore());
-    return environment.getScore();
+    ModelBuilder builder = new GeneticModelBuilder(candidate);
+    Model model = builder.buildModel();
+    model.actUntilNoLightLeft();
+    LoggerFactory.getLogger(SystemEvaluator.class).info("Evaluated system to " + model.getScore());
+    return model.getScore();
   }
 
   @Override

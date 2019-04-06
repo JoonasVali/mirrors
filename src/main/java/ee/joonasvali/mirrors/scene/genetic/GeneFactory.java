@@ -1,7 +1,7 @@
 package ee.joonasvali.mirrors.scene.genetic;
 
 import ee.joonasvali.mirrors.EvolutionProperties;
-import ee.joonasvali.mirrors.scene.LightGroup;
+import ee.joonasvali.mirrors.scene.ParticleGroup;
 import ee.joonasvali.mirrors.scene.genetic.impl.*;
 
 import java.util.ArrayList;
@@ -89,8 +89,8 @@ public class GeneFactory {
     return min + random.nextDouble() * (max - min);
   }
 
-  public Set<LightGroup> reflectiveGroups(Set<LightGroup> reflectiveGroups, Set<LightGroup> allGroups) {
-    Set<LightGroup> result = new HashSet<>();
+  public Set<ParticleGroup> reflectiveGroups(Set<ParticleGroup> reflectiveGroups, Set<ParticleGroup> allGroups) {
+    Set<ParticleGroup> result = new HashSet<>();
     // Add some elements
     result.addAll(randomSubCollection(allGroups, 1 - chanceOfMutation));
     // Remove some elements, wi
@@ -98,7 +98,7 @@ public class GeneFactory {
     return result;
   }
 
-  public Set<LightGroup> randomSubCollection(Set<LightGroup> groups, double chanceOfNotIncludingElement) {
+  public Set<ParticleGroup> randomSubCollection(Set<ParticleGroup> groups, double chanceOfNotIncludingElement) {
     if (chanceOfNotIncludingElement > 1 || chanceOfNotIncludingElement < 0) {
       throw new IllegalArgumentException("Bad chanceOfNotIncludingElement: " + chanceOfNotIncludingElement);
     }

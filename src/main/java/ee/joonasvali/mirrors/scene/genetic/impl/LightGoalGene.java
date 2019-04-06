@@ -1,9 +1,9 @@
 package ee.joonasvali.mirrors.scene.genetic.impl;
 
-import ee.joonasvali.mirrors.scene.Environment;
-import ee.joonasvali.mirrors.scene.LightGoal;
-import ee.joonasvali.mirrors.scene.LightGoalAction;
-import ee.joonasvali.mirrors.scene.LightGroup;
+import ee.joonasvali.mirrors.scene.Model;
+import ee.joonasvali.mirrors.scene.ParticleGoal;
+import ee.joonasvali.mirrors.scene.ParticleGoalAction;
+import ee.joonasvali.mirrors.scene.ParticleGroup;
 import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.Physical;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
@@ -18,10 +18,10 @@ public class LightGoalGene implements Gene<LightGoalGene> {
   private final double x;
   private final double y;
   private final Color internalColor;
-  private final LightGroup targetLightGroup;
+  private final ParticleGroup targetParticleGroup;
 
-  public LightGoalGene(double radius, double x, double y, Color internalColor, LightGroup targetLightGroup) {
-    this.targetLightGroup = targetLightGroup;
+  public LightGoalGene(double radius, double x, double y, Color internalColor, ParticleGroup targetParticleGroup) {
+    this.targetParticleGroup = targetParticleGroup;
     this.internalColor = internalColor;
     this.radius = radius;
     this.x = x;
@@ -30,30 +30,30 @@ public class LightGoalGene implements Gene<LightGoalGene> {
 
   @Override
   public Gene<LightGoalGene> copy() {
-    return new LightGoalGene(radius, x, y, internalColor, targetLightGroup);
+    return new LightGoalGene(radius, x, y, internalColor, targetParticleGroup);
   }
 
   @Override
   public LightGoalGene getOffspringGene(GeneFactory geneFactory) {
-    return new LightGoalGene(radius, x, y, internalColor, targetLightGroup);
+    return new LightGoalGene(radius, x, y, internalColor, targetParticleGroup);
   }
 
   @Override
-  public List<Physical> createPhysicals(Environment environment) {
-    LightGoalAction action = light -> {
-      environment.remove(light);
+  public List<Physical> createPhysicals(Model model) {
+    ParticleGoalAction action = particle -> {
+      model.remove(particle);
 
-      if (targetLightGroup.getId() == light.getLightGroup().getId()) {
-        environment.addScore((light).getIntensity());
+      if (targetParticleGroup.getId() == particle.getParticleGroup().getId()) {
+        model.addScore((particle).getIntensity());
       }
     };
     return Collections.singletonList(
-        new LightGoal(x - radius / 2, y - radius / 2, 0, radius, action, internalColor)
+        new ParticleGoal(x - radius / 2, y - radius / 2, 0, radius, action, internalColor)
     );
   }
 
   @Override
-  public List<LinePhysical> createLinePhysicals(Environment environment) {
+  public List<LinePhysical> createLinePhysicals(Model model) {
     return null;
   }
 }

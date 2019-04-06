@@ -11,13 +11,13 @@ public class Accelerator extends RoundPhysical implements Collidable {
   }
 
   @Override
-  public boolean isCollision(Light light) {
-    return CollisionUtil.areColliding(this, light.getX(), light.getY());
+  public boolean isCollision(Particle particle) {
+    return CollisionUtil.areColliding(this, particle.getX(), particle.getY());
   }
 
   @Override
-  public void actCollision(Light light, Environment environment) {
-    light.setSpeed(light.getSpeed() + acceleration);
+  public void actCollision(Particle particle, Model model) {
+    particle.setSpeed(particle.getSpeed() + acceleration);
   }
 
   @Override

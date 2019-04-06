@@ -2,13 +2,13 @@ package ee.joonasvali.mirrors.scene;
 
 import java.awt.*;
 
-public class LightGroup {
+public class ParticleGroup {
   private final int id;
   private Color color;
   // Kept with lazy initialization due to exclusion from serialization.
   private volatile transient Cache cache;
 
-  public LightGroup(int id, Color color) {
+  public ParticleGroup(int id, Color color) {
     this.id = id;
     this.color = color;
   }

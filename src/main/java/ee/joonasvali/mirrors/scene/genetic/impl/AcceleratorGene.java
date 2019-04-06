@@ -1,7 +1,7 @@
 package ee.joonasvali.mirrors.scene.genetic.impl;
 
 import ee.joonasvali.mirrors.scene.Accelerator;
-import ee.joonasvali.mirrors.scene.Environment;
+import ee.joonasvali.mirrors.scene.Model;
 import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.Physical;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
@@ -39,12 +39,12 @@ public class AcceleratorGene implements Gene<AcceleratorGene> {
   }
 
   @Override
-  public List<Physical> createPhysicals(Environment environment) {
+  public List<Physical> createPhysicals(Model model) {
     return Collections.singletonList(new Accelerator(x, y, 0, radius, acceleration));
   }
 
   @Override
-  public List<LinePhysical> createLinePhysicals(Environment environment) {
+  public List<LinePhysical> createLinePhysicals(Model model) {
     return null;
   }
 }

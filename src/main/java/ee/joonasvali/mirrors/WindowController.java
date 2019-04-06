@@ -18,12 +18,12 @@ public class WindowController {
   private static final long ENV_UPDATE_DELAY_MS = 9L;
   private static final int GRAPHICS_UPDATE_DELAY_MS = 30;
 
-  private final EnvironmentController env;
+  private final ModelController env;
   private volatile GameContainer container;
   private volatile Timer timer;
   private volatile boolean running = true;
 
-  public WindowController(EnvironmentController env) {
+  public WindowController(ModelController env) {
     this.env = env;
   }
 
@@ -50,7 +50,7 @@ public class WindowController {
 
     // Make the simulation update.
     while (running) {
-      synchronized (env.getEnvironment().getLock()) {
+      synchronized (env.getModel().getLock()) {
         env.nextStep();
       }
       Thread.sleep(ENV_UPDATE_DELAY_MS);

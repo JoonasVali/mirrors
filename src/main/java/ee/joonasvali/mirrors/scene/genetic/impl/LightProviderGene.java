@@ -12,9 +12,9 @@ public class LightProviderGene implements Gene<LightProviderGene> {
   private final double y;
   private final double density;
   private final double velocity;
-  private final LightGroup group;
+  private final ParticleGroup group;
 
-  public LightProviderGene(double x, double y, double density, double velocity, LightGroup group) {
+  public LightProviderGene(double x, double y, double density, double velocity, ParticleGroup group) {
     this.x = x;
     this.y = y;
     this.density = density;
@@ -33,14 +33,14 @@ public class LightProviderGene implements Gene<LightProviderGene> {
   }
 
   @Override
-  public List<Physical> createPhysicals(Environment environment) {
+  public List<Physical> createPhysicals(Model model) {
     return Collections.singletonList(
-        new LightSource(x, y, density, velocity, environment, group)
+        new ParticleSource(x, y, density, velocity, model, group)
     );
   }
 
   @Override
-  public List<LinePhysical> createLinePhysicals(Environment environment) {
+  public List<LinePhysical> createLinePhysicals(Model model) {
     return null;
   }
 

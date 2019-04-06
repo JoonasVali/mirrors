@@ -1,8 +1,8 @@
 package ee.joonasvali.mirrors.command;
 
-import ee.joonasvali.mirrors.DemoEnvironmentController;
-import ee.joonasvali.mirrors.scene.EnvironmentBuilder;
-import ee.joonasvali.mirrors.scene.genetic.GeneticEnvironmentBuilder;
+import ee.joonasvali.mirrors.DemoModelController;
+import ee.joonasvali.mirrors.scene.ModelBuilder;
+import ee.joonasvali.mirrors.scene.genetic.GeneticModelBuilder;
 import ee.joonasvali.mirrors.scene.genetic.impl.LoaderGenomeProvider;
 import ee.joonasvali.mirrors.util.SceneFileChooser;
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 public class GUIFileChooser {
   private static final Logger log = LoggerFactory.getLogger(GUIFileChooser.class);
 
-  public static DemoEnvironmentController chooseFileWithGUI(String[] args) {
+  public static DemoModelController chooseFileWithGUI(String[] args) {
     if (args.length < 2) {
       log.error("expected 2nd parameter to be the file pointing to sample directory");
       System.exit(-1);
@@ -35,8 +35,8 @@ public class GUIFileChooser {
       log.error("No file selected");
       System.exit(-1);
     } else {
-      EnvironmentBuilder builder = new GeneticEnvironmentBuilder(new LoaderGenomeProvider(file));
-      return new DemoEnvironmentController(builder);
+      ModelBuilder builder = new GeneticModelBuilder(new LoaderGenomeProvider(file));
+      return new DemoModelController(builder);
     }
     return null;
   }

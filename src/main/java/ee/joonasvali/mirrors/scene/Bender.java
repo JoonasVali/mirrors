@@ -14,13 +14,13 @@ public class Bender extends RoundPhysical implements Collidable {
   }
 
   @Override
-  public boolean isCollision(Light light) {
-    return CollisionUtil.areColliding(this, light.getX(), light.getY());
+  public boolean isCollision(Particle particle) {
+    return CollisionUtil.areColliding(this, particle.getX(), particle.getY());
   }
 
   @Override
-  public void actCollision(Light light, Environment environment) {
-    light.setAngle(light.getAngle() + strength);
+  public void actCollision(Particle particle, Model model) {
+    particle.setAngle(particle.getAngle() + strength);
   }
 
   @Override
