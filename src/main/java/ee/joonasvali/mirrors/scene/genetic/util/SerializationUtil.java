@@ -12,7 +12,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
-import ee.joonasvali.mirrors.scene.genetic.Genepool;
+import ee.joonasvali.mirrors.scene.genetic.Genome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +36,7 @@ public class SerializationUtil {
 
   private static Gson createGson() {
     GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
-    builder.registerTypeAdapter(Genepool.class, new GenepoolAdapter());
+    builder.registerTypeAdapter(Genome.class, new GenomeAdapter());
     return builder.create();
   }
 
@@ -44,52 +44,52 @@ public class SerializationUtil {
     this.dir = dir;
   }
 
-  public void serializePopulation(Collection<Genepool> pools, Path file) {
+  public void serializePopulation(Collection<Genome> genepool, Path file) {
     try {
-      savePopulation(pools, file);
+      savePopulation(genepool, file);
     } catch (IOException e) {
       log.error("abc", e);
     }
     log.info("saved population to " + file.toString());
   }
 
-  public void serialize(Genepool pool, String name) throws IOException {
+  public void serialize(Genome genome, String name) throws IOException {
     Files.createDirectories(dir);
     Path file = dir.resolve(name + ".json");
     try {
-      save(pool, file);
+      save(genome, file);
     } catch (IOException e) {
       log.error("abc", e);
     }
-    log.info("saved pool to " + file.toString());
+    log.info("saved genome to " + file.toString());
   }
 
-  private void save(Genepool pool, Path path) throws IOException {
+  private void save(Genome genome, Path path) throws IOException {
     try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-      gson.toJson(pool, writer);
+      gson.toJson(genome, writer);
     }
   }
 
-  private void savePopulation(Collection<Genepool> pools, Path path) throws IOException {
+  private void savePopulation(Collection<Genome> genepool, Path path) throws IOException {
     try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-      gson.toJson(pools, writer);
+      gson.toJson(genepool, writer);
     }
   }
 
-  public static Genepool deserialize(Path file) throws IOException {
+  public static Genome deserialize(Path file) throws IOException {
     String contents = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
-    return gson.fromJson(contents, Genepool.class);
+    return gson.fromJson(contents, Genome.class);
   }
 
-  public static Collection<Genepool> deserializePopulation(Path file) throws IOException {
+  public static Collection<Genome> deserializePopulation(Path file) throws IOException {
     String contents = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
-    Type collectionType = new TypeToken<Collection<Genepool>>() {}.getType();
+    Type collectionType = new TypeToken<Collection<Genome>>() {}.getType();
     return gson.fromJson(contents, collectionType);
   }
 
-  private static class GenepoolAdapter implements JsonSerializer<Genepool>, JsonDeserializer<Genepool> {
-    public Genepool deserialize(JsonElement jsonElement, Type type,
-                         JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+  private static class GenomeAdapter implements JsonSerializer<Genome>, JsonDeserializer<Genome> {
+    public Genome deserialize(JsonElement jsonElement, Type type,
+                              JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
       JsonObject jsonObject = jsonElement.getAsJsonObject();
       List<Gene> genes = new ArrayList<>();
       for (String key: jsonObject.keySet()) {
@@ -101,12 +101,12 @@ public class SerializationUtil {
           genes.add(gene);
         }
       }
-      return new Genepool(genes);
+      return new Genome(genes);
     }
 
-    public JsonElement serialize(Genepool pool, Type type, JsonSerializationContext jsonSerializationContext) {
+    public JsonElement serialize(Genome genome, Type type, JsonSerializationContext jsonSerializationContext) {
       Map<String, List<Gene>> genemap = new HashMap<>();
-      pool.forEach(gene -> {
+      genome.forEach(gene -> {
         List<Gene> list = genemap.computeIfAbsent(gene.getClass().getName(), klass -> new ArrayList<>());
         list.add(gene);
       });

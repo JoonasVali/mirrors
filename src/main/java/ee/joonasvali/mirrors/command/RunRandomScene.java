@@ -9,7 +9,7 @@ import ee.joonasvali.mirrors.scene.Constants;
 import ee.joonasvali.mirrors.scene.EnvironmentBuilder;
 import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 import ee.joonasvali.mirrors.scene.genetic.GeneticEnvironmentBuilder;
-import ee.joonasvali.mirrors.scene.genetic.impl.GeneratorGenepoolProvider;
+import ee.joonasvali.mirrors.scene.genetic.impl.GeneratorGenomeProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uncommons.maths.random.MersenneTwisterRNG;
@@ -35,7 +35,7 @@ public class RunRandomScene {
     );
     GeneFactory geneFactory = new GeneFactory(evolutionProperties, random);
     EnvironmentBuilder builder = new GeneticEnvironmentBuilder(
-        new GeneratorGenepoolProvider(geneFactory,
+        new GeneratorGenomeProvider(geneFactory,
             Constants.DIMENSION_X, Constants.DIMENSION_Y,
             evolutionProperties.isTopProducerEnabled(),
             evolutionProperties.isMiddleProducerEnabled(),

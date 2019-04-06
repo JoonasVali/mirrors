@@ -3,19 +3,18 @@ package ee.joonasvali.mirrors.watchmaker;
 import ee.joonasvali.mirrors.scene.Constants;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
 import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
-import ee.joonasvali.mirrors.scene.genetic.Genepool;
+import ee.joonasvali.mirrors.scene.genetic.Genome;
 import ee.joonasvali.mirrors.scene.genetic.impl.LightGoalGene;
 import ee.joonasvali.mirrors.scene.genetic.impl.LightProviderGene;
 import org.uncommons.watchmaker.framework.EvolutionaryOperator;
 
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class MutationOperator implements EvolutionaryOperator<Genepool> {
+public class MutationOperator implements EvolutionaryOperator<Genome> {
 
   private final double additionRate;
   private final double removalRate;
@@ -29,16 +28,16 @@ public class MutationOperator implements EvolutionaryOperator<Genepool> {
   }
 
   @Override
-  public List<Genepool> apply(List<Genepool> selectedCandidates, Random rng) {
-    List<Genepool> result = selectedCandidates.stream().map(Genepool::copy).collect(Collectors.toList());
+  public List<Genome> apply(List<Genome> selectedCandidates, Random rng) {
+    List<Genome> result = selectedCandidates.stream().map(Genome::copy).collect(Collectors.toList());
 
-    List<Genepool> list = new ArrayList<>();
-    for (Genepool pool : result) {
-      pool.removeIf(current -> canRemove(current) && rng.nextDouble() < removalRate);
+    List<Genome> list = new ArrayList<>();
+    for (Genome genome : result) {
+      genome.removeIf(current -> canRemove(current) && rng.nextDouble() < removalRate);
       if(rng.nextDouble() < additionRate){
-        pool.add(geneFactory.generateGene(Constants.DIMENSION_X, Constants.DIMENSION_Y));
+        genome.add(geneFactory.generateGene(Constants.DIMENSION_X, Constants.DIMENSION_Y));
       }
-      list.add(pool.getOffspring(geneFactory));
+      list.add(genome.getOffspring(geneFactory));
     }
     return list;
   }
