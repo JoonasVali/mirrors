@@ -4,7 +4,7 @@ import ee.joonasvali.mirrors.DemoModelController;
 import ee.joonasvali.mirrors.scene.ModelBuilder;
 import ee.joonasvali.mirrors.scene.genetic.GeneticModelBuilder;
 import ee.joonasvali.mirrors.scene.genetic.impl.LoaderGenomeProvider;
-import ee.joonasvali.mirrors.util.SceneFileChooser;
+import ee.joonasvali.mirrors.util.ModelFileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +29,7 @@ public class GUIFileChooser {
 
     Path sampleDir = Paths.get(args[1]);
 
-    SceneFileChooser fileChooser = new SceneFileChooser();
+    ModelFileChooser fileChooser = new ModelFileChooser();
     File file = fileChooser.selectFile(sampleDir);
     if (file == null) {
       log.error("No file selected");

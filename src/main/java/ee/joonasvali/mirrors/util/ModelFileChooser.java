@@ -8,8 +8,8 @@ import java.nio.file.Path;
 /**
  * @author Joonas Vali April 2016
  */
-public class SceneFileChooser extends JFileChooser {
-  public SceneFileChooser() {
+public class ModelFileChooser extends JFileChooser {
+  public ModelFileChooser() {
     setDialogTitle("Select *.json file");
     setFileFilter(new FileFilter() {
       @Override
@@ -23,7 +23,7 @@ public class SceneFileChooser extends JFileChooser {
 
       @Override
       public String getDescription() {
-        return ".json scene files";
+        return ".json model files";
       }
     });
     setMultiSelectionEnabled(false);
