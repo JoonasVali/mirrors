@@ -36,7 +36,7 @@ public class Repellent extends RoundPhysical implements Collidable {
         angle += 360;
       }
 
-      double force = Math.sqrt(Math.pow(forceX, 2) + Math.pow(forceY, 2)) / 30d;
+      double force = Math.hypot(forceX, forceY) / 30d;
       double angleDiff = angle - particle.getAngle();
 
       while (angleDiff > 180) {

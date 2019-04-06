@@ -4,12 +4,12 @@ package ee.joonasvali.mirrors.scene;
 public class CollisionUtil {
 
   public static boolean areColliding(RoundPhysical c1, RoundPhysical c2) {
-    double center_distance = Math.sqrt(Math.pow(c1.getCenterX() - c2.getCenterX(), 2) + Math.pow(c1.getCenterY() - c2.getCenterY(), 2));
+    double center_distance = Math.hypot(c1.getCenterX() - c2.getCenterX(), c1.getCenterY() - c2.getCenterY());
     return (c1.getRadius() + c2.getRadius()) < center_distance;
   }
 
   public static boolean areColliding(RoundPhysical c1, double x, double y) {
-    double dist = Math.sqrt(Math.pow(c1.getCenterX() - x, 2) + Math.pow(c1.getCenterY() - y, 2));
+    double dist = Math.hypot(c1.getCenterX() - x, c1.getCenterY() - y);
     return dist < c1.getRadius();
   }
 
