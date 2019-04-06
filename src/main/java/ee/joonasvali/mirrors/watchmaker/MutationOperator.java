@@ -4,8 +4,8 @@ import ee.joonasvali.mirrors.scene.Constants;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
 import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 import ee.joonasvali.mirrors.scene.genetic.Genome;
-import ee.joonasvali.mirrors.scene.genetic.impl.LightGoalGene;
-import ee.joonasvali.mirrors.scene.genetic.impl.LightProviderGene;
+import ee.joonasvali.mirrors.scene.genetic.impl.ParticleGoalGene;
+import ee.joonasvali.mirrors.scene.genetic.impl.ParticleProviderGene;
 import org.uncommons.watchmaker.framework.EvolutionaryOperator;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class MutationOperator implements EvolutionaryOperator<Genome> {
   }
 
   private boolean canRemove(Gene current) {
-    return !(current instanceof LightGoalGene) && !(current instanceof LightProviderGene);
+    return !(current instanceof ParticleGoalGene) && !(current instanceof ParticleProviderGene);
   }
 
 

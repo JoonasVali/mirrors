@@ -20,7 +20,7 @@ public class LineReflector extends LinePhysical {
   }
 
   @Override
-  protected void runLightCollisionAction(Particle particle, double particleXVector, double particleYVector) {
+  protected void runParticleCollisionAction(Particle particle, double particleXVector, double particleYVector) {
     if (reflectiveGroupIds != null && !reflectiveGroupIds.contains(particle.getParticleGroup().getId())) {
       // This reflector is transparent to this particle group.
       return;

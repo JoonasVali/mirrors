@@ -35,7 +35,7 @@ public class SystemEvaluator implements FitnessEvaluator<Genome> {
   private double evaluate(Genome candidate) {
     ModelBuilder builder = new GeneticModelBuilder(candidate);
     Model model = builder.buildModel();
-    model.actUntilNoLightLeft();
+    model.actUntilNoParticlesLeft();
     LoggerFactory.getLogger(SystemEvaluator.class).info("Evaluated system to " + model.getScore());
     return model.getScore();
   }

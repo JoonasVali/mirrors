@@ -36,22 +36,22 @@ public class GeneratorGenomeProvider implements GenomeProvider {
 
     if (topProducer) {
       ParticleGroup group1 = new ParticleGroup(1, new Color(255, 150, 150));
-      genome.add(new LightGoalGene(20, 550, 250, new Color(255, 150, 150), group1));
-      genome.add(createLightEmitter(150, 250, 0.1, 0.8, group1));
+      genome.add(new ParticleGoalGene(20, 550, 250, new Color(255, 150, 150), group1));
+      genome.add(createParticleEmitter(150, 250, 0.1, 0.8, group1));
       groups.add(group1);
     }
 
     if (middleProducer) {
       ParticleGroup group2 = new ParticleGroup(2, new Color(150, 255, 150));
-      genome.add(new LightGoalGene(20, 550, 300, new Color(150, 255, 150), group2));
-      genome.add(createLightEmitter(150, 300, 0.1, 1, group2));
+      genome.add(new ParticleGoalGene(20, 550, 300, new Color(150, 255, 150), group2));
+      genome.add(createParticleEmitter(150, 300, 0.1, 1, group2));
       groups.add(group2);
     }
 
     if (bottomProducer) {
       ParticleGroup group3 = new ParticleGroup(3, new Color(150, 150, 255));
-      genome.add(new LightGoalGene(20, 550, 350, new Color(150, 150, 255), group3));
-      genome.add(createLightEmitter(150, 350, 0.1, 1.2, group3));
+      genome.add(new ParticleGoalGene(20, 550, 350, new Color(150, 150, 255), group3));
+      genome.add(createParticleEmitter(150, 350, 0.1, 1.2, group3));
       groups.add(group3);
     }
 
@@ -70,8 +70,8 @@ public class GeneratorGenomeProvider implements GenomeProvider {
     return genome;
   }
 
-  private LightProviderGene createLightEmitter(int x, int y, double density, double velocity, ParticleGroup group) {
-    return new LightProviderGene(x, y, density, velocity, group);
+  private ParticleProviderGene createParticleEmitter(int x, int y, double density, double velocity, ParticleGroup group) {
+    return new ParticleProviderGene(x, y, density, velocity, group);
   }
 
   public Gene generateGene() {

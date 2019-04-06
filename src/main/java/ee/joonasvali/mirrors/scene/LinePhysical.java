@@ -56,11 +56,11 @@ public abstract class LinePhysical implements Collidable {
 
     Point intersection = Util.getLineIntersection(particleX, particleY, nextX, nextY, x, y, x2, y2);
     if (intersection != null) {
-      runLightCollisionAction(particle, xVector, yVector);
+      runParticleCollisionAction(particle, xVector, yVector);
     }
 
   }
 
-  abstract void runLightCollisionAction(Particle particle, double particleXVector, double particleYVector);
+  abstract void runParticleCollisionAction(Particle particle, double particleXVector, double particleYVector);
 
 }
