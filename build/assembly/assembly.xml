@@ -1,0 +1,78 @@
+<assembly>
+  <id>bin</id>
+  <!-- Specifies that our binary distribution is a dir -->
+  <formats>
+    <format>dir</format>
+  </formats>
+
+  <!-- Add jars and their dependencies to lib folder -->
+  <moduleSets>
+    <moduleSet>
+      <useAllReactorProjects>true</useAllReactorProjects>
+      <binaries>
+        <outputDirectory>lib</outputDirectory>
+        <unpack>false</unpack>
+        <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
+      </binaries>
+    </moduleSet>
+  </moduleSets>
+
+  <fileSets>
+    <fileSet>
+      <directory>${binfolder}/unix</directory>
+      <outputDirectory>bin</outputDirectory>
+      <includes>
+        <include>**/*</include>
+      </includes>
+      <lineEnding>unix</lineEnding>
+      <fileMode>0755</fileMode>
+    </fileSet>
+
+    <fileSet>
+      <directory>${binfolder}/win</directory>
+      <outputDirectory>bin</outputDirectory>
+      <includes>
+        <include>**/*</include>
+      </includes>
+      <lineEnding>windows</lineEnding>
+    </fileSet>
+
+    <fileSet>
+      <directory>${configfolder}</directory>
+      <outputDirectory>config</outputDirectory>
+      <includes>
+        <include>**/*.unix.*</include>
+      </includes>
+      <lineEnding>unix</lineEnding>
+      <fileMode>0755</fileMode>
+    </fileSet>
+
+    <fileSet>
+      <directory>${configfolder}</directory>
+      <outputDirectory>config</outputDirectory>
+      <includes>
+        <include>**/*.win.*</include>
+      </includes>
+      <lineEnding>windows</lineEnding>
+    </fileSet>
+
+    <fileSet>
+      <directory>${included}/doc</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>**/*</include>
+      </includes>
+      <lineEnding>unix</lineEnding>
+      <fileMode>0444</fileMode>
+    </fileSet>
+
+    <!-- create empty dir 'projects' -->
+    <fileSet>
+      <directory>.</directory>
+      <outputDirectory>projects</outputDirectory>
+      <excludes>
+        <exclude>*/**</exclude>
+      </excludes>
+    </fileSet>
+  </fileSets>
+</assembly>
