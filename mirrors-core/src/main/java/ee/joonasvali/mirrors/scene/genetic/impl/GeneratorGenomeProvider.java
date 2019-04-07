@@ -42,8 +42,8 @@ public class GeneratorGenomeProvider implements GenomeProvider {
     }
 
     if (middleProducer) {
-      ParticleGroup group2 = new ParticleGroup(2, new Color(150, 255, 150));
-      genome.add(new ParticleGoalGene(20, 550, 300, new Color(150, 255, 150), group2));
+      ParticleGroup group2 = new ParticleGroup(2, new Color(212, 255, 216));
+      genome.add(new ParticleGoalGene(20, 550, 300,  new Color(212, 255, 216), group2));
       genome.add(createParticleEmitter(150, 300, 0.1, 1, group2));
       groups.add(group2);
     }

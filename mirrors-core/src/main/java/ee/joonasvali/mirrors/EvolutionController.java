@@ -187,10 +187,13 @@ public class EvolutionController {
         log.info("Time: " + new Date());
         log.info("best of generation (" + generation + "): " + data.getBestCandidateFitness());
         if (data.getBestCandidateFitness() > last) {
-          try {
-            saver.serialize(data.getBestCandidate(), generation + "-" + (int) (data.getBestCandidateFitness()));
-          } catch (IOException e) {
-            log.error("Unable to save best candidate.", e);
+          // Lets not save the first generation as it might be loaded evolution and we don't yet have data about best fitness.
+          if (last > 0) {
+            try {
+              saver.serialize(data.getBestCandidate(), generation + "-" + (int) (data.getBestCandidateFitness()));
+            } catch (IOException e) {
+              log.error("Unable to save best candidate.", e);
+            }
           }
           last = data.getBestCandidateFitness();
         }
