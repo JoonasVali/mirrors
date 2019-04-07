@@ -9,14 +9,19 @@ import ee.joonasvali.mirrors.scene.Particle;
 import ee.joonasvali.mirrors.scene.ParticleGroup;
 import ee.joonasvali.mirrors.scene.Physical;
 import ee.joonasvali.mirrors.scene.genetic.impl.RepellentGene;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+@Ignore
+@Category(GraphicalTest.class)
 public class GraphicalRepellentTest {
   private final ParticleGroup group = new ParticleGroup(1, new Color(255, 255, 255));
+
   @Test
   public void repellentTest() throws InvocationTargetException, InterruptedException {
     ModelBuilder builder = () -> {

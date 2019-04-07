@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,6 +61,8 @@ public class SerializationUtilTest {
   public void serializePopulation() throws IOException {
     Path temp = folder.newFolder("mirrors-test").toPath();
     Path evolutionDir = temp.resolve("test-evolution");
+    Files.createDirectories(evolutionDir);
+
     Path evolutionFile = evolutionDir.resolve("evo.json");
     SerializationUtil util = new SerializationUtil(evolutionDir);
     Genome genes1 = new Genome(Collections.singletonList(new BenderGene(50, 60, 70, 80)));
@@ -77,7 +80,7 @@ public class SerializationUtilTest {
   private <T> void assertAllElementsPresentByFieldComparison(Collection<T> expected, Collection<T> actual) {
     List<T> expectedCopy = new ArrayList<>(expected);
     // The order isn't guaranteed so checking for presence of every gene is a bit complicated:
-    for (T obj: actual) {
+    for (T obj : actual) {
       Iterator<T> iterator = expectedCopy.iterator();
       while (iterator.hasNext()) {
         T candidate = iterator.next();

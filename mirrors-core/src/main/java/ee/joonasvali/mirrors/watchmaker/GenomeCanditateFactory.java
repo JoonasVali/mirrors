@@ -10,6 +10,7 @@ import java.util.Random;
 public class GenomeCanditateFactory extends AbstractCandidateFactory<Genome> {
 
   private GenomeProvider provider;
+
   public GenomeCanditateFactory(GenomeProvider provider) {
     this.provider = provider;
   }

@@ -6,7 +6,7 @@ public abstract class BasePhysical implements Physical {
   protected final double width, height;
   protected final double rotation;
 
-  public BasePhysical(double x, double y, double rotation, double width, double height){
+  public BasePhysical(double x, double y, double rotation, double width, double height) {
     this.x = x;
     this.y = y;
     this.rotation = rotation;

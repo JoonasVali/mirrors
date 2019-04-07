@@ -34,7 +34,7 @@ public class MutationOperator implements EvolutionaryOperator<Genome> {
     List<Genome> list = new ArrayList<>();
     for (Genome genome : result) {
       genome.removeIf(current -> canRemove(current) && rng.nextDouble() < removalRate);
-      if(rng.nextDouble() < additionRate){
+      if (rng.nextDouble() < additionRate) {
         genome.add(geneFactory.generateGene(Constants.DIMENSION_X, Constants.DIMENSION_Y));
       }
       list.add(genome.getOffspring(geneFactory));

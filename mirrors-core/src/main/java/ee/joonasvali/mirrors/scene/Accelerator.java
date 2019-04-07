@@ -22,10 +22,10 @@ public class Accelerator extends RoundPhysical implements Collidable {
 
   @Override
   public void render(Graphics2D g) {
-    if(acceleration > 0) {
+    if (acceleration > 0) {
       g.setColor(Color.green);
     } else g.setColor(Color.yellow);
-    g.drawOval((int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
-    g.drawString(String.format("%.1f", acceleration), (float)getCenterX() - 10, (float)getCenterY() - 10);
+    g.drawOval((int) getX(), (int) getY(), (int) getWidth(), (int) getHeight());
+    g.drawString(String.format("%.1f", acceleration), (float) getCenterX() - 10, (float) getCenterY() - 10);
   }
 }

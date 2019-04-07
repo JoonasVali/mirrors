@@ -9,7 +9,10 @@ import java.util.List;
 
 public interface Gene<T extends Gene> {
   Gene<T> copy();
+
   T getOffspringGene(GeneFactory geneFactory);
+
   List<Physical> createPhysicals(Model model);
+
   List<LinePhysical> createLinePhysicals(Model model);
 }

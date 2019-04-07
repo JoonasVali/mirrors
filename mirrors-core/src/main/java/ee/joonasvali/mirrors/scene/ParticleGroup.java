@@ -24,7 +24,7 @@ public class ParticleGroup {
     int rate = (int) (intensity / initialIntensity * 255);
     g.setColor(cache.colors[rate]);
 
-    g.drawLine((int)x, (int)y, (int)x, (int)y);
+    g.drawLine((int) x, (int) y, (int) x, (int) y);
   }
 
   public Color getColor() {
@@ -37,6 +37,7 @@ public class ParticleGroup {
 
   private static class Cache {
     private transient Color[] colors = new Color[256];
+
     private Cache(Color color) {
       for (int i = 0; i < colors.length; i++) {
         colors[i] = new Color(color.getRed(), color.getGreen(), color.getBlue(), i);

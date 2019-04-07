@@ -29,8 +29,8 @@ public class Model {
   }
 
   public void addObject(Physical physical) {
-    if(physical instanceof Particle) {
-      particles.add((Particle)physical);
+    if (physical instanceof Particle) {
+      particles.add((Particle) physical);
       return;
     }
     this.objects.add(physical);
@@ -44,19 +44,19 @@ public class Model {
 
   public void act(long delta) {
     // check collisions for particle and objects
-    for(LinePhysical line : lines) {
-      for(Particle particle : particles){
-        if(line.isCollision(particle)) {
+    for (LinePhysical line : lines) {
+      for (Particle particle : particles) {
+        if (line.isCollision(particle)) {
           line.actCollision(particle, this);
         }
       }
     }
 
-    for(Physical object : objects) {
-      if(object instanceof Collidable) {
+    for (Physical object : objects) {
+      if (object instanceof Collidable) {
         Collidable collidable = (Collidable) object;
-        for(Particle particle : particles){
-          if(collidable.isCollision(particle)) {
+        for (Particle particle : particles) {
+          if (collidable.isCollision(particle)) {
             collidable.actCollision(particle, this);
           }
         }
@@ -88,7 +88,7 @@ public class Model {
   }
 
   public void remove(Physical object) {
-    if(object instanceof Particle){
+    if (object instanceof Particle) {
       particles.remove(object);
       return;
     }

@@ -3,12 +3,14 @@ package ee.joonasvali.mirrors.graphical;
 import ee.joonasvali.mirrors.DemoModelController;
 import ee.joonasvali.mirrors.ModelController;
 import ee.joonasvali.mirrors.WindowController;
+import ee.joonasvali.mirrors.scene.LineReflector;
 import ee.joonasvali.mirrors.scene.Model;
 import ee.joonasvali.mirrors.scene.ModelBuilder;
 import ee.joonasvali.mirrors.scene.Particle;
 import ee.joonasvali.mirrors.scene.ParticleGroup;
-import ee.joonasvali.mirrors.scene.LineReflector;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +20,8 @@ import java.util.HashSet;
 /**
  * @author Joonas Vali April 2017
  */
+@Ignore
+@Category(GraphicalTest.class)
 public class GraphicalMirrorTest {
   private final ParticleGroup group = new ParticleGroup(1, new Color(255, 255, 255));
 
@@ -64,7 +68,7 @@ public class GraphicalMirrorTest {
       model.addObject(new Particle(480, 210, 230, 1, 100, 0.1, group));
 
       model.addObject(new Particle(350, 350, 10, 1, 100, 0.1, group));
-      model.addObject(new Particle(400, 350,  0, 1, 100, 0.1, group));
+      model.addObject(new Particle(400, 350, 0, 1, 100, 0.1, group));
 
       return model;
     };
@@ -90,7 +94,7 @@ public class GraphicalMirrorTest {
       model.addObject(new Particle(480, 210, 230, 1, 100, 0.1, group));
 
       model.addObject(new Particle(350, 350, 10, 1, 100, 0.1, group));
-      model.addObject(new Particle(400, 350,  0, 1, 100, 0.1, group));
+      model.addObject(new Particle(400, 350, 0, 1, 100, 0.1, group));
 
       return model;
     };
@@ -116,7 +120,7 @@ public class GraphicalMirrorTest {
       model.addObject(new Particle(480, 210, 330, 1, 100, 0.1, group));
 
       model.addObject(new Particle(350, 350, 10, 1, 100, 0.1, group));
-      model.addObject(new Particle(400, 350,  0, 1, 100, 0.1, group));
+      model.addObject(new Particle(400, 350, 0, 1, 100, 0.1, group));
 
       return model;
     };
@@ -143,7 +147,7 @@ public class GraphicalMirrorTest {
       model.addObject(new Particle(480, 210, 330, 1, 100, 0.1, group));
 
       model.addObject(new Particle(350, 350, 10, 1, 100, 0.1, group));
-      model.addObject(new Particle(400, 350,  0, 1, 100, 0.1, group));
+      model.addObject(new Particle(400, 350, 0, 1, 100, 0.1, group));
 
       return model;
     };

@@ -26,7 +26,7 @@ public class Bender extends RoundPhysical implements Collidable {
   @Override
   public void render(Graphics2D g) {
     g.setColor(Color.pink);
-    g.drawOval((int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
-    g.drawString(String.format("%.1f", strength), (float)getCenterX() - 10, (float)getCenterY() - 10);
+    g.drawOval((int) getX(), (int) getY(), (int) getWidth(), (int) getHeight());
+    g.drawString(String.format("%.1f", strength), (float) getCenterX() - 10, (float) getCenterY() - 10);
   }
 }
