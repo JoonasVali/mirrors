@@ -21,7 +21,7 @@ public class SystemEvaluator implements FitnessEvaluator<Genome> {
     synchronized (cache) {
       score = cache.get(candidate);
     }
-    if(score == null){
+    if (score == null) {
       score = evaluate(candidate);
 
 

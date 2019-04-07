@@ -23,7 +23,7 @@ public abstract class LinePhysical implements Collidable {
 
   public void render(Graphics2D g) {
     g.setColor(Color.cyan);
-    g.drawLine((int)x, (int)y, (int)x2, (int)y2);
+    g.drawLine((int) x, (int) y, (int) x2, (int) y2);
   }
 
   private boolean isAboutToCollide(Particle particle) {

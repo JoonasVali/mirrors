@@ -22,6 +22,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class SerializationUtil {
     try {
       savePopulation(genepool, file);
     } catch (IOException e) {
-      log.error("abc", e);
+      throw new RuntimeException("Can't create file or write into it: " + file, e);
     }
     log.info("saved population to " + file.toString());
   }
@@ -58,10 +59,10 @@ public class SerializationUtil {
     Path file = dir.resolve(name + ".json");
     try {
       save(genome, file);
+      log.info("saved genome to " + file.toString());
     } catch (IOException e) {
-      log.error("abc", e);
+      log.error("Unable to serialize genome.", e);
     }
-    log.info("saved genome to " + file.toString());
   }
 
   private void save(Genome genome, Path path) throws IOException {
@@ -71,7 +72,7 @@ public class SerializationUtil {
   }
 
   private void savePopulation(Collection<Genome> genepool, Path path) throws IOException {
-    try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+    try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE)) {
       gson.toJson(genepool, writer);
     }
   }
@@ -83,7 +84,8 @@ public class SerializationUtil {
 
   public static Collection<Genome> deserializePopulation(Path file) throws IOException {
     String contents = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
-    Type collectionType = new TypeToken<Collection<Genome>>() {}.getType();
+    Type collectionType = new TypeToken<Collection<Genome>>() {
+    }.getType();
     return gson.fromJson(contents, collectionType);
   }
 
@@ -92,7 +94,7 @@ public class SerializationUtil {
                               JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
       JsonObject jsonObject = jsonElement.getAsJsonObject();
       List<Gene> genes = new ArrayList<>();
-      for (String key: jsonObject.keySet()) {
+      for (String key : jsonObject.keySet()) {
         Class klass = getGeneClass(key);
 
         JsonArray array = jsonObject.get(key).getAsJsonArray();

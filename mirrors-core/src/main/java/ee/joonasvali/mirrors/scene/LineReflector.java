@@ -25,8 +25,8 @@ public class LineReflector extends LinePhysical {
       // This reflector is transparent to this particle group.
       return;
     }
-    double dx=x2-x;
-    double dy=y2-y;
+    double dx = x2 - x;
+    double dy = y2 - y;
     double normalX = -dy;
     double normalY = dx;
 

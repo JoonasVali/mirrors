@@ -7,7 +7,8 @@ import java.util.stream.Collectors;
 
 public class Genome extends ArrayList<Gene> {
 
-  public Genome() { }
+  public Genome() {
+  }
 
   public Genome(List<Gene> list) {
     super(list);
@@ -23,7 +24,7 @@ public class Genome extends ArrayList<Gene> {
 
   public Genome getOffspring(GeneFactory geneFactory) {
     List<Gene> genome = new ArrayList<>(this.size());
-    for(Gene gene : this) {
+    for (Gene gene : this) {
       genome.add(gene.getOffspringGene(geneFactory));
     }
     return new Genome(genome);

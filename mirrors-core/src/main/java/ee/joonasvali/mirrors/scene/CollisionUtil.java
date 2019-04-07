@@ -15,24 +15,24 @@ public class CollisionUtil {
 
   // Rectangle check with point
   public static boolean areColliding(Physical c1, double x, double y) {
-    if(c1 instanceof RoundPhysical) {
-      return areColliding((RoundPhysical)c1, x, y);
+    if (c1 instanceof RoundPhysical) {
+      return areColliding((RoundPhysical) c1, x, y);
     }
-    return(x >= c1.getX() && x <= c1.getX() + c1.getWidth() &&
-            y >= c1.getY() && y <= c1.getY() + c1.getHeight());
+    return (x >= c1.getX() && x <= c1.getX() + c1.getWidth() &&
+        y >= c1.getY() && y <= c1.getY() + c1.getHeight());
   }
 
   public static boolean areColliding(Physical c1, Physical c2) {
-    if(c1 instanceof RoundPhysical && c2 instanceof RoundPhysical) {
-      return areColliding((RoundPhysical)c1, (RoundPhysical)c2);
+    if (c1 instanceof RoundPhysical && c2 instanceof RoundPhysical) {
+      return areColliding((RoundPhysical) c1, (RoundPhysical) c2);
     }
 
     // Optimization by eliminating impossible:
-    if(c1.getX() + c1.getWidth() < c2.getX() || c2.getX() + c2.getWidth() < c1.getX()){
+    if (c1.getX() + c1.getWidth() < c2.getX() || c2.getX() + c2.getWidth() < c1.getX()) {
       // The objects are not near each other X-wise.
       return false;
     }
-    if(c1.getY() + c1.getHeight() < c2.getY() || c2.getY() + c2.getHeight() < c1.getY()){
+    if (c1.getY() + c1.getHeight() < c2.getY() || c2.getY() + c2.getHeight() < c1.getY()) {
       // The objects are not near each other Y-wise.
       return false;
     }

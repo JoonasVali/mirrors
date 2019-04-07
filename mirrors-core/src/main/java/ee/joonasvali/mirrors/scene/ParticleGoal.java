@@ -17,9 +17,9 @@ public class ParticleGoal extends RoundPhysical implements Collidable {
   @Override
   public void render(Graphics2D g) {
     g.setColor(color);
-    g.drawOval((int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
+    g.drawOval((int) getX(), (int) getY(), (int) getWidth(), (int) getHeight());
     g.setColor(internalColor);
-    g.drawOval((int)getX() + 1, (int)getY() + 1, (int)getWidth() - 1, (int)getHeight() - 1);
+    g.drawOval((int) getX() + 1, (int) getY() + 1, (int) getWidth() - 1, (int) getHeight() - 1);
   }
 
   @Override

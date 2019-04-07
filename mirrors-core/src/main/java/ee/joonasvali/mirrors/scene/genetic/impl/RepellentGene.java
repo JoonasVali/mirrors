@@ -35,7 +35,7 @@ public class RepellentGene implements Gene<RepellentGene> {
         geneFactory.largeRandom(20) + x,
         geneFactory.largeRandom(20) + y,
         geneFactory.largeRandom(10) + radius,
-        geneFactory.smallrandom(50) +  delta);
+        geneFactory.smallrandom(50) + delta);
   }
 
   @Override

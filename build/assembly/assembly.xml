@@ -14,6 +14,9 @@
         <unpack>false</unpack>
         <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
       </binaries>
+      <excludes>
+        <exclude>com.github.joonasvali.mirrors:mirrors-test</exclude>
+      </excludes>
     </moduleSet>
   </moduleSets>
 

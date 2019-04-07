@@ -14,7 +14,7 @@ public class Particle extends BasePhysical implements Activatable {
   /**
    * @param x
    * @param y
-   * @param angle with 0 on top
+   * @param angle                 with 0 on top
    * @param speed
    * @param intensity
    * @param itensityReductionRate

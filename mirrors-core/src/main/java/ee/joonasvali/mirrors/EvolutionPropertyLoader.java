@@ -38,27 +38,27 @@ public class EvolutionPropertyLoader {
       }
 
       properties = new EvolutionProperties(
-          getProperty(props,"elites", Integer::parseInt, ELITES),
-          getProperty(props,"concurrent", Integer::parseInt, CONCURRENT),
-          getProperty(props,"target.fitness", Integer::parseInt, TARGET_FITNESS),
-          getProperty(props,"keep.machine.alive", Boolean::parseBoolean, KEEP_MACHINE_ALIVE),
-          getProperty(props,"gene.mutation.rate", Double::parseDouble, GENE_MUTATION_RATE),
-          getProperty(props,"gene.deletion.rate", Double::parseDouble, GENE_DELETION_RATE),
-          getProperty(props,"gene.addition.rate", Double::parseDouble, GENE_ADDITION_RATE),
-          getProperty(props,"reflectors.enabled", Boolean::parseBoolean, REFLECTORS_ENABLED),
-          getProperty(props,"benders.enabled", Boolean::parseBoolean, BENDERS_ENABLED),
-          getProperty(props,"accelerators.enabled", Boolean::parseBoolean, ACCELERATORS_ENABLED),
-          getProperty(props,"repellents.enabled", Boolean::parseBoolean, REPELLENTS_ENABLED)
+          getProperty(props, "elites", Integer::parseInt, ELITES),
+          getProperty(props, "concurrent", Integer::parseInt, CONCURRENT),
+          getProperty(props, "target.fitness", Integer::parseInt, TARGET_FITNESS),
+          getProperty(props, "keep.machine.alive", Boolean::parseBoolean, KEEP_MACHINE_ALIVE),
+          getProperty(props, "gene.mutation.rate", Double::parseDouble, GENE_MUTATION_RATE),
+          getProperty(props, "gene.deletion.rate", Double::parseDouble, GENE_DELETION_RATE),
+          getProperty(props, "gene.addition.rate", Double::parseDouble, GENE_ADDITION_RATE),
+          getProperty(props, "reflectors.enabled", Boolean::parseBoolean, REFLECTORS_ENABLED),
+          getProperty(props, "benders.enabled", Boolean::parseBoolean, BENDERS_ENABLED),
+          getProperty(props, "accelerators.enabled", Boolean::parseBoolean, ACCELERATORS_ENABLED),
+          getProperty(props, "repellents.enabled", Boolean::parseBoolean, REPELLENTS_ENABLED)
       );
 
       boolean topProducerEnabled = getProperty(
-          props,"top.producer.enabled", Boolean::parseBoolean, TOP_PRODUCER_ENABLED
+          props, "top.producer.enabled", Boolean::parseBoolean, TOP_PRODUCER_ENABLED
       );
       boolean middleProducerEnabled = getProperty(
-          props,"middle.producer.enabled", Boolean::parseBoolean, MIDDLE_PRODUCER_ENABLED
+          props, "middle.producer.enabled", Boolean::parseBoolean, MIDDLE_PRODUCER_ENABLED
       );
       boolean bottomProducerEnabled = getProperty(
-          props,"bottom.producer.enabled", Boolean::parseBoolean, BOTTOM_PRODUCER_ENABLED
+          props, "bottom.producer.enabled", Boolean::parseBoolean, BOTTOM_PRODUCER_ENABLED
       );
 
       properties.setTopProducerEnabled(topProducerEnabled);

@@ -25,7 +25,7 @@ public class Util {
   public static float getAngle(double x, double y, double x2, double y2) {
     float angle = (float) Math.toDegrees(Math.atan2(x2 - x, y2 - y));
 
-    while (angle < 0){
+    while (angle < 0) {
       angle += 360;
     }
 
@@ -40,7 +40,7 @@ public class Util {
     int resultX = (int) (x + (timeDiff * velocity) * Math.sin(Math.toRadians(angle)));
     int resultY = (int) (y + (timeDiff * velocity) * Math.cos(Math.toRadians(angle)));
 
-    return new Point(resultX,resultY);
+    return new Point(resultX, resultY);
   }
 
   public static boolean isInRange(double x, double y, double x2, double y2, double radius) {
@@ -66,7 +66,7 @@ public class Util {
    * Taken from http://stackoverflow.com/a/14795484
    */
   public static Point getLineIntersection(double p0_x, double p0_y, double p1_x, double p1_y,
-                                   double p2_x, double p2_y, double p3_x, double p3_y) {
+                                          double p2_x, double p2_y, double p3_x, double p3_y) {
     double s02_x, s02_y, s10_x, s10_y, s32_x, s32_y, s_numer, t_numer, denom, t;
     s10_x = p1_x - p0_x;
     s10_y = p1_y - p0_y;
@@ -92,7 +92,7 @@ public class Util {
       return null; // No collision
     // Collision detected
     t = t_numer / denom;
-    Point p = new Point((int)(p0_x + (t * s10_x)), (int)(p0_y + (t * s10_y)));
+    Point p = new Point((int) (p0_x + (t * s10_x)), (int) (p0_y + (t * s10_y)));
     return p;
   }
 
