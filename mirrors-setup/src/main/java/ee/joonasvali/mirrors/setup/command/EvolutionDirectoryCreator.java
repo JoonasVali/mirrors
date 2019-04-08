@@ -26,6 +26,7 @@ public class EvolutionDirectoryCreator {
   private static final String EVOLUTION_UNIX_PROPERTIES = "evolution.unix.properties";
   private static final String PROPERTIES_FILE_NAME = isWin ? EVOLUTION_WIN_PROPERTIES : EVOLUTION_UNIX_PROPERTIES;
   public static final String PLAY_DEMO_NAME = "demo" + (isWin ? ".bat" : ".sh");
+  public static final String MUTATION_DEMO_NAME = "demo-mutation" + (isWin ? ".bat" : ".sh");
 
   public static ModelController createEvolutionDirectory(String[] args) {
     if (args.length < 2) {
@@ -52,6 +53,7 @@ public class EvolutionDirectoryCreator {
     createSamplePlayer(evolutionDirectory, mirrorsHome);
     createEvolutionProperties(evolutionDirectory, mirrorsHome);
     createRandomDemoPlayer(evolutionDirectory, mirrorsHome);
+    createMutationDemoModelPlayer(evolutionDirectory, mirrorsHome);
   }
 
   private static void createAndValidateEvolutionDirectory(Path evolutionDirectory) {
@@ -158,6 +160,24 @@ public class EvolutionDirectoryCreator {
           "#!/bin/bash\n" +
           "export MIRRORS_HOME=" + mirrorsHome.toString() + "\n" +
           "java -jar -Xmx2048M $MIRRORS_HOME/lib/" + MIRRORS_CORE_JAR_NAME;
+    }
+    createFileOrFail(playDemoFile, content);
+  }
+
+  private static void createMutationDemoModelPlayer(Path evolutionDirectory, Path mirrorsHome) {
+    Path playDemoFile = evolutionDirectory.resolve(MUTATION_DEMO_NAME);
+
+    String content;
+    if (isWin) {
+      content = "" +
+          "@echo off\n" +
+          "SET MIRRORS_HOME=" + mirrorsHome.toString() + "\n" +
+          "java -jar -Xmx2048M %MIRRORS_HOME%/lib/" + MIRRORS_CORE_JAR_NAME + " mutation ./evolution.properties";
+    } else {
+      content = "" +
+          "#!/bin/bash\n" +
+          "export MIRRORS_HOME=" + mirrorsHome.toString() + "\n" +
+          "java -jar -Xmx2048M $MIRRORS_HOME/lib/" + MIRRORS_CORE_JAR_NAME + " mutation ./evolution.properties";
     }
     createFileOrFail(playDemoFile, content);
   }

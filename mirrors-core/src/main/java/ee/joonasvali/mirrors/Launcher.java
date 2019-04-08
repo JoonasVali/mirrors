@@ -2,6 +2,7 @@ package ee.joonasvali.mirrors;
 
 import ee.joonasvali.mirrors.command.GUIFileChooser;
 import ee.joonasvali.mirrors.command.RunEvolution;
+import ee.joonasvali.mirrors.command.RunMutationDemo;
 import ee.joonasvali.mirrors.command.RunRandomScene;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,11 @@ public class Launcher {
     if (arg.equals("evolution")) {
       log.info("Launching Evolution mode.");
       return RunEvolution.evolution(args);
+    }
+
+    if (arg.equals("mutation")) {
+      log.info("Launching mutation demo.");
+      return RunMutationDemo.run(args);
     }
 
     log.error("Arguments didn't match anything we know how to parse.");
