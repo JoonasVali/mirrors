@@ -14,7 +14,7 @@ import java.awt.event.KeyListener;
 /**
  * @author Joonas Vali April 2016
  */
-public class DemoModelController implements ModelController {
+public class DemoModelController  implements ModelController {
   private final ModelBuilder modelBuilder;
   private final Renderer renderer;
   private volatile long lastRender;
