@@ -6,17 +6,14 @@ import ee.joonasvali.mirrors.scene.Model;
 import ee.joonasvali.mirrors.scene.ModelBuilder;
 import ee.joonasvali.mirrors.scene.genetic.GeneticModelBuilder;
 import ee.joonasvali.mirrors.scene.genetic.Genome;
-import ee.joonasvali.mirrors.scene.genetic.impl.GeneratorGenomeProvider;
-import ee.joonasvali.mirrors.watchmaker.MutationOperator;
 import org.uncommons.watchmaker.framework.EvolutionaryOperator;
-import org.uncommons.watchmaker.framework.operators.EvolutionPipeline;
 
-import java.util.List;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class MutationDemoModelController implements ModelController {

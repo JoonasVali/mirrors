@@ -13,8 +13,10 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -71,6 +73,47 @@ public class SerializationUtilTest {
     population.add(genes1);
     population.add(genes2);
 
+    util.serializePopulation(population, evolutionFile);
+    Collection<Genome> result = SerializationUtil.deserializePopulation(evolutionFile);
+
+    assertAllElementsPresentByFieldComparison(population, result);
+  }
+
+  @Test
+  public void overwritesExistingPopulationFile() throws IOException {
+    Path temp = folder.newFolder("mirrors-test").toPath();
+    Path evolutionDir = temp.resolve("test-evolution");
+    Files.createDirectories(evolutionDir);
+
+    Path evolutionFile = evolutionDir.resolve("evo.json");
+    String existingPopulation = "[\n" +
+        "  {\n" +
+        "    \"ee.joonasvali.mirrors.scene.genetic.impl.BenderGene\": [\n" +
+        "      {\n" +
+        "        \"x\": 50.0,\n" +
+        "        \"y\": 60.0,\n" +
+        "        \"radius\": 70.0,\n" +
+        "        \"strength\": 80.0\n" +
+        "      }\n" +
+        "    ]\n" +
+        "  },\n" +
+        "  {\n" +
+        "    \"ee.joonasvali.mirrors.scene.genetic.impl.BenderGene\": [\n" +
+        "      {\n" +
+        "        \"x\": 51.0,\n" +
+        "        \"y\": 61.0,\n" +
+        "        \"radius\": 71.0,\n" +
+        "        \"strength\": 81.0\n" +
+        "      }\n" +
+        "    ]\n" +
+        "  }\n" +
+        "]";
+    Files.write(evolutionFile, existingPopulation.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
+
+    SerializationUtil util = new SerializationUtil(evolutionDir);
+    Genome genes1 = new Genome(Collections.singletonList(new BenderGene(11, 12, 13, 14)));
+    ArrayList<Genome> population = new ArrayList<>();
+    population.add(genes1);
     util.serializePopulation(population, evolutionFile);
     Collection<Genome> result = SerializationUtil.deserializePopulation(evolutionFile);
 

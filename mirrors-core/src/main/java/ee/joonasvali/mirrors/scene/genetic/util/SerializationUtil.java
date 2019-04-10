@@ -72,7 +72,7 @@ public class SerializationUtil {
   }
 
   private void savePopulation(Collection<Genome> genepool, Path path) throws IOException {
-    try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE)) {
+    try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
       gson.toJson(genepool, writer);
     }
   }
