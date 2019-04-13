@@ -74,9 +74,73 @@ public class SerializationUtilTest {
     population.add(genes2);
 
     util.serializePopulation(population, evolutionFile);
+
+    String expected = "[\n" +
+        "  {\n" +
+        "    \"ee.joonasvali.mirrors.scene.genetic.impl.BenderGene\": [\n" +
+        "      {\n" +
+        "        \"x\": 50.0,\n" +
+        "        \"y\": 60.0,\n" +
+        "        \"radius\": 70.0,\n" +
+        "        \"strength\": 80.0\n" +
+        "      }\n" +
+        "    ]\n" +
+        "  },\n" +
+        "  {\n" +
+        "    \"ee.joonasvali.mirrors.scene.genetic.impl.BenderGene\": [\n" +
+        "      {\n" +
+        "        \"x\": 51.0,\n" +
+        "        \"y\": 61.0,\n" +
+        "        \"radius\": 71.0,\n" +
+        "        \"strength\": 81.0\n" +
+        "      }\n" +
+        "    ]\n" +
+        "  }\n" +
+        "]";
+
+    String contents = new String(Files.readAllBytes(evolutionFile), StandardCharsets.UTF_8);
+    Assert.assertEquals(expected, contents);
+  }
+
+  @Test
+  public void deserializePopulation() throws IOException {
+    Path temp = folder.newFolder("mirrors-test").toPath();
+    Path evolutionDir = temp.resolve("test-evolution");
+    Files.createDirectories(evolutionDir);
+
+    Path evolutionFile = evolutionDir.resolve("evo.json");
+    String content = "[\n" +
+        "  {\n" +
+        "    \"ee.joonasvali.mirrors.scene.genetic.impl.BenderGene\": [\n" +
+        "      {\n" +
+        "        \"x\": 50.0,\n" +
+        "        \"y\": 60.0,\n" +
+        "        \"radius\": 70.0,\n" +
+        "        \"strength\": 80.0\n" +
+        "      }\n" +
+        "    ]\n" +
+        "  },\n" +
+        "  {\n" +
+        "    \"ee.joonasvali.mirrors.scene.genetic.impl.BenderGene\": [\n" +
+        "      {\n" +
+        "        \"x\": 51.0,\n" +
+        "        \"y\": 61.0,\n" +
+        "        \"radius\": 71.0,\n" +
+        "        \"strength\": 81.0\n" +
+        "      }\n" +
+        "    ]\n" +
+        "  }\n" +
+        "]";
+    Files.write(evolutionFile, content.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE_NEW);
     Collection<Genome> result = SerializationUtil.deserializePopulation(evolutionFile);
 
-    assertAllElementsPresentByFieldComparison(population, result);
+    Genome genes1 = new Genome(Collections.singletonList(new BenderGene(50, 60, 70, 80)));
+    Genome genes2 = new Genome(Collections.singletonList(new BenderGene(51, 61, 71, 81)));
+    ArrayList<Genome> expectedPopulation = new ArrayList<>();
+    expectedPopulation.add(genes1);
+    expectedPopulation.add(genes2);
+
+    assertAllElementsPresentByFieldComparison(expectedPopulation, result);
   }
 
   @Test
