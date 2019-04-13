@@ -7,10 +7,10 @@ import ee.joonasvali.mirrors.scene.Physical;
 import java.util.List;
 
 
-public interface Gene<T extends Gene> {
-  Gene<T> copy();
+public interface Gene {
+  Gene copy();
 
-  T getOffspringGene(GeneFactory geneFactory);
+  Gene getOffspringGene(GeneFactory geneFactory);
 
   List<Physical> createPhysicals(Model model);
 

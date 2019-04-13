@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * @author Joonas Vali April 2017
  */
-public class TriangleReflectorGene implements Gene<TriangleReflectorGene> {
+public class TriangleReflectorGene implements Gene {
 
   public static final int BOX_SIZE = 3;
   public static final int BOX_SPACE = 2;
@@ -47,7 +47,7 @@ public class TriangleReflectorGene implements Gene<TriangleReflectorGene> {
   }
 
   @Override
-  public Gene<TriangleReflectorGene> copy() {
+  public TriangleReflectorGene copy() {
     return new TriangleReflectorGene(x, y, x1, y1, x2, y2, x3, y3);
   }
 

@@ -13,7 +13,7 @@ import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
-public class ParticleGoalGene implements Gene<ParticleGoalGene> {
+public class ParticleGoalGene implements Gene {
   private final double radius;
   private final double x;
   private final double y;
@@ -29,7 +29,7 @@ public class ParticleGoalGene implements Gene<ParticleGoalGene> {
   }
 
   @Override
-  public Gene<ParticleGoalGene> copy() {
+  public ParticleGoalGene copy() {
     return new ParticleGoalGene(radius, x, y, internalColor, targetParticleGroup);
   }
 

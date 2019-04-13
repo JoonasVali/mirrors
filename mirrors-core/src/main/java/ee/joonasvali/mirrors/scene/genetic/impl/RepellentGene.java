@@ -10,7 +10,7 @@ import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 import java.util.Collections;
 import java.util.List;
 
-public class RepellentGene implements Gene<RepellentGene> {
+public class RepellentGene implements Gene {
 
   private final double x;
   private final double y;
@@ -25,7 +25,7 @@ public class RepellentGene implements Gene<RepellentGene> {
   }
 
   @Override
-  public Gene<RepellentGene> copy() {
+  public RepellentGene copy() {
     return new RepellentGene(x, y, radius, delta);
   }
 

@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class BenderGene implements Gene<BenderGene> {
+public class BenderGene implements Gene {
 
   private final double x;
   private final double y;
@@ -26,7 +26,7 @@ public class BenderGene implements Gene<BenderGene> {
   }
 
   @Override
-  public Gene<BenderGene> copy() {
+  public BenderGene copy() {
     return new BenderGene(x, y, radius, strength);
   }
 

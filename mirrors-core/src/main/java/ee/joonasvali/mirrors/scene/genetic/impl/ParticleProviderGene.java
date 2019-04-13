@@ -7,7 +7,7 @@ import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 import java.util.Collections;
 import java.util.List;
 
-public class ParticleProviderGene implements Gene<ParticleProviderGene> {
+public class ParticleProviderGene implements Gene {
   private final double x;
   private final double y;
   private final double density;
@@ -23,7 +23,7 @@ public class ParticleProviderGene implements Gene<ParticleProviderGene> {
   }
 
   @Override
-  public Gene<ParticleProviderGene> copy() {
+  public ParticleProviderGene copy() {
     return new ParticleProviderGene(x, y, density, velocity, group);
   }
 

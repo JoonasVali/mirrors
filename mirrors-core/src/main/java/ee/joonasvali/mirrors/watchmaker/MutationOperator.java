@@ -27,28 +27,26 @@ public class MutationOperator implements EvolutionaryOperator<Genome> {
 
   @Override
   public List<Genome> apply(List<Genome> selectedCandidates, Random rng) {
-    List<Genome> result = selectedCandidates.stream().map(Genome::copy).collect(Collectors.toList());
+    // IMPORTANT: Make sure you do not alter the selectedCandidates List or it's contents any way.
 
-    List<Genome> list = new ArrayList<>();
-    for (Genome genome : result) {
-      list.add(mutateGenome(rng, genome));
+    List<Genome> result = new ArrayList<>();
+    for (Genome genome : selectedCandidates) {
+      result.add(mutateGenome(rng, genome.getOffspring(geneFactory)));
     }
-    return list;
+    return result;
   }
 
-  protected Genome mutateGenome(Random rng, Genome genome) {
+  private Genome mutateGenome(Random rng, Genome genome) {
     genome.removeIf(current -> canRemove(current) && rng.nextDouble() < removalRate);
 
-    List<Gene> newGenes = new ArrayList<>(1);
-    for (int i = 0; i < genome.size(); i++) {
+    int maxAddedGenes = genome.size();
+    for (int i = 0; i < maxAddedGenes; i++) {
       if (rng.nextDouble() < additionRate) {
-        newGenes.add(geneFactory.generateGene(Constants.DIMENSION_X, Constants.DIMENSION_Y));
+        genome.add(geneFactory.generateGene(Constants.DIMENSION_X, Constants.DIMENSION_Y));
       }
     }
 
-    Genome result = genome.getOffspring(geneFactory);
-    result.addAll(newGenes);
-    return result;
+    return genome;
   }
 
   private boolean canRemove(Gene current) {

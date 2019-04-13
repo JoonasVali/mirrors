@@ -10,7 +10,7 @@ import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 import java.util.Collections;
 import java.util.List;
 
-public class AcceleratorGene implements Gene<AcceleratorGene> {
+public class AcceleratorGene implements Gene {
 
   private final double x;
   private final double y;
@@ -25,7 +25,7 @@ public class AcceleratorGene implements Gene<AcceleratorGene> {
   }
 
   @Override
-  public Gene<AcceleratorGene> copy() {
+  public AcceleratorGene copy() {
     return new AcceleratorGene(x, y, radius, acceleration);
   }
 
