@@ -1,10 +1,13 @@
 package ee.joonasvali.mirrors.scene.label;
 
+import ee.joonasvali.mirrors.scene.Collidable;
+import ee.joonasvali.mirrors.scene.Model;
+import ee.joonasvali.mirrors.scene.Particle;
 import ee.joonasvali.mirrors.scene.Physical;
 
 import java.awt.*;
 
-public class BoxLabelPhysical implements Physical {
+public class BoxLabelPhysical implements Physical, Collidable {
   private final int x;
   private final int y;
   private final int width;
@@ -48,5 +51,15 @@ public class BoxLabelPhysical implements Physical {
   public void render(Graphics2D g) {
     g.setColor(color);
     g.drawRect(x, y, width, height);
+  }
+
+  @Override
+  public boolean isCollision(Particle object) {
+    return false;
+  }
+
+  @Override
+  public void actCollision(Particle object, Model model) {
+
   }
 }

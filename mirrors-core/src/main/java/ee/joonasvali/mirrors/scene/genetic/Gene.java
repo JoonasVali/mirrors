@@ -1,10 +1,6 @@
 package ee.joonasvali.mirrors.scene.genetic;
 
 import ee.joonasvali.mirrors.scene.Model;
-import ee.joonasvali.mirrors.scene.LinePhysical;
-import ee.joonasvali.mirrors.scene.Physical;
-
-import java.util.List;
 
 
 public interface Gene {
@@ -12,7 +8,5 @@ public interface Gene {
 
   Gene getOffspringGene(GeneFactory geneFactory);
 
-  List<Physical> createPhysicals(Model model);
-
-  List<LinePhysical> createLinePhysicals(Model model);
+  void expressTo(Model model);
 }

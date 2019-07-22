@@ -1,14 +1,9 @@
 package ee.joonasvali.mirrors.scene.genetic.impl;
 
 import ee.joonasvali.mirrors.scene.Model;
-import ee.joonasvali.mirrors.scene.LinePhysical;
-import ee.joonasvali.mirrors.scene.Physical;
 import ee.joonasvali.mirrors.scene.Repellent;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
 import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
-
-import java.util.Collections;
-import java.util.List;
 
 public class RepellentGene implements Gene {
 
@@ -39,14 +34,9 @@ public class RepellentGene implements Gene {
   }
 
   @Override
-  public List<Physical> createPhysicals(Model model) {
-    return Collections.singletonList(
+  public void expressTo(Model model) {
+    model.addObject(
         new Repellent(x, y, 0, radius, delta)
     );
-  }
-
-  @Override
-  public List<LinePhysical> createLinePhysicals(Model model) {
-    return null;
   }
 }

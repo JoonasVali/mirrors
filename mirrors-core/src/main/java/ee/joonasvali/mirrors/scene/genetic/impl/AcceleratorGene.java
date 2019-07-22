@@ -2,13 +2,8 @@ package ee.joonasvali.mirrors.scene.genetic.impl;
 
 import ee.joonasvali.mirrors.scene.Accelerator;
 import ee.joonasvali.mirrors.scene.Model;
-import ee.joonasvali.mirrors.scene.LinePhysical;
-import ee.joonasvali.mirrors.scene.Physical;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
 import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
-
-import java.util.Collections;
-import java.util.List;
 
 public class AcceleratorGene implements Gene {
 
@@ -39,12 +34,7 @@ public class AcceleratorGene implements Gene {
   }
 
   @Override
-  public List<Physical> createPhysicals(Model model) {
-    return Collections.singletonList(new Accelerator(x, y, 0, radius, acceleration));
-  }
-
-  @Override
-  public List<LinePhysical> createLinePhysicals(Model model) {
-    return null;
+  public void expressTo(Model model) {
+    model.addObject(new Accelerator(x, y, 0, radius, acceleration));
   }
 }

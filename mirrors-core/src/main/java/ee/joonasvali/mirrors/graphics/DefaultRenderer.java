@@ -1,8 +1,9 @@
 package ee.joonasvali.mirrors.graphics;
 
+import ee.joonasvali.mirrors.scene.Collidable;
+import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.Model;
 import ee.joonasvali.mirrors.scene.Particle;
-import ee.joonasvali.mirrors.scene.LinePhysical;
 import ee.joonasvali.mirrors.scene.Physical;
 
 import java.awt.*;
@@ -17,12 +18,16 @@ public class DefaultRenderer implements Renderer {
     synchronized (model.getLock()) {
       g.setColor(Color.BLACK);
       g.fillRect(0, 0, 1000, 1000);
-      for (LinePhysical line : model.getLines()) {
-        line.render(g);
-      }
 
-      for (Physical object : model.getObjects()) {
-        object.render(g);
+
+      for (Collidable object : model.getObjects()) {
+        if (object instanceof LinePhysical) {
+          ((LinePhysical)object).render(g);
+        }
+
+        if (object instanceof Physical) {
+          ((Physical)object).render(g);
+        }
       }
 
       for (Particle particle : model.getParticles()) {

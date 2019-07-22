@@ -2,10 +2,6 @@ package ee.joonasvali.mirrors.scene.genetic;
 
 import ee.joonasvali.mirrors.scene.Model;
 import ee.joonasvali.mirrors.scene.ModelBuilder;
-import ee.joonasvali.mirrors.scene.LinePhysical;
-import ee.joonasvali.mirrors.scene.Physical;
-
-import java.util.List;
 
 public class GeneticModelBuilder implements ModelBuilder {
 
@@ -24,17 +20,7 @@ public class GeneticModelBuilder implements ModelBuilder {
   @Override
   public Model buildModel() {
     Model model = new Model();
-    for (Gene gene : genome.getGenes()) {
-      List<Physical> physicalList = gene.createPhysicals(model);
-      if (physicalList != null) {
-        physicalList.forEach(model::addObject);
-      }
-
-      List<LinePhysical> linePhysicalList = gene.createLinePhysicals(model);
-      if (linePhysicalList != null) {
-        linePhysicalList.forEach(model::addObject);
-      }
-    }
+    genome.getGenes().forEach(gene -> gene.expressTo(model));
     return model;
   }
 

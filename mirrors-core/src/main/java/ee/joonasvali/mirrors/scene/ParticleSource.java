@@ -4,9 +4,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParticleSource extends RoundPhysical implements Activatable {
+public class ParticleSource extends RoundPhysical implements Activatable, Collidable {
   private final ParticleGroup particleGroup;
-  private final Model env;
+  private final Model model;
   private final double density;
   private final double velocity;
   private boolean hasActivated;
@@ -18,7 +18,7 @@ public class ParticleSource extends RoundPhysical implements Activatable {
     this.density = density;
     this.velocity = velocity;
     this.particleGroup = particleGroup;
-    this.env = model;
+    this.model = model;
 
   }
 
@@ -42,7 +42,17 @@ public class ParticleSource extends RoundPhysical implements Activatable {
       Particle particle = new Particle(getCenterX(), getCenterY(), i, velocity, 100, 0.1, particleGroup);
       particles.add(particle);
     }
-    env.addParticles(particles);
+    model.addParticles(particles);
+
+  }
+
+  @Override
+  public boolean isCollision(Particle object) {
+    return false;
+  }
+
+  @Override
+  public void actCollision(Particle object, Model model) {
 
   }
 }

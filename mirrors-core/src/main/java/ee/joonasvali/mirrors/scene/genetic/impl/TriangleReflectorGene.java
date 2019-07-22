@@ -1,16 +1,12 @@
 package ee.joonasvali.mirrors.scene.genetic.impl;
 
+import ee.joonasvali.mirrors.scene.LineReflector;
 import ee.joonasvali.mirrors.scene.Model;
 import ee.joonasvali.mirrors.scene.ParticleGroup;
-import ee.joonasvali.mirrors.scene.LinePhysical;
-import ee.joonasvali.mirrors.scene.LineReflector;
-import ee.joonasvali.mirrors.scene.Physical;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
 import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 import ee.joonasvali.mirrors.scene.label.BoxLabelPhysical;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -81,32 +77,25 @@ public class TriangleReflectorGene implements Gene {
   }
 
   @Override
-  public List<Physical> createPhysicals(Model model) {
+  public void expressTo(Model model) {
+    Set<Integer> groupIds = reflectiveGroups == null ?
+        null :
+        reflectiveGroups.stream().map(ParticleGroup::getId).collect(Collectors.toSet());
+
+    model.addObject(new LineReflector(x1 + x, y1 + y, x2 + x, y2 + y, groupIds));
+    model.addObject(new LineReflector(x2 + x, y2 + y, x3 + x, y3 + y, groupIds));
+    model.addObject(new LineReflector(x3 + x, y3 + y, x1 + x, y1 + y, groupIds));
+
     if (reflectiveGroups != null) {
-      List<Physical> physicals = new ArrayList<>();
       int yMin = (int) (Math.min(Math.min(y1, y2), y3) + y);
       int xMax = (int) (Math.max(Math.max(x1, x2), x3) + x);
       int count = 0;
       for (ParticleGroup group : reflectiveGroups) {
-        physicals.add(
+        model.addObject(
             new BoxLabelPhysical(xMax + (BOX_SPACE + 1 + BOX_SIZE) * count, yMin, BOX_SIZE, BOX_SIZE, group.getColor())
         );
         count++;
       }
-      return physicals;
     }
-    return null;
-  }
-
-  @Override
-  public List<LinePhysical> createLinePhysicals(Model model) {
-    List<LinePhysical> lines = new ArrayList<>();
-    Set<Integer> groupIds = reflectiveGroups == null ?
-        null :
-        reflectiveGroups.stream().map(ParticleGroup::getId).collect(Collectors.toSet());
-    lines.add(new LineReflector(x1 + x, y1 + y, x2 + x, y2 + y, groupIds));
-    lines.add(new LineReflector(x2 + x, y2 + y, x3 + x, y3 + y, groupIds));
-    lines.add(new LineReflector(x3 + x, y3 + y, x1 + x, y1 + y, groupIds));
-    return lines;
   }
 }

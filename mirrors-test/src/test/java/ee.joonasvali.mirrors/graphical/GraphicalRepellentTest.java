@@ -7,7 +7,6 @@ import ee.joonasvali.mirrors.scene.Model;
 import ee.joonasvali.mirrors.scene.ModelBuilder;
 import ee.joonasvali.mirrors.scene.Particle;
 import ee.joonasvali.mirrors.scene.ParticleGroup;
-import ee.joonasvali.mirrors.scene.Physical;
 import ee.joonasvali.mirrors.scene.genetic.impl.RepellentGene;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,7 +14,6 @@ import org.junit.experimental.categories.Category;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
 @Ignore
 @Category(GraphicalTest.class)
@@ -28,8 +26,7 @@ public class GraphicalRepellentTest {
       Model model = new Model();
 
       RepellentGene gene = new RepellentGene(350, 250, 50, 0.01f);
-      List<Physical> list = gene.createPhysicals(model);
-      list.forEach(model::addObject);
+      gene.expressTo(model);
 
       model.addObject(new Particle(300, 200, 125, 1, 100, 0.1, group));
       model.addObject(new Particle(150, 150, 125, 1, 100, 0.1, group));

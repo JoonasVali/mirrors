@@ -5,8 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class Model {
-  private final List<Physical> objects = new CopyOnWriteArrayList<>();
-  private final List<LinePhysical> lines = new CopyOnWriteArrayList<>();
+  private final List<Collidable> objects = new CopyOnWriteArrayList<>();
   private volatile List<Particle> particles = new CopyOnWriteArrayList<>();
   private double score = 0;
   private Object lock;
@@ -24,16 +23,12 @@ public class Model {
     }
   }
 
-  public void addObject(LinePhysical line) {
-    this.lines.add(line);
+  public void addObject(Particle particle) {
+    particles.add(particle);
   }
 
-  public void addObject(Physical physical) {
-    if (physical instanceof Particle) {
-      particles.add((Particle) physical);
-      return;
-    }
-    this.objects.add(physical);
+  public void addObject(Collidable collidable) {
+    this.objects.add(collidable);
   }
 
   public void actUntilNoParticlesLeft() {
@@ -43,27 +38,15 @@ public class Model {
   }
 
   public void act(long delta) {
-    // check collisions for particle and objects
-    for (LinePhysical line : lines) {
+    for (Collidable collidable : objects) {
       for (Particle particle : particles) {
-        if (line.isCollision(particle)) {
-          line.actCollision(particle, this);
+        if (collidable.isCollision(particle)) {
+          collidable.actCollision(particle, this);
         }
       }
     }
 
-    for (Physical object : objects) {
-      if (object instanceof Collidable) {
-        Collidable collidable = (Collidable) object;
-        for (Particle particle : particles) {
-          if (collidable.isCollision(particle)) {
-            collidable.actCollision(particle, this);
-          }
-        }
-      }
-    }
-
-    for (Physical object : objects) {
+    for (Collidable object : objects) {
       if (object instanceof Activatable) {
         ((Activatable) object).activate();
       }
@@ -79,7 +62,7 @@ public class Model {
             particle.getY() > screenHeight);
   }
 
-  public List<Physical> getObjects() {
+  public List<Collidable> getObjects() {
     return objects;
   }
 
@@ -87,12 +70,8 @@ public class Model {
     return particles;
   }
 
-  public void remove(Physical object) {
-    if (object instanceof Particle) {
-      particles.remove(object);
-      return;
-    }
-    objects.remove(object);
+  public void removeParticle(Particle particle) {
+    particles.remove(particle);
   }
 
   public boolean hasParticlesRemaining() {
@@ -105,10 +84,6 @@ public class Model {
 
   public void setLock(Object lock) {
     this.lock = lock;
-  }
-
-  public List<LinePhysical> getLines() {
-    return lines;
   }
 
   public void addParticles(List<Particle> particles) {

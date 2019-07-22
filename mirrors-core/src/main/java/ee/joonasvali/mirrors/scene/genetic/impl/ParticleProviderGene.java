@@ -1,11 +1,10 @@
 package ee.joonasvali.mirrors.scene.genetic.impl;
 
-import ee.joonasvali.mirrors.scene.*;
+import ee.joonasvali.mirrors.scene.Model;
+import ee.joonasvali.mirrors.scene.ParticleGroup;
+import ee.joonasvali.mirrors.scene.ParticleSource;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
 import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
-
-import java.util.Collections;
-import java.util.List;
 
 public class ParticleProviderGene implements Gene {
   private final double x;
@@ -33,15 +32,8 @@ public class ParticleProviderGene implements Gene {
   }
 
   @Override
-  public List<Physical> createPhysicals(Model model) {
-    return Collections.singletonList(
-        new ParticleSource(x, y, density, velocity, model, group)
-    );
-  }
-
-  @Override
-  public List<LinePhysical> createLinePhysicals(Model model) {
-    return null;
+  public void expressTo(Model model) {
+    model.addObject(new ParticleSource(x, y, density, velocity, model, group));
   }
 
 }
