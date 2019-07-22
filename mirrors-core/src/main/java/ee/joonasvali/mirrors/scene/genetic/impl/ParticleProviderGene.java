@@ -4,7 +4,6 @@ import ee.joonasvali.mirrors.scene.Model;
 import ee.joonasvali.mirrors.scene.ParticleGroup;
 import ee.joonasvali.mirrors.scene.ParticleSource;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
-import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 
 public class ParticleProviderGene implements Gene {
   private final double x;
@@ -23,11 +22,6 @@ public class ParticleProviderGene implements Gene {
 
   @Override
   public ParticleProviderGene copy() {
-    return new ParticleProviderGene(x, y, density, velocity, group);
-  }
-
-  @Override
-  public ParticleProviderGene getOffspringGene(GeneFactory geneFactory) {
     return new ParticleProviderGene(x, y, density, velocity, group);
   }
 

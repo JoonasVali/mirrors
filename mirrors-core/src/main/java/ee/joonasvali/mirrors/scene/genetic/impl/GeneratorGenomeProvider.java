@@ -61,7 +61,7 @@ public class GeneratorGenomeProvider implements GenomeProvider {
       Gene gene = generateGene();
 
       if (gene instanceof TriangleReflectorGene && groups.size() > 1) {
-        ((TriangleReflectorGene) gene).setAllGroups(groups);
+        geneFactory.setReflectiveParticleGroups(groups);
         ((TriangleReflectorGene) gene).setReflectiveGroups(geneFactory.randomSubCollection(groups, 0.20));
       }
 

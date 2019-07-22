@@ -4,7 +4,6 @@ import ee.joonasvali.mirrors.scene.LineReflector;
 import ee.joonasvali.mirrors.scene.Model;
 import ee.joonasvali.mirrors.scene.ParticleGroup;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
-import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 import ee.joonasvali.mirrors.scene.label.BoxLabelPhysical;
 
 import java.util.Set;
@@ -17,18 +16,17 @@ public class TriangleReflectorGene implements Gene {
 
   public static final int BOX_SIZE = 3;
   public static final int BOX_SPACE = 2;
-  private final double x;
-  private final double y;
+  public final double x;
+  public final double y;
 
-  private final double x1;
-  private final double y1;
-  private final double x2;
-  private final double y2;
-  private final double x3;
-  private final double y3;
+  public final double x1;
+  public final double y1;
+  public final double x2;
+  public final double y2;
+  public final double x3;
+  public final double y3;
 
   private Set<ParticleGroup> reflectiveGroups;
-  private Set<ParticleGroup> allGroups;
 
   public TriangleReflectorGene(
       double x, double y, double x1, double y1, double x2, double y2, double x3, double y3) {
@@ -47,33 +45,8 @@ public class TriangleReflectorGene implements Gene {
     return new TriangleReflectorGene(x, y, x1, y1, x2, y2, x3, y3);
   }
 
-  @Override
-  public TriangleReflectorGene getOffspringGene(GeneFactory geneFactory) {
-    TriangleReflectorGene gene = new TriangleReflectorGene(
-        geneFactory.largeRandom(20) + x,
-        geneFactory.largeRandom(20) + y,
-        geneFactory.largeRandom(5) + x1,
-        geneFactory.largeRandom(5) + y1,
-        geneFactory.largeRandom(5) + x2,
-        geneFactory.largeRandom(5) + y2,
-        geneFactory.largeRandom(5) + x3,
-        geneFactory.largeRandom(5) + y3
-    );
-    if (reflectiveGroups != null) {
-      gene.setReflectiveGroups(geneFactory.reflectiveGroups(reflectiveGroups, allGroups));
-    }
-    if (allGroups != null) {
-      gene.setAllGroups(allGroups);
-    }
-    return gene;
-  }
-
   public void setReflectiveGroups(Set<ParticleGroup> reflectiveGroups) {
     this.reflectiveGroups = reflectiveGroups;
-  }
-
-  public void setAllGroups(Set<ParticleGroup> allGroups) {
-    this.allGroups = allGroups;
   }
 
   @Override
@@ -97,5 +70,9 @@ public class TriangleReflectorGene implements Gene {
         count++;
       }
     }
+  }
+
+  public Set<ParticleGroup> getReflectiveGroups() {
+    return reflectiveGroups;
   }
 }

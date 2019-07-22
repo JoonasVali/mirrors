@@ -25,7 +25,7 @@ public class Genome extends ArrayList<Gene> {
   public Genome getOffspring(GeneFactory geneFactory) {
     List<Gene> genome = new ArrayList<>(this.size());
     for (Gene gene : this) {
-      genome.add(gene.getOffspringGene(geneFactory));
+      genome.add(geneFactory.getOffspringGene(gene));
     }
     return new Genome(genome);
   }

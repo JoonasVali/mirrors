@@ -1,8 +1,8 @@
 package ee.joonasvali.mirrors.scene.genetic.impl;
 
-import ee.joonasvali.mirrors.scene.genetic.util.SerializationUtil;
 import ee.joonasvali.mirrors.scene.genetic.Genome;
 import ee.joonasvali.mirrors.scene.genetic.GenomeProvider;
+import ee.joonasvali.mirrors.scene.genetic.util.SerializationUtil;
 
 import java.io.File;
 import java.io.IOException;

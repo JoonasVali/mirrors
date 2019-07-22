@@ -5,7 +5,6 @@ import ee.joonasvali.mirrors.scene.ParticleGoal;
 import ee.joonasvali.mirrors.scene.ParticleGoalAction;
 import ee.joonasvali.mirrors.scene.ParticleGroup;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
-import ee.joonasvali.mirrors.scene.genetic.GeneFactory;
 
 import java.awt.*;
 
@@ -29,10 +28,6 @@ public class ParticleGoalGene implements Gene {
     return new ParticleGoalGene(radius, x, y, internalColor, targetParticleGroup);
   }
 
-  @Override
-  public ParticleGoalGene getOffspringGene(GeneFactory geneFactory) {
-    return new ParticleGoalGene(radius, x, y, internalColor, targetParticleGroup);
-  }
 
   @Override
   public void expressTo(Model model) {
