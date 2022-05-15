@@ -1,6 +1,7 @@
 package ee.joonasvali.mirrors;
 
 import ee.joonasvali.mirrors.command.GUIFileChooser;
+import ee.joonasvali.mirrors.command.PopulationExplorer;
 import ee.joonasvali.mirrors.command.RunEvolution;
 import ee.joonasvali.mirrors.command.RunMutationDemo;
 import ee.joonasvali.mirrors.command.RunRandomScene;
@@ -37,6 +38,11 @@ public class Launcher {
     if (arg.equals("load")) {
       log.info("Launching GUI file loader.");
       return GUIFileChooser.chooseFileWithGUI(args);
+    }
+
+    if (arg.equals("explore")) {
+      log.info("Launching population explorer.");
+      return PopulationExplorer.explore(args);
     }
 
     if (arg.equals("evolution")) {

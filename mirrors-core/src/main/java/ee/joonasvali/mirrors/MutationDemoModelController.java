@@ -8,6 +8,7 @@ import ee.joonasvali.mirrors.scene.genetic.GeneticModelBuilder;
 import ee.joonasvali.mirrors.scene.genetic.Genome;
 import org.uncommons.watchmaker.framework.EvolutionaryOperator;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -81,6 +82,16 @@ public class MutationDemoModelController implements ModelController {
   @Override
   public KeyListener getKeyListener() {
     return keyListener;
+  }
+
+  @Override
+  public boolean hasControlPanel() {
+    return false;
+  }
+
+  @Override
+  public JPanel getControlPanel() {
+    return null;
   }
 }
 

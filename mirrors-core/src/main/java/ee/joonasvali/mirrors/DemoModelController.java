@@ -4,7 +4,10 @@ import ee.joonasvali.mirrors.graphics.DefaultRenderer;
 import ee.joonasvali.mirrors.graphics.Renderer;
 import ee.joonasvali.mirrors.scene.Model;
 import ee.joonasvali.mirrors.scene.ModelBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -15,6 +18,8 @@ import java.awt.event.KeyListener;
  * @author Joonas Vali April 2016
  */
 public class DemoModelController  implements ModelController {
+  private static final Logger log = LoggerFactory.getLogger(DemoModelController.class);
+
   private final ModelBuilder modelBuilder;
   private final Renderer renderer;
   private volatile long lastRender;
@@ -37,6 +42,7 @@ public class DemoModelController  implements ModelController {
     return new KeyAdapter() {
       @Override
       public void keyReleased(KeyEvent e) {
+        log.info("Key: " + e.getKeyChar() + " " + e.getKeyCode());
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
           init();
         }
@@ -68,5 +74,15 @@ public class DemoModelController  implements ModelController {
   @Override
   public KeyListener getKeyListener() {
     return keyListener;
+  }
+
+  @Override
+  public boolean hasControlPanel() {
+    return false;
+  }
+
+  @Override
+  public JPanel getControlPanel() {
+    return null;
   }
 }

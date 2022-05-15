@@ -33,9 +33,13 @@ public class WindowController {
     SwingUtilities.invokeAndWait(
         () -> {
           try {
+            int dimensionX = Constants.DIMENSION_X;
+            if (env.hasControlPanel()) {
+              dimensionX += env.getControlPanel().getPreferredSize().width;
+            }
             container = new GameContainer(env);
             container.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            container.setSize(new Dimension(Constants.DIMENSION_X, Constants.DIMENSION_Y));
+            container.setSize(new Dimension(dimensionX, Constants.DIMENSION_Y));
             container.setVisible(true);
           } catch (Exception e) {
             log.error("Unable to launch Mirrors", e);

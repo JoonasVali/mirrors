@@ -2,6 +2,7 @@ package ee.joonasvali.mirrors;
 
 import ee.joonasvali.mirrors.scene.Model;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
 
@@ -18,4 +19,8 @@ public interface ModelController {
   Model getModel();
 
   KeyListener getKeyListener();
+
+  boolean hasControlPanel();
+
+  JPanel getControlPanel();
 }

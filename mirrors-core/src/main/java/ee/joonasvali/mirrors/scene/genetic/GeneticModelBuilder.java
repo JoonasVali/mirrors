@@ -7,6 +7,7 @@ public class GeneticModelBuilder implements ModelBuilder {
 
   private Genome genome;
   private GenomeProvider provider;
+  private volatile boolean reload;
 
   public GeneticModelBuilder(GenomeProvider provider) {
     this.provider = provider;
@@ -17,8 +18,16 @@ public class GeneticModelBuilder implements ModelBuilder {
     this.genome = genome;
   }
 
+  public void setReload() {
+    this.reload = true;
+  }
+
   @Override
   public Model buildModel() {
+    if (reload) {
+      loadGenome();
+      reload = false;
+    }
     Model model = new Model();
     genome.getGenes().forEach(gene -> gene.expressTo(model));
     return model;

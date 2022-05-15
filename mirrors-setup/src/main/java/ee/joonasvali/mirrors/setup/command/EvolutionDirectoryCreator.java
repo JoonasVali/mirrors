@@ -21,6 +21,7 @@ public class EvolutionDirectoryCreator {
   private static final boolean isWin = SystemUtils.IS_OS_WINDOWS;
   private static final String EVOLVE_FILE_NAME = "evolve" + (isWin ? ".bat" : ".sh");
   private static final String PLAY_SAMPLE_FILE_NAME = "play" + (isWin ? ".bat" : ".sh");
+  private static final String POPULATION_EXPLORER_FILE_NAME = "explore" + (isWin ? ".bat" : ".sh");
 
   private static final String EVOLUTION_WIN_PROPERTIES = "evolution.win.properties";
   private static final String EVOLUTION_UNIX_PROPERTIES = "evolution.unix.properties";
@@ -51,6 +52,7 @@ public class EvolutionDirectoryCreator {
     Path mirrorsHome = getMirrorsHome();
     createEvolutionRunner(evolutionDirectory, mirrorsHome);
     createSamplePlayer(evolutionDirectory, mirrorsHome);
+    createPopulationExplorer(evolutionDirectory, mirrorsHome);
     createEvolutionProperties(evolutionDirectory, mirrorsHome);
     createRandomDemoPlayer(evolutionDirectory, mirrorsHome);
     createMutationDemoModelPlayer(evolutionDirectory, mirrorsHome);
@@ -124,6 +126,26 @@ public class EvolutionDirectoryCreator {
     }
 
     createFileOrFail(runEvolutionFile, content);
+  }
+
+  private static void createPopulationExplorer(Path evolutionDirectory, Path mirrorsHome) {
+    Path populationExplorerFile = evolutionDirectory.resolve(POPULATION_EXPLORER_FILE_NAME);
+
+    String content;
+    if (isWin) {
+      content = "" +
+          "@echo off\n" +
+          "SET MIRRORS_HOME=" + mirrorsHome.toString() + "\n" +
+          "java -jar -Xmx2048M %MIRRORS_HOME%/lib/" + MIRRORS_CORE_JAR_NAME + " explore " +
+          evolutionDirectory.resolve(EvolutionController.POPULATIONS_FILE_NAME).toAbsolutePath() + "\n";
+    } else {
+      content = "" +
+          "#!/bin/bash\n" +
+          "export MIRRORS_HOME=" + mirrorsHome.toString() + "\n" +
+          "java -jar -Xmx2048M $MIRRORS_HOME/lib/" + MIRRORS_CORE_JAR_NAME + " explore " +
+          evolutionDirectory.resolve(EvolutionController.POPULATIONS_FILE_NAME).toAbsolutePath() + "\n";
+    }
+    createFileOrFail(populationExplorerFile, content);
   }
 
   private static void createSamplePlayer(Path evolutionDirectory, Path mirrorsHome) {
