@@ -5,6 +5,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class Model {
+  // We assign small penalty for every object. This leads evolution to remove unnecessary genes over time.
+  public static final float OBJECT_COUNT_PENALTY = 1f;
   private final List<Collidable> objects = new CopyOnWriteArrayList<>();
   private volatile List<Particle> particles = new CopyOnWriteArrayList<>();
   private double score = 0;
@@ -13,7 +15,7 @@ public class Model {
   private final int screenHeight = Constants.DIMENSION_Y;
 
   public double getScore() {
-    return score;
+    return Math.max(0, score);
   }
 
   public void addScore(double score) {
@@ -28,6 +30,7 @@ public class Model {
   }
 
   public void addObject(Collidable collidable) {
+    this.score -= OBJECT_COUNT_PENALTY;
     this.objects.add(collidable);
   }
 
