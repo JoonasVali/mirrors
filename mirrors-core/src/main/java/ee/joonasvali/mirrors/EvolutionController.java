@@ -116,6 +116,11 @@ public class EvolutionController {
 
     TerminationCondition targetFitnessCondition = new TargetFitness(targetFitness, true);
 
+    if (seedPopulation.size() > concurrent) {
+      log.info("Reducing seed population to match concurrent limit.");
+      seedPopulation = seedPopulation.stream().limit(concurrent).collect(Collectors.toSet());
+    }
+
     Genome winner;
     try {
       synchronized (abortCondition) {
