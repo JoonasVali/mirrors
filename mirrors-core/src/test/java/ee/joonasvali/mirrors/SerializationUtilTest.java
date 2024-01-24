@@ -7,10 +7,9 @@ import ee.joonasvali.mirrors.scene.genetic.impl.AcceleratorGene;
 import ee.joonasvali.mirrors.scene.genetic.impl.BenderGene;
 import ee.joonasvali.mirrors.scene.genetic.util.SerializationUtil;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -25,12 +24,12 @@ import java.util.List;
 
 public class SerializationUtilTest {
 
-  @Rule
-  public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir
+  public Path folder;
 
   @Test
   public void singleGeneSerializedAndDeserialized() throws IOException {
-    Path temp = folder.newFolder("mirrors-test").toPath();
+    Path temp = folder.resolve("mirrors-test");
     SerializationUtil util = new SerializationUtil(temp.resolve("test-evolution"));
     Genome genome = new Genome(Collections.singletonList(new BenderGene(50, 60, 70, 80)));
     util.serialize(genome, "abc");
@@ -38,12 +37,12 @@ public class SerializationUtilTest {
     Genome result = SerializationUtil.deserialize(file);
     BenderGene bender = (BenderGene) result.get(0);
     boolean equals = EqualsBuilder.reflectionEquals(bender, new BenderGene(50, 60, 70, 80));
-    Assert.assertTrue("Bender gene not equal to expected bender gene", equals);
+    Assertions.assertTrue(equals, "Bender gene not equal to expected bender gene");
   }
 
   @Test
   public void multipleGenesSerializedAndDeserialized() throws IOException {
-    Path temp = folder.newFolder("mirrors-test").toPath();
+    Path temp = folder.resolve("mirrors-test");
     SerializationUtil util = new SerializationUtil(temp.resolve("test-evolution"));
     List<Gene> geneList = new ArrayList<>();
     geneList.add(new BenderGene(50, 60, 70, 80));
@@ -54,14 +53,14 @@ public class SerializationUtilTest {
 
     Path file = temp.resolve("test-evolution").resolve("abc.json");
     Genome result = SerializationUtil.deserialize(file);
-    Assert.assertEquals(3, result.size());
+    Assertions.assertEquals(3, result.size());
 
     assertAllElementsPresentByFieldComparison(geneList, result);
   }
 
   @Test
   public void serializePopulation() throws IOException {
-    Path temp = folder.newFolder("mirrors-test").toPath();
+    Path temp = folder.resolve("mirrors-test");
     Path evolutionDir = temp.resolve("test-evolution");
     Files.createDirectories(evolutionDir);
 
@@ -99,12 +98,12 @@ public class SerializationUtilTest {
         "]";
 
     String contents = new String(Files.readAllBytes(evolutionFile), StandardCharsets.UTF_8);
-    Assert.assertEquals(expected, contents);
+    Assertions.assertEquals(expected, contents);
   }
 
   @Test
   public void deserializePopulation() throws IOException {
-    Path temp = folder.newFolder("mirrors-test").toPath();
+    Path temp = folder.resolve("mirrors-test");
     Path evolutionDir = temp.resolve("test-evolution");
     Files.createDirectories(evolutionDir);
 
@@ -145,7 +144,7 @@ public class SerializationUtilTest {
 
   @Test
   public void overwritesExistingPopulationFile() throws IOException {
-    Path temp = folder.newFolder("mirrors-test").toPath();
+    Path temp = folder.resolve("mirrors-test");
     Path evolutionDir = temp.resolve("test-evolution");
     Files.createDirectories(evolutionDir);
 

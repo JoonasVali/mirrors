@@ -8,15 +8,15 @@ import ee.joonasvali.mirrors.scene.ModelBuilder;
 import ee.joonasvali.mirrors.scene.Particle;
 import ee.joonasvali.mirrors.scene.ParticleGroup;
 import ee.joonasvali.mirrors.scene.genetic.impl.RepellentGene;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
-@Ignore
-@Category(GraphicalTest.class)
+@Disabled
+@Tag("GraphicalTest")
 public class GraphicalRepellentTest {
   private final ParticleGroup group = new ParticleGroup(1, new Color(255, 255, 255));
 
