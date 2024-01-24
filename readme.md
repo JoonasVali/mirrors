@@ -24,7 +24,7 @@ well the model as a whole works. There are currently four types of modifiers: re
 ## Running mirrors ##
 
 You need:
-Java 8 installed. JAVA_HOME set and java runtime in the path.
+Java 16+ installed. JAVA_HOME set and java runtime in the path.
 Maven (I used 3.0.5 and 2.2.1, both worked).
 
 

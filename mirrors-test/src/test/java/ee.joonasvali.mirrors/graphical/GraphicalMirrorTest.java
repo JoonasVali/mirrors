@@ -8,9 +8,9 @@ import ee.joonasvali.mirrors.scene.Model;
 import ee.joonasvali.mirrors.scene.ModelBuilder;
 import ee.joonasvali.mirrors.scene.Particle;
 import ee.joonasvali.mirrors.scene.ParticleGroup;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
@@ -20,8 +20,8 @@ import java.util.HashSet;
 /**
  * @author Joonas Vali April 2017
  */
-@Ignore
-@Category(GraphicalTest.class)
+@Disabled
+@Tag("GraphicalTest")
 public class GraphicalMirrorTest {
   private final ParticleGroup group = new ParticleGroup(1, new Color(255, 255, 255));
 
