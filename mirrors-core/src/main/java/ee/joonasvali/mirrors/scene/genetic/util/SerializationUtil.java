@@ -10,12 +10,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import ee.joonasvali.mirrors.scene.genetic.Gene;
 import ee.joonasvali.mirrors.scene.genetic.Genome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -38,6 +42,7 @@ public class SerializationUtil {
   private static Gson createGson() {
     GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
     builder.registerTypeAdapter(Genome.class, new GenomeAdapter());
+    builder.registerTypeAdapter(Color.class, new ColorTypeAdapter());
     return builder.create();
   }
 
@@ -88,7 +93,24 @@ public class SerializationUtil {
     }.getType();
     return gson.fromJson(contents, collectionType);
   }
+  private static class ColorTypeAdapter extends TypeAdapter<Color> {
+    @Override
+    public void write(JsonWriter out, Color value) throws IOException {
+      if (value == null) {
+        out.nullValue();
+        return;
+      }
+      // Ensure the RGB value is represented as a hexadecimal string with leading zeros
+      String rgb = String.format("#%06X", (0xFFFFFF & value.getRGB()));
+      out.value(rgb);
+    }
 
+    @Override
+    public Color read(JsonReader in) throws IOException {
+      String rgb = in.nextString();
+      return Color.decode(rgb);
+    }
+  }
   private static class GenomeAdapter implements JsonSerializer<Genome>, JsonDeserializer<Genome> {
     public Genome deserialize(JsonElement jsonElement, Type type,
                               JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
@@ -127,3 +149,4 @@ public class SerializationUtil {
     }
   }
 }
+
